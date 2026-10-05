@@ -5,3 +5,7 @@ showreel/s[hv][12].png
 showreel/spec.png
 showreel/snd/*.wav
 showreel/chk/
+showreel/frames30_*/
+showreel/test30_*/
+showreel/g30*.png
+showreel/log30.txt
