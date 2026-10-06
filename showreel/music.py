@@ -12,6 +12,10 @@ import wave
 SR = 44100
 import sys
 DUR = float(sys.argv[1]) if len(sys.argv) > 1 else 15.0
+# variante 'b': Re menor (Dm Bb F C) + tic-tac de reloj (pieza del plazo del art. 25)
+VARIANT = sys.argv[2] if len(sys.argv) > 2 else 'a'
+TR = 5 if VARIANT == 'b' else 0
+LEAD_SHIFT = -12 if VARIANT == 'b' else 0
 N = int(SR * DUR)
 rng = np.random.default_rng(2026)
 
@@ -22,7 +26,7 @@ kicks = []
 
 
 def mf(m):
-    return 440.0 * 2 ** ((m - 69) / 12)
+    return 440.0 * 2 ** ((m + TR - 69) / 12)
 
 
 def tt(d):
@@ -151,7 +155,7 @@ def lead(m, d):
     t = tt(d)
     vib = 1 + 0.004 * np.sin(2 * np.pi * 5.5 * t) * np.clip((t - 0.2) / 0.3, 0, 1)
     ph = lambda f, dt: (np.cumsum(f * vib * (1 + dt)) / SR) % 1.0
-    s = sum(2 * ph(mf(m), dt) - 1 for dt in (-0.006, 0, 0.006)) / 3 + 0.4 * (2 * ph(mf(m - 12), 0.003) - 1)
+    s = sum(2 * ph(mf(m + LEAD_SHIFT), dt) - 1 for dt in (-0.006, 0, 0.006)) / 3 + 0.4 * (2 * ph(mf(m - 12 + LEAD_SHIFT), 0.003) - 1)
     s = flt(s, 'lowpass', 3800, 2)
     env = np.minimum(1, t / 0.05) * (0.75 + 0.25 * np.exp(-t * 4)) * np.minimum(1, (d - t) / 0.08)
     return s * env * 0.9
@@ -420,6 +424,18 @@ def arrange30():
 
 (arrange15 if DUR == 15 else arrange30)()
 
+
+def tick(hi=True):
+    t = tt(0.06)
+    return (np.sin(2 * np.pi * (2400 if hi else 1700) * t) * np.exp(-t * 90) + flt(noise(0.06), 'highpass', 5000) * np.exp(-t * 200) * 0.5) * 0.5
+
+
+if VARIANT == 'b':                                          # reloj: apertura y escena de los 60 días
+    for k in range(10):
+        place(tick(k % 2 == 0), k * 0.5, 0.55, pan=0.35 if k % 2 else -0.35, rev=0.3)
+    for k in range(8):
+        place(tick(k % 2 == 0), 9.0 + k * 0.5 + 0.25, 0.3, pan=0.35 if k % 2 else -0.35, rev=0.2)
+
 # ---------------- mezcla ----------------
 duck = np.ones(N)
 tN = np.arange(N) / SR
@@ -454,7 +470,8 @@ mix = np.tanh(1.6 * mix) / np.tanh(1.6)                  # saturación/limitaci�
 mix *= 0.93
 
 pcm = (np.clip(mix.T, -1, 1) * 32767).astype(np.int16)
-with wave.open('snd/music.wav' if DUR == 15 else f'snd/music{int(DUR)}.wav', 'wb') as w:
+OUT = 'snd/music.wav' if DUR == 15 else f"snd/music{int(DUR)}{'' if VARIANT == 'a' else VARIANT}.wav"
+with wave.open(OUT, 'wb') as w:
     w.setnchannels(2)
     w.setsampwidth(2)
     w.setframerate(SR)
