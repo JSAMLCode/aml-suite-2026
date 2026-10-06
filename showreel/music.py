@@ -14,7 +14,7 @@ import sys
 DUR = float(sys.argv[1]) if len(sys.argv) > 1 else 15.0
 # variante 'b': Re menor (Dm Bb F C) + tic-tac de reloj (pieza del plazo del art. 25)
 VARIANT = sys.argv[2] if len(sys.argv) > 2 else 'a'
-TR = 5 if VARIANT == 'b' else 0
+TR = {'b': 5, 'c': -2}.get(VARIANT, 0)
 LEAD_SHIFT = -12 if VARIANT == 'b' else 0
 N = int(SR * DUR)
 rng = np.random.default_rng(2026)
@@ -429,6 +429,17 @@ def tick(hi=True):
     t = tt(0.06)
     return (np.sin(2 * np.pi * (2400 if hi else 1700) * t) * np.exp(-t * 90) + flt(noise(0.06), 'highpass', 5000) * np.exp(-t * 200) * 0.5) * 0.5
 
+
+def ping():
+    t = tt(1.2)
+    return np.sin(2 * np.pi * 1320 * t) * np.exp(-t * 5) * 0.45 + np.sin(2 * np.pi * 2640 * t) * np.exp(-t * 9) * 0.12
+
+
+if VARIANT == 'c':                                          # sonar: apertura y escena del art. 14 (geolocalización)
+    for k in range(5):
+        place(ping(), k * 1.0, 0.5, pan=-0.3 if k % 2 else 0.3, rev=0.6)
+    for k in range(4):
+        place(ping(), 9.0 + k * 1.0 + 0.5, 0.3, pan=0.3 if k % 2 else -0.3, rev=0.6)
 
 if VARIANT == 'b':                                          # reloj: apertura y escena de los 60 días
     for k in range(10):

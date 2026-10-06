@@ -15,3 +15,5 @@ showreel/gp_*.png
 showreel/q[12].png
 showreel/logP.txt
 showreel/log*.txt
+showreel/framesG_*/
+showreel/tg_*/
