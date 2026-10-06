@@ -376,19 +376,22 @@ function sCierre(lt){
   ctx.beginPath();ctx.moveTo(-ss*.38,ss*.05);ctx.lineTo(-ss*.09,ss*.35);ctx.lineTo(ss*.42,-ss*.27);ctx.setLineDash([ss*2*kp,ss*5]);ctx.stroke();ctx.restore();
   flare(CX,sy,.8*(1-prog(lt,0,1))+.15);
   const Q=['¿CUÁNTAS ALERTAS ABIERTAS','TIENE HOY SU EQUIPO','CON MÁS DE 60 DÍAS?'];
-  const qs=Math.min(...Q.map(q=>fit(q,900,4,W-(VERT?110:320),VERT?66:78))),qy=VERT?740:440,lh=qs*1.18;
+  const qs=Math.min(...Q.map(q=>fit(q,900,4,W-(VERT?220:320),VERT?66:78))),qy=VERT?740:420,lh=qs*1.18;
   Q.forEach((q,k)=>{const st=.3+k*.15;
     if(k===2){ctx.save();glow(hexA(C.gold,.5),40);rise(q,CX,qy+k*lh,qs,900,metal(qy+k*lh-qs*.75,qy+k*lh),{t:lt,start:st,stagger:.02,dur:.45,ls:4,align:'center'});ctx.restore()}
     else rise(q,CX,qy+k*lh,qs,900,C.txt,{t:lt,start:st,stagger:.02,dur:.45,ls:4,align:'center'})});
-  const nY=VERT?1190:qy+2*lh+150;
-  glow('rgba(120,200,255,.35)',24);rise('SELENE',CX,nY,VERT?96:72,900,C.txt,{t:lt,start:1.0,stagger:.05,dur:.45,ls:VERT?20:18,align:'center'});noGlow();
-  const lp=eo5(prog(lt,1.2,1.6));ctx.save();ctx.fillStyle=C.gold;glow(C.gold,14);ctx.fillRect(CX-220*lp,nY+(VERT?26:20),440*lp,3);ctx.restore();
-  const tp=eo3(prog(lt,1.3,1.7));
-  if(VERT){text('PROCOMPLIANCE',CX,nY+82,30,800,C.gold2,'center',tp,10);text('SERRANO LAWYERS & CONSULTANTS',CX,nY+124,24,700,C.gold2,'center',tp,6)}
-  else text('PROCOMPLIANCE  ·  SERRANO LAWYERS & CONSULTANTS',CX,nY+62,22,700,C.gold2,'center',tp,7);
-  const pa=eo3(prog(lt,1.6,2.0)),py=VERT?nY+250:nY+120;
+  const nY=VERT?1110:qy+2*lh+140,NAME='JOSÉ ANTONIO SERRANO',ns=fit(NAME,900,VERT?8:14,W-(VERT?240:300),VERT?84:70);
+  glow('rgba(120,200,255,.35)',24);rise(NAME,CX,nY,ns,900,C.txt,{t:lt,start:1.0,stagger:.03,dur:.45,ls:VERT?10:14,align:'center'});noGlow();
+  const lp=eo5(prog(lt,1.2,1.6));ctx.save();ctx.fillStyle=C.gold;glow(C.gold,14);ctx.fillRect(CX-260*lp,nY+(VERT?28:20),520*lp,3);ctx.restore();
+  const tp=eo3(prog(lt,1.3,1.7)),cp=eo3(prog(lt,1.45,1.85));
+  text('AML  ·  CUMPLIMIENTO  ·  GRC',CX,nY+(VERT?82:62),VERT?30:24,900,C.gold2,'center',tp,10);
+  const CRED=VERT?['CP/AML FIBA  ·  ISO 37301 · 37001 · 37000 · 31000','AI COMPLIANCE EXPERT  ·  LEGALTECH ARCHITECT','LEAN SIX SIGMA GREEN BELT  ·  DOCENTE  ·  SPEAKER']
+                 :['CP/AML FIBA  ·  ISO 37301 · 37001 · 37000 · 31000','AI COMPLIANCE EXPERT  ·  LEGALTECH ARCHITECT  ·  LEAN SIX SIGMA GREEN BELT  ·  DOCENTE  ·  SPEAKER'];
+  const cs=Math.min(...CRED.map(c=>fit(c,800,4,W-(VERT?110:260),VERT?20:17)));
+  CRED.forEach((c,k)=>text(c,CX,nY+(VERT?128:100)+k*(VERT?36:28),cs,800,C.txt,'center',cp*.85,4));
+  const pa=eo3(prog(lt,1.6,2.0)),py=VERT?nY+300:nY+178;
   if(VERT){text('P.D.  ARTÍCULO 14 · GEOLOCALIZACIÓN INFERENCIAL',CX,py,18,800,C.dim,'center',pa,4);text('VENCE EL 30 DE JUNIO DE 2027 · PRÓXIMO POST',CX,py+32,18,800,C.dim,'center',pa,4)}
-  else text('P.D.  ARTÍCULO 14 · GEOLOCALIZACIÓN INFERENCIAL · VENCE EL 30 DE JUNIO DE 2027 · PRÓXIMO POST',CX,py,16,800,C.dim,'center',pa,4);
+  else text('P.D.  ARTÍCULO 14 · GEOLOCALIZACIÓN INFERENCIAL · VENCE EL 30 DE JUNIO DE 2027 · PRÓXIMO POST',CX,py,15,800,C.dim,'center',pa,4);
   ctx.restore();
 }
 
@@ -428,7 +431,7 @@ function post(t){
   const ha=open*(1-prog(t,DUR-.7,DUR-.3));
   const ty=VERT?110:58,by=VERT?H-110:H-42;
   out.fillStyle=(Math.floor(t*2)%2)?C.red:'rgba(255,77,106,.3)';out.globalAlpha=ha;out.beginPath();out.arc(VERT?60:62,ty-6,6,0,6.283);out.fill();out.globalAlpha=1;
-  text('SELENE  ×  PROCOMPLIANCE',VERT?78:80,ty,16,800,C.txt,'left',.85*ha,5);
+  text('JOSÉ ANTONIO SERRANO  ·  AML · CUMPLIMIENTO · GRC',VERT?78:80,ty,16,800,C.txt,'left',.85*ha,VERT?3:5);
   const s=Math.floor(t),fr=Math.floor((t%1)*30);
   text(`00:${String(s).padStart(2,'0')}:${String(fr).padStart(2,'0')}`,W-(VERT?60:62),ty,16,800,C.txt,'right',.85*ha,4);
   text('ACUERDO SBP 1-2026  ·  ARTÍCULO 25',VERT?60:62,by,14,800,C.dim,'left',.8*ha,5);
