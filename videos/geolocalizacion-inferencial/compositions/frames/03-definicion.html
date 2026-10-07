@@ -7,12 +7,18 @@
 .f03-definicion-stage{position:absolute;inset:0}
 .f03-definicion-a{position:absolute}
 .f03-definicion-D{font-family:'Space Grotesk',Inter,sans-serif;letter-spacing:-.02em;line-height:1.12}
-.f03-definicion-ey{position:absolute;left:65px;top:50px;font-family:'Space Grotesk',Inter,sans-serif;text-transform:uppercase;letter-spacing:.08em;color:#2FB8FF;font-weight:600;font-size:30px}
-.f03-definicion-tg{position:absolute;right:65px;top:44px;border:1px solid rgba(169,188,204,.3);color:#A9BCCC;border-radius:100px;font-size:26px;padding:8px 24px}
-.f03-definicion-at{position:absolute;left:65px;width:930px;top:136px;font-family:'Space Grotesk',Inter,sans-serif;font-weight:600;letter-spacing:-.02em;line-height:1.14;font-size:64px}
+.f03-definicion-ey{position:absolute;left:65px;top:76px;font-family:'Space Grotesk',Inter,sans-serif;text-transform:uppercase;letter-spacing:.08em;color:#2FB8FF;font-weight:600;font-size:30px}
+.f03-definicion-tg{position:absolute;right:65px;top:70px;border:1px solid rgba(169,188,204,.3);color:#A9BCCC;border-radius:100px;font-size:26px;padding:8px 24px}
+.f03-definicion-at{position:absolute;left:65px;width:930px;top:150px;font-family:'Space Grotesk',Inter,sans-serif;font-weight:600;letter-spacing:-.02em;line-height:1.14;font-size:62px}
 .f03-definicion-at .f03-definicion-k{color:#2FB8FF}
 .f03-definicion-w{display:inline-block}
-.f03-definicion-src{position:absolute;left:65px;top:1008px;font-size:24px;color:#6F8799}
+.f03-definicion-src{position:absolute;left:65px;top:982px;font-size:22px;color:#6F8799}
+.f03-definicion-hudt{position:absolute;left:65px;top:26px;display:flex;align-items:center;gap:12px;font-family:'Space Grotesk',Inter,sans-serif;font-size:17px;font-weight:600;letter-spacing:.16em;color:#A9BCCC;text-transform:uppercase}
+.f03-definicion-hudt i{display:inline-block;width:9px;height:9px;border-radius:50%;background:#FF5C6C}
+.f03-definicion-tc{position:absolute;right:65px;top:26px;font-family:'Space Grotesk',Inter,sans-serif;font-size:17px;font-weight:600;letter-spacing:.14em;color:#A9BCCC}
+.f03-definicion-hudb{position:absolute;left:65px;top:1036px;font-family:'Space Grotesk',Inter,sans-serif;font-size:15px;font-weight:600;letter-spacing:.16em;color:#6F8799;text-transform:uppercase}
+.f03-definicion-ptrack{position:absolute;right:65px;top:1044px;width:300px;height:2px;background:rgba(169,188,204,.18)}
+.f03-definicion-pfill{position:absolute;left:0;top:0;width:100%;height:100%;background:#D9B26A;transform-origin:0 50%;box-shadow:0 0 10px rgba(217,178,106,.6)}
 .f03-definicion-pg{position:absolute;left:0;bottom:0;height:5px;background:#2FB8FF;transform-origin:0 50%}
 .f03-definicion-glass{position:absolute;background:linear-gradient(160deg,rgba(255,255,255,.08),rgba(255,255,255,.02));border:1px solid rgba(169,188,204,.24);border-radius:22px}
 .f03-definicion-glow{position:absolute;border-radius:50%;background:radial-gradient(circle,rgba(34,81,255,.55),transparent 65%)}
@@ -41,7 +47,7 @@
     Sin coordenadas GPS</div>
 </div>
 <div class="f03-definicion-src" id="f03-definicion-src">Fuente: Acuerdo 1-2026 SBP, art. 14</div>
-<div class="f03-definicion-pg" id="f03-definicion-pg" style="width:100%"></div>
+<div class="f03-definicion-hudt" id="f03-definicion-hudt"><i></i>José Antonio Serrano · AML · Cumplimiento · GRC</div><div class="f03-definicion-tc" id="f03-definicion-tc">00:00:00</div><div class="f03-definicion-hudb" id="f03-definicion-hudb">Acuerdo SBP 1-2026 · Arts. 14 y 53</div><div class="f03-definicion-ptrack"><div class="f03-definicion-pfill" id="f03-definicion-pfill"></div></div>
 </div>
 </div>
 <script src="assets/vendor/gsap.min.js"></script>
@@ -53,7 +59,8 @@ const q=(s)=>document.querySelectorAll(s);
 tl.fromTo("#f03-definicion-grid",{x:0,y:0},{x:-43,y:-22,duration:D,ease:"none"},0);
 tl.fromTo("#f03-definicion-ey",{opacity:0,x:-20},{opacity:1,x:0,duration:.5,ease:"power3.out"},0.05);
 if(document.getElementById("f03-definicion-tg"))tl.fromTo("#f03-definicion-tg",{opacity:0,y:-10},{opacity:1,y:0,duration:.5,ease:"back.out(2)"},1.85);
-tl.fromTo("#f03-definicion-pg",{scaleX:0.25},{scaleX:0.38,duration:D,ease:"none"},0);
+tl.fromTo("#f03-definicion-pfill",{scaleX:0.1921},{scaleX:0.3595,duration:D,ease:"none"},0);
+const tcp={v:13.077};const tce=document.getElementById("f03-definicion-tc");const fmt=(x)=>{const f=Math.floor((x%1)*30),s=Math.floor(x)%60,m=Math.floor(x/60);return [m,s,f].map(n=>String(n).padStart(2,"0")).join(":")};tl.fromTo(tcp,{v:13.077},{v:24.469,duration:D,ease:"none",onUpdate:()=>{tce.textContent=fmt(tcp.v)}},0);
 tl.fromTo(q("#f03-definicion-at .f03-definicion-w"),{opacity:0,y:28,filter:"blur(8px)"},{opacity:1,y:0,filter:"blur(0px)",duration:.55,ease:"power3.out",stagger:{amount:2.0}},0.15);
 
 tl.fromTo("#f03-definicion-panel",{opacity:0,y:40},{opacity:1,y:0,duration:.9,ease:"power3.out"},0.6);

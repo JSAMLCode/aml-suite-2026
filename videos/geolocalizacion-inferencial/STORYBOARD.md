@@ -125,7 +125,7 @@ keyMessage: El proyecto necesita un dueño definido, Tecnología o Cumplimiento.
 
 ## Frame 8 — Fuente
 
-- scene: Tarjeta de fuente estilo nota al pie: Acuerdo 1-2026 de la SBP, arts. 14 y 53; firma "José Antonio Serrano · AML GRC" con crédito "Motion Graphics"; #PBC #Cumplimiento.
+- scene: Tarjeta de fuente estilo nota al pie: Acuerdo 1-2026 de la SBP, arts. 14 y 53; #PBC #Cumplimiento.
 - voiceover: "Fuente: Acuerdo uno guion dos mil veintiséis de la SBP, artículos catorce y cincuenta y tres."
 - duration: 5.547s
 - transition_in: crossfade
@@ -138,3 +138,19 @@ keyMessage: El proyecto necesita un dueño definido, Tecnología o Cumplimiento.
 
 narrativeRole: Cita la fuente normativa y firma la pieza.
 keyMessage: Todo lo dicho se apoya en el Acuerdo 1-2026 de la SBP, arts. 14 y 53.
+
+## Frame 9 — Firma
+
+- scene: Globo wireframe con pin dorado y rayos de luz; "JOSÉ ANTONIO SERRANO", regla dorada, "AML · CUMPLIMIENTO · GRC", credenciales y crédito "Motion Graphics".
+- voiceover: ""
+- duration: 5s
+- transition_in: crossfade
+- status: animated
+- src: compositions/frames/09-firma.html
+- type: branding
+- persuasion: Citation / source
+- beat: authority
+- blueprint: logo-assemble-lockup
+
+narrativeRole: Firma del autor con credenciales, tomada del video de referencia del usuario.
+keyMessage: La pieza la firma José Antonio Serrano, AML · Cumplimiento · GRC.

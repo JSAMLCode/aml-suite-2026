@@ -7,12 +7,18 @@
 .f01-fecha-stage{position:absolute;inset:0}
 .f01-fecha-a{position:absolute}
 .f01-fecha-D{font-family:'Space Grotesk',Inter,sans-serif;letter-spacing:-.02em;line-height:1.12}
-.f01-fecha-ey{position:absolute;left:65px;top:50px;font-family:'Space Grotesk',Inter,sans-serif;text-transform:uppercase;letter-spacing:.08em;color:#2FB8FF;font-weight:600;font-size:30px}
-.f01-fecha-tg{position:absolute;right:65px;top:44px;border:1px solid rgba(169,188,204,.3);color:#A9BCCC;border-radius:100px;font-size:26px;padding:8px 24px}
-.f01-fecha-at{position:absolute;left:65px;width:930px;top:136px;font-family:'Space Grotesk',Inter,sans-serif;font-weight:600;letter-spacing:-.02em;line-height:1.14;font-size:64px}
+.f01-fecha-ey{position:absolute;left:65px;top:76px;font-family:'Space Grotesk',Inter,sans-serif;text-transform:uppercase;letter-spacing:.08em;color:#2FB8FF;font-weight:600;font-size:30px}
+.f01-fecha-tg{position:absolute;right:65px;top:70px;border:1px solid rgba(169,188,204,.3);color:#A9BCCC;border-radius:100px;font-size:26px;padding:8px 24px}
+.f01-fecha-at{position:absolute;left:65px;width:930px;top:150px;font-family:'Space Grotesk',Inter,sans-serif;font-weight:600;letter-spacing:-.02em;line-height:1.14;font-size:62px}
 .f01-fecha-at .f01-fecha-k{color:#2FB8FF}
 .f01-fecha-w{display:inline-block}
-.f01-fecha-src{position:absolute;left:65px;top:1008px;font-size:24px;color:#6F8799}
+.f01-fecha-src{position:absolute;left:65px;top:982px;font-size:22px;color:#6F8799}
+.f01-fecha-hudt{position:absolute;left:65px;top:26px;display:flex;align-items:center;gap:12px;font-family:'Space Grotesk',Inter,sans-serif;font-size:17px;font-weight:600;letter-spacing:.16em;color:#A9BCCC;text-transform:uppercase}
+.f01-fecha-hudt i{display:inline-block;width:9px;height:9px;border-radius:50%;background:#FF5C6C}
+.f01-fecha-tc{position:absolute;right:65px;top:26px;font-family:'Space Grotesk',Inter,sans-serif;font-size:17px;font-weight:600;letter-spacing:.14em;color:#A9BCCC}
+.f01-fecha-hudb{position:absolute;left:65px;top:1036px;font-family:'Space Grotesk',Inter,sans-serif;font-size:15px;font-weight:600;letter-spacing:.16em;color:#6F8799;text-transform:uppercase}
+.f01-fecha-ptrack{position:absolute;right:65px;top:1044px;width:300px;height:2px;background:rgba(169,188,204,.18)}
+.f01-fecha-pfill{position:absolute;left:0;top:0;width:100%;height:100%;background:#D9B26A;transform-origin:0 50%;box-shadow:0 0 10px rgba(217,178,106,.6)}
 .f01-fecha-pg{position:absolute;left:0;bottom:0;height:5px;background:#2FB8FF;transform-origin:0 50%}
 .f01-fecha-glass{position:absolute;background:linear-gradient(160deg,rgba(255,255,255,.08),rgba(255,255,255,.02));border:1px solid rgba(169,188,204,.24);border-radius:22px}
 .f01-fecha-glow{position:absolute;border-radius:50%;background:radial-gradient(circle,rgba(34,81,255,.55),transparent 65%)}
@@ -24,7 +30,8 @@
 <div class="clip f01-fecha-bg" id="f01-fecha-bgclip" data-start="0" data-duration="3.849" data-track-index="0"></div>
 <div class="f01-fecha-stage" id="f01-fecha-stage">
 <div class="f01-fecha-grid" id="f01-fecha-grid"></div>
-<div class="f01-fecha-glow" id="f01-fecha-glow" style="left:190px;top:200px;width:700px;height:700px"></div>
+<div id="f01-fecha-rays" style="position:absolute;left:-210.0px;top:-210.0px;width:1500px;height:1500px;border-radius:50%;opacity:0.55;background:repeating-conic-gradient(from 0deg,rgba(120,180,255,.13) 0deg 3deg,transparent 3deg 14deg);-webkit-mask-image:radial-gradient(circle,#000 8%,transparent 70%);mask-image:radial-gradient(circle,#000 8%,transparent 70%)"></div><div class="f01-fecha-glow" id="f01-fecha-glow" style="left:190px;top:200px;width:700px;height:700px"></div>
+<div class="f01-fecha-a" style="left:240px;top:240px;width:600px;height:600px"><svg id="f01-fecha-globe" width="600" height="600" viewBox="0 0 600 600" style="position:absolute;opacity:0.45"><circle cx="300.0" cy="300.0" r="296.0" fill="rgba(34,81,255,.10)" stroke="rgba(47,184,255,.75)" stroke-width="2"/><ellipse cx="300.0" cy="300.0" rx="74.0" ry="296.0" fill="none" stroke="rgba(47,184,255,.32)" stroke-width="1.2"/><ellipse cx="300.0" cy="300.0" rx="162.8" ry="296.0" fill="none" stroke="rgba(47,184,255,.32)" stroke-width="1.2"/><ellipse cx="300.0" cy="300.0" rx="242.7" ry="296.0" fill="none" stroke="rgba(47,184,255,.32)" stroke-width="1.2"/><ellipse cx="300.0" cy="122.4" rx="236.8" ry="33.2" fill="none" stroke="rgba(47,184,255,.28)" stroke-width="1.1"/><ellipse cx="300.0" cy="211.2" rx="282.4" ry="39.5" fill="none" stroke="rgba(47,184,255,.28)" stroke-width="1.1"/><ellipse cx="300.0" cy="300.0" rx="296.0" ry="41.4" fill="none" stroke="rgba(47,184,255,.28)" stroke-width="1.1"/><ellipse cx="300.0" cy="388.8" rx="282.4" ry="39.5" fill="none" stroke="rgba(47,184,255,.28)" stroke-width="1.1"/><ellipse cx="300.0" cy="477.6" rx="236.8" ry="33.2" fill="none" stroke="rgba(47,184,255,.28)" stroke-width="1.1"/><circle class="f01-fecha-gd" cx="359.2" cy="196.4" r="3.6" fill="#D9B26A"/><circle class="f01-fecha-gd" cx="196.4" cy="270.4" r="2.6" fill="#2FB8FF"/><circle class="f01-fecha-gd" cx="433.2" cy="344.4" r="2.6" fill="#2FB8FF"/><circle class="f01-fecha-gd" cx="270.4" cy="418.4" r="3.6" fill="#2FB8FF"/><circle class="f01-fecha-gd" cx="329.6" cy="314.8" r="2.6" fill="#D9B26A"/><circle class="f01-fecha-gd" cx="152.0" cy="388.8" r="2.6" fill="#2FB8FF"/><circle class="f01-fecha-gd" cx="388.8" cy="122.4" r="3.6" fill="#2FB8FF"/><circle class="f01-fecha-gd" cx="462.8" cy="226.0" r="2.6" fill="#2FB8FF"/><circle class="f01-fecha-gd" cx="226.0" cy="137.2" r="2.6" fill="#D9B26A"/><circle class="f01-fecha-gd" cx="300.0" cy="240.8" r="3.6" fill="#2FB8FF"/></svg></div>
 <div class="f01-fecha-a f01-fecha-ring" id="f01-fecha-r1" style="left:110px;top:90px;width:860px;height:860px"></div>
 <div class="f01-fecha-a f01-fecha-ring" id="f01-fecha-r2" style="left:230px;top:210px;width:620px;height:620px"></div>
 <div class="f01-fecha-a f01-fecha-ring" id="f01-fecha-r3" style="left:350px;top:330px;width:380px;height:380px"></div>
@@ -32,7 +39,7 @@
 <div class="f01-fecha-a f01-fecha-D" id="f01-fecha-dm" style="left:0;right:0;top:250px;text-align:center;font-weight:700;font-size:160px">30 · 06</div>
 <div class="f01-fecha-a f01-fecha-D" id="f01-fecha-yr" style="left:0;right:0;top:470px;text-align:center;font-weight:700;font-size:270px;color:#2FB8FF;line-height:1">2027</div>
 <div class="f01-fecha-a" id="f01-fecha-sub" style="left:0;right:0;top:800px;text-align:center;font-size:38px;color:#A9BCCC;font-weight:500">Plazo para incorporar la geolocalización inferencial</div>
-<div class="f01-fecha-pg" id="f01-fecha-pg" style="width:100%"></div>
+<div class="f01-fecha-hudt" id="f01-fecha-hudt"><i></i>José Antonio Serrano · AML · Cumplimiento · GRC</div><div class="f01-fecha-tc" id="f01-fecha-tc">00:00:00</div><div class="f01-fecha-hudb" id="f01-fecha-hudb">Acuerdo SBP 1-2026 · Arts. 14 y 53</div><div class="f01-fecha-ptrack"><div class="f01-fecha-pfill" id="f01-fecha-pfill"></div></div>
 </div>
 </div>
 <script src="assets/vendor/gsap.min.js"></script>
@@ -44,9 +51,12 @@ const q=(s)=>document.querySelectorAll(s);
 tl.fromTo("#f01-fecha-grid",{x:0,y:0},{x:-43,y:-22,duration:D,ease:"none"},0);
 tl.fromTo("#f01-fecha-ey",{opacity:0,x:-20},{opacity:1,x:0,duration:.5,ease:"power3.out"},0.05);
 if(document.getElementById("f01-fecha-tg"))tl.fromTo("#f01-fecha-tg",{opacity:0,y:-10},{opacity:1,y:0,duration:.5,ease:"back.out(2)"},0.15);
-tl.fromTo("#f01-fecha-pg",{scaleX:0},{scaleX:0.12,duration:D,ease:"none"},0);
+tl.fromTo("#f01-fecha-pfill",{scaleX:0.0000},{scaleX:0.0492,duration:D,ease:"none"},0);
+const tcp={v:0.000};const tce=document.getElementById("f01-fecha-tc");const fmt=(x)=>{const f=Math.floor((x%1)*30),s=Math.floor(x)%60,m=Math.floor(x/60);return [m,s,f].map(n=>String(n).padStart(2,"0")).join(":")};tl.fromTo(tcp,{v:0.000},{v:3.349,duration:D,ease:"none",onUpdate:()=>{tce.textContent=fmt(tcp.v)}},0);
 
 tl.fromTo("#f01-fecha-stage",{scale:1},{scale:1.06,duration:D,ease:"none",transformOrigin:"50% 52%"},0);
+tl.fromTo("#f01-fecha-rays",{rotation:0,opacity:0},{rotation:25,opacity:.55,duration:D,ease:"none"},0);
+tl.fromTo("#f01-fecha-globe",{rotation:-8,scale:.9},{rotation:8,scale:1.02,duration:D,ease:"none"},0);
 tl.fromTo(["#f01-fecha-r3","#f01-fecha-r2","#f01-fecha-r1"],{scale:.4,opacity:0},{scale:1,opacity:1,duration:1.4,ease:"expo.out",stagger:.18},0);
 tl.fromTo("#f01-fecha-glow",{opacity:0,scale:.6},{opacity:1,scale:1,duration:1.6,ease:"power2.out"},0);
 tl.fromTo("#f01-fecha-dm",{opacity:0,y:40,scale:1.08},{opacity:1,y:0,scale:1,duration:.8,ease:"power4.out"},0.1);

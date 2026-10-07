@@ -1,5 +1,8 @@
 {
-  "bgm": null,
+  "bgm": {
+    "path": "assets/bgm/score.wav",
+    "volume": 0.55
+  },
   "bgm_pending": false,
   "voices": [
     {

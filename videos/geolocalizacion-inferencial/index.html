@@ -37,7 +37,7 @@
       id="root"
       data-composition-id="main"
       data-start="0"
-      data-duration="63.061"
+      data-duration="68.061"
       data-width="1080"
       data-height="1080"
     >
@@ -173,7 +173,7 @@
         data-composition-id="08-fuente"
         data-composition-src="compositions/frames/08-fuente.html"
         data-start="57.514"
-        data-duration="5.547"
+        data-duration="6.047"
         data-track-index="1"
       ></div>
       <audio
@@ -183,6 +183,26 @@
         data-duration="5.547"
         data-track-index="10"
         data-volume="1"
+      ></audio>
+
+      <div
+        id="el-09-firma"
+        class="scene"
+        data-composition-id="09-firma"
+        data-composition-src="compositions/frames/09-firma.html"
+        data-start="63.061"
+        data-duration="5"
+        data-track-index="0"
+      ></div>
+
+      <!-- BGM -->
+      <audio
+        id="el-bgm"
+        src="assets/bgm/score.wav"
+        data-start="0"
+        data-duration="68.061"
+        data-track-index="11"
+        data-volume="0.55"
       ></audio>
 
     </div>
@@ -213,7 +233,10 @@
         tl.to("#el-07-pregunta", { opacity: 0, duration: 0.5, ease: "power2.inOut" }, 57.514);
         tl.fromTo("#el-08-fuente", { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "power2.inOut" }, 57.514);
         tl.addLabel("hf:transition:07-pregunta:08-fuente:crossfade", 57.514);
-        tl.to({}, { duration: 63.061 }, 0); // full-span anchor — main.duration() == composition total (Studio master duration)
+        tl.to("#el-08-fuente", { opacity: 0, duration: 0.5, ease: "power2.inOut" }, 63.061);
+        tl.fromTo("#el-09-firma", { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "power2.inOut" }, 63.061);
+        tl.addLabel("hf:transition:08-fuente:09-firma:crossfade", 63.061);
+        tl.to({}, { duration: 68.061 }, 0); // full-span anchor — main.duration() == composition total (Studio master duration)
       })();
     </script>
   </body>
