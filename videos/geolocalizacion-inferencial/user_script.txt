@@ -1,0 +1,10 @@
+30 de junio de 2027.
+Es el plazo del artículo 53 para que los bancos que abren cuentas por medios digitales o remotos incorporen la geolocalización inferencial.
+Ya no es opcional. El artículo 14 la exige como fuente primaria de evaluación de riesgo, y la define como estimar la ubicación del solicitante y del dispositivo sin necesidad de coordenadas físicas directas.
+Las señales que menciona el texto: dirección IP, tipo de red, proveedor de internet, VPN, proxies, redes de anonimización, zona horaria y configuración regional del dispositivo.
+Sirve para dos cosas: verificar el domicilio que declara el cliente y frenar aperturas desde jurisdicciones de alto riesgo, sancionadas o que no cuadran con lo declarado.
+Nueve meses parecen muchos. Pero hay que decidir si se construye o se compra, integrar con la plataforma de apertura, calibrar y documentar en el manual.
+¿Su banco ya definió quién es el dueño de este proyecto: Tecnología o Cumplimiento?
+#PBC #Cumplimiento
+
+Primer comentario: Fuente: Acuerdo 1-2026 de la SBP, artículo 14 y artículo 53.

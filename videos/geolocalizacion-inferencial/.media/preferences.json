@@ -1,0 +1,55 @@
+{
+  "version": 1,
+  "preferences": {
+    "destination": {
+      "value": "linkedin-feed",
+      "confirmed_in": [
+        "geolocalizacion-inferencial"
+      ],
+      "updated_at": "2026-10-07T02:13:18.632Z"
+    },
+    "aspect": {
+      "value": "1080x1080",
+      "confirmed_in": [
+        "geolocalizacion-inferencial"
+      ],
+      "updated_at": "2026-10-07T02:13:18.683Z"
+    },
+    "language": {
+      "value": "es",
+      "confirmed_in": [
+        "geolocalizacion-inferencial"
+      ],
+      "updated_at": "2026-10-07T02:13:18.761Z"
+    },
+    "voice": {
+      "value": "ef_dora",
+      "confirmed_in": [
+        "geolocalizacion-inferencial"
+      ],
+      "updated_at": "2026-10-07T02:13:18.873Z"
+    },
+    "flow": {
+      "value": "automation",
+      "confirmed_in": [
+        "geolocalizacion-inferencial"
+      ],
+      "updated_at": "2026-10-07T02:13:19.006Z"
+    },
+    "storyboard": {
+      "value": "yes",
+      "confirmed_in": [
+        "geolocalizacion-inferencial"
+      ],
+      "updated_at": "2026-10-07T02:13:19.124Z"
+    },
+    "style_preset.faceless-explainer": {
+      "value": "blue-professional",
+      "confirmed_in": [
+        "geolocalizacion-inferencial"
+      ],
+      "updated_at": "2026-10-07T02:13:19.198Z"
+    }
+  },
+  "sightings": {}
+}
