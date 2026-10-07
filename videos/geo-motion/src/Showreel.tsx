@@ -1,0 +1,55 @@
+import React from 'react';
+import {AbsoluteFill, Audio, Sequence, staticFile} from 'remotion';
+import {C} from './theme';
+import {loadFonts} from './fonts';
+import {TL, span} from './tl';
+import {EditorHud, Flash, Grain, Vignette} from './ui';
+import {S0Open, S1Fecha} from './scenes/S1Fecha';
+import {S2Art53} from './scenes/S2Art53';
+import {S3Art14} from './scenes/S3Art14';
+import {S4Senales} from './scenes/S4Senales';
+import {S5Controles} from './scenes/S5Controles';
+import {S6Plazo} from './scenes/S6Plazo';
+import {S7Pregunta} from './scenes/S7Pregunta';
+import {S8Fuente, S9Firma} from './scenes/S8Fuente';
+
+loadFonts();
+
+const SCENES: [string, React.FC][] = [
+  ['01', S1Fecha],
+  ['02', S2Art53],
+  ['03', S3Art14],
+  ['04', S4Senales],
+  ['05', S5Controles],
+  ['06', S6Plazo],
+  ['07', S7Pregunta],
+  ['08', S8Fuente],
+];
+
+export const Geo: React.FC = () => (
+  <AbsoluteFill style={{background: C.navy}}>
+    <Sequence durationInFrames={TL.open}>
+      <S0Open />
+    </Sequence>
+    {SCENES.map(([id, Scene]) => (
+      <Sequence key={id} from={span(id).from} durationInFrames={span(id).len}>
+        <Scene />
+      </Sequence>
+    ))}
+    <Sequence from={TL.sign} durationInFrames={TL.end - TL.sign}>
+      <S9Firma />
+    </Sequence>
+
+    {['02', '03', '04', '05', '06', '07'].map((id) => (
+      <Flash key={id} at={span(id).from} max={0.35} />
+    ))}
+
+    <Vignette />
+    <Grain />
+    <Sequence from={span('02').from} durationInFrames={TL.sign - span('02').from}>
+      <EditorHud offset={span('02').from} />
+    </Sequence>
+
+    <Audio src={staticFile('mix.wav')} />
+  </AbsoluteFill>
+);

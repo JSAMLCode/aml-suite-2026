@@ -11,9 +11,11 @@ contenido de las escenas.
 
 ## Arranque
 
-1. Copia la plantilla sin dependencias ni renders:
-   `rsync -a --exclude node_modules --exclude out videos/motion-showreel/ videos/<slug>/`
-   y luego `cd videos/<slug> && npm install`.
+1. Copia la plantilla sin dependencias ni renders (no hay rsync en el contenedor):
+   `cd videos/motion-showreel && tar cf - --exclude=node_modules --exclude=out --exclude=src/scenes . | (mkdir -p ../<slug> && cd ../<slug> && tar xf -)`
+   y luego `cd ../<slug> && npm install`.
+   Si la pieza lleva locución, parte de `videos/geo-motion/` (plantilla con voz,
+   formato 1:1): trae `align.py`, `timeline.py`, `src/tl.ts` y `score.py` con mezcla.
 2. Navegador: `remotion.config.ts` ya apunta a
    `/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell`
    con `swangle`. No descargues Chrome.
@@ -21,6 +23,27 @@ contenido de las escenas.
    formato (16:9 o 9:16), marca del cierre (SELENE, Serrano Lawyers &
    Consultants o Procompliance) y la escena de datos (qué cifras son reales).
    No inventes cifras regulatorias: si no hay datos, márcalos como ilustrativos.
+
+## Piezas con locución (explainers)
+
+Referencia: `videos/geo-motion/` (Geolocalización inferencial, 1080×1080, 75 s).
+
+- La voz manda: cada frase es una escena. `align.py` saca tiempos por palabra
+  con RMS + reparto por sílabas (la descarga de modelos de Whisper está
+  bloqueada por el proxy): fronteras de oración ±30 ms, palabras ±150 ms.
+- `timeline.py` coloca cada frase en el siguiente pulso (múltiplo de 15 f) con
+  ≥ 0,3 s de respiro y escribe `src/timeline.json`, que leen vídeo y sonido.
+- En escena, los golpes se anclan con `wf('03', 'catorce')` (fotograma local de
+  la palabra; usa `nth` si el prefijo se repite: `wf('07', 'de', 1)`). En
+  `score.py`, `cue()` hace el mismo cálculo: un único origen de verdad.
+- Patrón por escena: número de artículo gigante con `Slam` → se aparca arriba a
+  la derecha (escala sobre `transform-origin` calculado, sin traslaciones) →
+  esquema que se construye palabra a palabra. `Source` al pie en toda escena
+  normativa; "Esquema ilustrativo" cuando las duraciones o cifras no son reales.
+- Mezcla: música −10 dB bajo la voz (envolvente de 150 ms), sin saturación,
+  normalizada a −14 LUFS / −1,5 dBTP con `loudnorm`.
+- Componentes 1:1 en `src/ui.tsx`: `Words`, `Slam`, `Stamp`, `Source`,
+  `SectionLabel`, `EditorHud` (timecode global con `offset`).
 
 ## Sistema visual (no negociable)
 
