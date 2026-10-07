@@ -2,8 +2,8 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=1920, height=1080" />
-    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <meta name="viewport" content="width=1080, height=1080" />
+    <script src="assets/vendor/gsap.min.js"></script>
     <style>
       * {
         margin: 0;
@@ -12,25 +12,23 @@
       }
       html,
       body {
-        margin: 0;
-        width: 1920px;
+        width: 1080px;
         height: 1080px;
         overflow: hidden;
-        background: #0a0a0a;
+        background: #000;
       }
       #root {
+        position: relative;
+        width: 1080px;
+        height: 1080px;
+        overflow: hidden;
+        background: #051C2C;
+      }
+      .scene {
+        position: absolute;
+        inset: 0;
         width: 100%;
         height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-family: Inter, ui-sans-serif, system-ui, sans-serif;
-      }
-      #title {
-        color: #f4f4f5;
-        font-size: 72px;
-        font-weight: 600;
-        letter-spacing: -0.03em;
       }
     </style>
   </head>
@@ -39,17 +37,184 @@
       id="root"
       data-composition-id="main"
       data-start="0"
-      data-duration="10"
-      data-width="1920"
+      data-duration="63.061"
+      data-width="1080"
       data-height="1080"
     >
-      <h1 id="title" class="clip" data-start="0" data-duration="10" data-track-index="0">Title</h1>
+      <div
+        id="el-01-fecha"
+        class="scene"
+        data-composition-id="01-fecha"
+        data-composition-src="compositions/frames/01-fecha.html"
+        data-start="0"
+        data-duration="3.849"
+        data-track-index="0"
+      ></div>
+      <audio
+        id="el-01-fecha-voice"
+        src="assets/voice/01.wav"
+        data-start="0"
+        data-duration="3.349"
+        data-track-index="10"
+        data-volume="1"
+      ></audio>
+
+      <div
+        id="el-02-no-opcional"
+        class="scene"
+        data-composition-id="02-no-opcional"
+        data-composition-src="compositions/frames/02-no-opcional.html"
+        data-start="3.349"
+        data-duration="10.228"
+        data-track-index="1"
+      ></div>
+      <audio
+        id="el-02-no-opcional-voice"
+        src="assets/voice/02.wav"
+        data-start="3.349"
+        data-duration="9.728"
+        data-track-index="10"
+        data-volume="1"
+      ></audio>
+
+      <div
+        id="el-03-definicion"
+        class="scene"
+        data-composition-id="03-definicion"
+        data-composition-src="compositions/frames/03-definicion.html"
+        data-start="13.077"
+        data-duration="11.892"
+        data-track-index="0"
+      ></div>
+      <audio
+        id="el-03-definicion-voice"
+        src="assets/voice/03.wav"
+        data-start="13.077"
+        data-duration="11.392"
+        data-track-index="10"
+        data-volume="1"
+      ></audio>
+
+      <div
+        id="el-04-senales"
+        class="scene"
+        data-composition-id="04-senales"
+        data-composition-src="compositions/frames/04-senales.html"
+        data-start="24.469"
+        data-duration="10.079"
+        data-track-index="1"
+      ></div>
+      <audio
+        id="el-04-senales-voice"
+        src="assets/voice/04.wav"
+        data-start="24.469"
+        data-duration="9.579"
+        data-track-index="10"
+        data-volume="1"
+      ></audio>
+
+      <div
+        id="el-05-dos-usos"
+        class="scene"
+        data-composition-id="05-dos-usos"
+        data-composition-src="compositions/frames/05-dos-usos.html"
+        data-start="34.048"
+        data-duration="10.441"
+        data-track-index="0"
+      ></div>
+      <audio
+        id="el-05-dos-usos-voice"
+        src="assets/voice/05.wav"
+        data-start="34.048"
+        data-duration="9.941"
+        data-track-index="10"
+        data-volume="1"
+      ></audio>
+
+      <div
+        id="el-06-nueve-meses"
+        class="scene"
+        data-composition-id="06-nueve-meses"
+        data-composition-src="compositions/frames/06-nueve-meses.html"
+        data-start="43.989000000000004"
+        data-duration="9.353"
+        data-track-index="1"
+      ></div>
+      <audio
+        id="el-06-nueve-meses-voice"
+        src="assets/voice/06.wav"
+        data-start="43.989000000000004"
+        data-duration="8.853"
+        data-track-index="10"
+        data-volume="1"
+      ></audio>
+
+      <div
+        id="el-07-pregunta"
+        class="scene"
+        data-composition-id="07-pregunta"
+        data-composition-src="compositions/frames/07-pregunta.html"
+        data-start="52.842000000000006"
+        data-duration="5.172"
+        data-track-index="0"
+      ></div>
+      <audio
+        id="el-07-pregunta-voice"
+        src="assets/voice/07.wav"
+        data-start="52.842000000000006"
+        data-duration="4.672"
+        data-track-index="10"
+        data-volume="1"
+      ></audio>
+
+      <div
+        id="el-08-fuente"
+        class="scene"
+        data-composition-id="08-fuente"
+        data-composition-src="compositions/frames/08-fuente.html"
+        data-start="57.514"
+        data-duration="5.547"
+        data-track-index="1"
+      ></div>
+      <audio
+        id="el-08-fuente-voice"
+        src="assets/voice/08.wav"
+        data-start="57.514"
+        data-duration="5.547"
+        data-track-index="10"
+        data-volume="1"
+      ></audio>
+
     </div>
+
     <script>
-      const tl = gsap.timeline({ paused: true });
-      // Example: tl.fromTo("#title", { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.6 }, 0);
-      window.__timelines["main"] = tl;
-      tl.seek(0);
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = gsap.timeline({ paused: true });
+      // ── frame transitions (injected by transitions.mjs) ──
+      (function () { var tl = window.__timelines["main"];
+        tl.to("#el-01-fecha", { opacity: 0, duration: 0.5, ease: "power2.inOut" }, 3.349);
+        tl.fromTo("#el-02-no-opcional", { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "power2.inOut" }, 3.349);
+        tl.addLabel("hf:transition:01-fecha:02-no-opcional:crossfade", 3.349);
+        tl.to("#el-02-no-opcional", { x: -1080, duration: 0.5, ease: "power3.inOut" }, 13.077);
+        tl.fromTo("#el-03-definicion", { x: 1080, opacity: 1 }, { x: 0, opacity: 1, duration: 0.5, ease: "power3.inOut" }, 13.077);
+        tl.addLabel("hf:transition:02-no-opcional:03-definicion:push-slide", 13.077);
+        tl.to("#el-03-definicion", { x: -1080, duration: 0.5, ease: "power3.inOut" }, 24.469);
+        tl.fromTo("#el-04-senales", { x: 1080, opacity: 1 }, { x: 0, opacity: 1, duration: 0.5, ease: "power3.inOut" }, 24.469);
+        tl.addLabel("hf:transition:03-definicion:04-senales:push-slide", 24.469);
+        tl.to("#el-04-senales", { opacity: 0, duration: 0.5, ease: "power2.inOut" }, 34.048);
+        tl.fromTo("#el-05-dos-usos", { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "power2.inOut" }, 34.048);
+        tl.addLabel("hf:transition:04-senales:05-dos-usos:crossfade", 34.048);
+        tl.to("#el-05-dos-usos", { x: -1080, duration: 0.5, ease: "power3.inOut" }, 43.989);
+        tl.fromTo("#el-06-nueve-meses", { x: 1080, opacity: 1 }, { x: 0, opacity: 1, duration: 0.5, ease: "power3.inOut" }, 43.989);
+        tl.addLabel("hf:transition:05-dos-usos:06-nueve-meses:push-slide", 43.989);
+        tl.to("#el-06-nueve-meses", { opacity: 0, duration: 0.5, ease: "power2.inOut" }, 52.842);
+        tl.fromTo("#el-07-pregunta", { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "power2.inOut" }, 52.842);
+        tl.addLabel("hf:transition:06-nueve-meses:07-pregunta:crossfade", 52.842);
+        tl.to("#el-07-pregunta", { opacity: 0, duration: 0.5, ease: "power2.inOut" }, 57.514);
+        tl.fromTo("#el-08-fuente", { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "power2.inOut" }, 57.514);
+        tl.addLabel("hf:transition:07-pregunta:08-fuente:crossfade", 57.514);
+        tl.to({}, { duration: 63.061 }, 0); // full-span anchor — main.duration() == composition total (Studio master duration)
+      })();
     </script>
   </body>
 </html>

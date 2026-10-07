@@ -1,0 +1,61 @@
+<template>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap');
+#root{position:absolute;inset:0;width:1080px;height:1080px;overflow:hidden;font-family:Inter,sans-serif;color:#fff}
+.f01-fecha-bg{position:absolute;inset:0;background:radial-gradient(120% 90% at 70% 20%,#0f3a5c 0%,#051C2C 55%,#030F18 100%)}
+.f01-fecha-grid{position:absolute;inset:-60px;background-image:linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px);background-size:43px 43px;-webkit-mask-image:radial-gradient(60% 60% at 50% 45%,#000 20%,transparent 100%);mask-image:radial-gradient(60% 60% at 50% 45%,#000 20%,transparent 100%)}
+.f01-fecha-stage{position:absolute;inset:0}
+.f01-fecha-a{position:absolute}
+.f01-fecha-D{font-family:'Space Grotesk',Inter,sans-serif;letter-spacing:-.02em;line-height:1.12}
+.f01-fecha-ey{position:absolute;left:65px;top:50px;font-family:'Space Grotesk',Inter,sans-serif;text-transform:uppercase;letter-spacing:.08em;color:#2FB8FF;font-weight:600;font-size:30px}
+.f01-fecha-tg{position:absolute;right:65px;top:44px;border:1px solid rgba(169,188,204,.3);color:#A9BCCC;border-radius:100px;font-size:26px;padding:8px 24px}
+.f01-fecha-at{position:absolute;left:65px;width:930px;top:136px;font-family:'Space Grotesk',Inter,sans-serif;font-weight:600;letter-spacing:-.02em;line-height:1.14;font-size:64px}
+.f01-fecha-at .f01-fecha-k{color:#2FB8FF}
+.f01-fecha-w{display:inline-block}
+.f01-fecha-src{position:absolute;left:65px;top:1008px;font-size:24px;color:#6F8799}
+.f01-fecha-pg{position:absolute;left:0;bottom:0;height:5px;background:#2FB8FF;transform-origin:0 50%}
+.f01-fecha-glass{position:absolute;background:linear-gradient(160deg,rgba(255,255,255,.08),rgba(255,255,255,.02));border:1px solid rgba(169,188,204,.24);border-radius:22px}
+.f01-fecha-glow{position:absolute;border-radius:50%;background:radial-gradient(circle,rgba(34,81,255,.55),transparent 65%)}
+.f01-fecha-nd{position:absolute;display:flex;align-items:center;justify-content:center;text-align:center;font-family:'Space Grotesk',Inter,sans-serif;font-weight:500;color:#fff;padding:0 14px;box-sizing:border-box}
+.f01-fecha-sweep{position:absolute;top:-20%;width:180px;height:140%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.10),transparent);transform:rotate(18deg)}
+.f01-fecha-ring{border-radius:50%;border:1.5px solid rgba(47,184,255,.28)}
+</style>
+<div id="root" data-composition-id="01-fecha" data-width="1080" data-height="1080" data-duration="3.849">
+<div class="clip f01-fecha-bg" id="f01-fecha-bgclip" data-start="0" data-duration="3.849" data-track-index="0"></div>
+<div class="f01-fecha-stage" id="f01-fecha-stage">
+<div class="f01-fecha-grid" id="f01-fecha-grid"></div>
+<div class="f01-fecha-glow" id="f01-fecha-glow" style="left:190px;top:200px;width:700px;height:700px"></div>
+<div class="f01-fecha-a f01-fecha-ring" id="f01-fecha-r1" style="left:110px;top:90px;width:860px;height:860px"></div>
+<div class="f01-fecha-a f01-fecha-ring" id="f01-fecha-r2" style="left:230px;top:210px;width:620px;height:620px"></div>
+<div class="f01-fecha-a f01-fecha-ring" id="f01-fecha-r3" style="left:350px;top:330px;width:380px;height:380px"></div>
+<div class="f01-fecha-ey" id="f01-fecha-ey">Acuerdo 1-2026 · SBP</div><div class="f01-fecha-tg" id="f01-fecha-tg">PBC</div>
+<div class="f01-fecha-a f01-fecha-D" id="f01-fecha-dm" style="left:0;right:0;top:250px;text-align:center;font-weight:700;font-size:160px">30 · 06</div>
+<div class="f01-fecha-a f01-fecha-D" id="f01-fecha-yr" style="left:0;right:0;top:470px;text-align:center;font-weight:700;font-size:270px;color:#2FB8FF;line-height:1">2027</div>
+<div class="f01-fecha-a" id="f01-fecha-sub" style="left:0;right:0;top:800px;text-align:center;font-size:38px;color:#A9BCCC;font-weight:500">Plazo para incorporar la geolocalización inferencial</div>
+<div class="f01-fecha-pg" id="f01-fecha-pg" style="width:100%"></div>
+</div>
+</div>
+<script src="assets/vendor/gsap.min.js"></script>
+<script>
+(function(){
+const D=3.349;
+const tl=gsap.timeline({paused:true});
+const q=(s)=>document.querySelectorAll(s);
+tl.fromTo("#f01-fecha-grid",{x:0,y:0},{x:-43,y:-22,duration:D,ease:"none"},0);
+tl.fromTo("#f01-fecha-ey",{opacity:0,x:-20},{opacity:1,x:0,duration:.5,ease:"power3.out"},0.05);
+if(document.getElementById("f01-fecha-tg"))tl.fromTo("#f01-fecha-tg",{opacity:0,y:-10},{opacity:1,y:0,duration:.5,ease:"back.out(2)"},0.15);
+tl.fromTo("#f01-fecha-pg",{scaleX:0},{scaleX:0.12,duration:D,ease:"none"},0);
+
+tl.fromTo("#f01-fecha-stage",{scale:1},{scale:1.06,duration:D,ease:"none",transformOrigin:"50% 52%"},0);
+tl.fromTo(["#f01-fecha-r3","#f01-fecha-r2","#f01-fecha-r1"],{scale:.4,opacity:0},{scale:1,opacity:1,duration:1.4,ease:"expo.out",stagger:.18},0);
+tl.fromTo("#f01-fecha-glow",{opacity:0,scale:.6},{opacity:1,scale:1,duration:1.6,ease:"power2.out"},0);
+tl.fromTo("#f01-fecha-dm",{opacity:0,y:40,scale:1.08},{opacity:1,y:0,scale:1,duration:.8,ease:"power4.out"},0.1);
+const yr={v:1990}; const el=document.getElementById("f01-fecha-yr");
+tl.fromTo("#f01-fecha-yr",{opacity:0,scale:.85},{opacity:1,scale:1,duration:.7,ease:"back.out(1.6)"},0.35);
+tl.fromTo(yr,{v:1990},{v:2027,duration:1.1,ease:"power3.out",onUpdate:()=>{el.textContent=Math.round(yr.v)}},0.35);
+tl.fromTo("#f01-fecha-sub",{opacity:0,y:20},{opacity:1,y:0,duration:.6,ease:"power3.out"},1.81);
+
+window.__timelines["01-fecha"]=tl;
+})();
+</script>
+</template>

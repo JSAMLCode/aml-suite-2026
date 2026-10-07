@@ -1,0 +1,64 @@
+<template>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap');
+#root{position:absolute;inset:0;width:1080px;height:1080px;overflow:hidden;font-family:Inter,sans-serif;color:#fff}
+.f08-fuente-bg{position:absolute;inset:0;background:radial-gradient(120% 90% at 70% 20%,#0f3a5c 0%,#051C2C 55%,#030F18 100%)}
+.f08-fuente-grid{position:absolute;inset:-60px;background-image:linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px);background-size:43px 43px;-webkit-mask-image:radial-gradient(60% 60% at 50% 45%,#000 20%,transparent 100%);mask-image:radial-gradient(60% 60% at 50% 45%,#000 20%,transparent 100%)}
+.f08-fuente-stage{position:absolute;inset:0}
+.f08-fuente-a{position:absolute}
+.f08-fuente-D{font-family:'Space Grotesk',Inter,sans-serif;letter-spacing:-.02em;line-height:1.12}
+.f08-fuente-ey{position:absolute;left:65px;top:50px;font-family:'Space Grotesk',Inter,sans-serif;text-transform:uppercase;letter-spacing:.08em;color:#2FB8FF;font-weight:600;font-size:30px}
+.f08-fuente-tg{position:absolute;right:65px;top:44px;border:1px solid rgba(169,188,204,.3);color:#A9BCCC;border-radius:100px;font-size:26px;padding:8px 24px}
+.f08-fuente-at{position:absolute;left:65px;width:930px;top:136px;font-family:'Space Grotesk',Inter,sans-serif;font-weight:600;letter-spacing:-.02em;line-height:1.14;font-size:64px}
+.f08-fuente-at .f08-fuente-k{color:#2FB8FF}
+.f08-fuente-w{display:inline-block}
+.f08-fuente-src{position:absolute;left:65px;top:1008px;font-size:24px;color:#6F8799}
+.f08-fuente-pg{position:absolute;left:0;bottom:0;height:5px;background:#2FB8FF;transform-origin:0 50%}
+.f08-fuente-glass{position:absolute;background:linear-gradient(160deg,rgba(255,255,255,.08),rgba(255,255,255,.02));border:1px solid rgba(169,188,204,.24);border-radius:22px}
+.f08-fuente-glow{position:absolute;border-radius:50%;background:radial-gradient(circle,rgba(34,81,255,.55),transparent 65%)}
+.f08-fuente-nd{position:absolute;display:flex;align-items:center;justify-content:center;text-align:center;font-family:'Space Grotesk',Inter,sans-serif;font-weight:500;color:#fff;padding:0 14px;box-sizing:border-box}
+.f08-fuente-sweep{position:absolute;top:-20%;width:180px;height:140%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.10),transparent);transform:rotate(18deg)}
+
+</style>
+<div id="root" data-composition-id="08-fuente" data-width="1080" data-height="1080" data-duration="5.547">
+<div class="clip f08-fuente-bg" id="f08-fuente-bgclip" data-start="0" data-duration="5.547" data-track-index="0"></div>
+<div class="f08-fuente-stage" id="f08-fuente-stage">
+<div class="f08-fuente-grid" id="f08-fuente-grid"></div>
+<div class="f08-fuente-glow" id="f08-fuente-glow" style="left:-120px;top:-120px;width:760px;height:760px"></div>
+<div class="f08-fuente-a" id="f08-fuente-acc" style="left:65px;top:330px;width:65px;height:6px;background:#2FB8FF;transform-origin:0 50%"></div>
+<div class="f08-fuente-ey" id="f08-fuente-ey" style="top:360px">Fuente</div>
+<div class="f08-fuente-a" id="f08-fuente-tw" style="left:65px;top:420px;width:950px;height:110px;overflow:hidden">
+ <div class="f08-fuente-D" id="f08-fuente-ttl" style="font-weight:700;font-size:76px;white-space:nowrap">Acuerdo 1-2026 de la SBP</div>
+ <div class="f08-fuente-sweep" id="f08-fuente-sweep" style="left:-240px"></div></div>
+<div class="f08-fuente-a f08-fuente-D" id="f08-fuente-art" style="left:65px;top:560px;font-size:54px;color:#2FB8FF;font-weight:600">Artículo 14 · Artículo 53</div>
+<div class="f08-fuente-a" id="f08-fuente-rule" style="left:65px;top:760px;width:950px;height:1px;background:rgba(169,188,204,.3);transform-origin:0 50%"></div>
+<div class="f08-fuente-a f08-fuente-D" id="f08-fuente-sig" style="left:65px;top:800px;font-size:40px;font-weight:600">José Antonio Serrano <span style="color:#2FB8FF">· AML GRC</span></div>
+<div class="f08-fuente-a" id="f08-fuente-mg" style="right:65px;top:812px;font-size:24px;color:#6F8799;letter-spacing:.14em;text-transform:uppercase;font-family:'Space Grotesk',Inter,sans-serif;font-weight:500">Motion Graphics</div>
+<div class="f08-fuente-a f08-fuente-D" id="f08-fuente-hs" style="left:65px;top:870px;font-size:32px;color:#2FB8FF;font-weight:600">#PBC  #Cumplimiento</div>
+<div class="f08-fuente-pg" id="f08-fuente-pg" style="width:100%"></div>
+</div>
+</div>
+<script src="assets/vendor/gsap.min.js"></script>
+<script>
+(function(){
+const D=5.547;
+const tl=gsap.timeline({paused:true});
+const q=(s)=>document.querySelectorAll(s);
+tl.fromTo("#f08-fuente-grid",{x:0,y:0},{x:-43,y:-22,duration:D,ease:"none"},0);
+tl.fromTo("#f08-fuente-pg",{scaleX:0.88},{scaleX:1,duration:D,ease:"none"},0);
+
+tl.fromTo("#f08-fuente-glow",{opacity:0,scale:.7},{opacity:.8,scale:1,duration:1.6,ease:"power2.out"},0);
+tl.fromTo("#f08-fuente-acc",{scaleX:0},{scaleX:1,duration:.5,ease:"power3.out"},0.1);
+tl.fromTo("#f08-fuente-ey",{opacity:0,x:-15},{opacity:1,x:0,duration:.5},0.2);
+tl.fromTo("#f08-fuente-ttl",{yPercent:110},{yPercent:0,duration:.8,ease:"power4.out"},0.3);
+tl.fromTo("#f08-fuente-art",{opacity:0,y:20},{opacity:1,y:0,duration:.6,ease:"power3.out"},3.04);
+tl.fromTo("#f08-fuente-sweep",{x:0},{x:1400,duration:1.1,ease:"power2.inOut"},1.0);
+tl.fromTo("#f08-fuente-rule",{scaleX:0},{scaleX:1,duration:.8,ease:"power3.inOut"},1.6);
+tl.fromTo(["#f08-fuente-sig","#f08-fuente-mg"],{opacity:0,y:16},{opacity:1,y:0,duration:.6,ease:"power3.out",stagger:.2},2.0);
+tl.fromTo("#f08-fuente-hs",{opacity:0},{opacity:1,duration:.6},2.6);
+tl.fromTo("#f08-fuente-stage",{scale:1},{scale:1.035,duration:D,ease:"none",transformOrigin:"30% 50%"},0);
+
+window.__timelines["08-fuente"]=tl;
+})();
+</script>
+</template>
