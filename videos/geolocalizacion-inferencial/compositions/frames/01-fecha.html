@@ -31,7 +31,7 @@
 <div class="f01-fecha-stage" id="f01-fecha-stage">
 <div class="f01-fecha-grid" id="f01-fecha-grid"></div>
 <div id="f01-fecha-rays" style="position:absolute;left:-210.0px;top:-210.0px;width:1500px;height:1500px;border-radius:50%;opacity:0.55;background:repeating-conic-gradient(from 0deg,rgba(120,180,255,.13) 0deg 3deg,transparent 3deg 14deg);-webkit-mask-image:radial-gradient(circle,#000 8%,transparent 70%);mask-image:radial-gradient(circle,#000 8%,transparent 70%)"></div><div class="f01-fecha-glow" id="f01-fecha-glow" style="left:190px;top:200px;width:700px;height:700px"></div>
-<div class="f01-fecha-a" style="left:240px;top:240px;width:600px;height:600px"><svg id="f01-fecha-globe" width="600" height="600" viewBox="0 0 600 600" style="position:absolute;opacity:0.45"><circle cx="300.0" cy="300.0" r="296.0" fill="rgba(34,81,255,.10)" stroke="rgba(47,184,255,.75)" stroke-width="2"/><ellipse cx="300.0" cy="300.0" rx="74.0" ry="296.0" fill="none" stroke="rgba(47,184,255,.32)" stroke-width="1.2"/><ellipse cx="300.0" cy="300.0" rx="162.8" ry="296.0" fill="none" stroke="rgba(47,184,255,.32)" stroke-width="1.2"/><ellipse cx="300.0" cy="300.0" rx="242.7" ry="296.0" fill="none" stroke="rgba(47,184,255,.32)" stroke-width="1.2"/><ellipse cx="300.0" cy="122.4" rx="236.8" ry="33.2" fill="none" stroke="rgba(47,184,255,.28)" stroke-width="1.1"/><ellipse cx="300.0" cy="211.2" rx="282.4" ry="39.5" fill="none" stroke="rgba(47,184,255,.28)" stroke-width="1.1"/><ellipse cx="300.0" cy="300.0" rx="296.0" ry="41.4" fill="none" stroke="rgba(47,184,255,.28)" stroke-width="1.1"/><ellipse cx="300.0" cy="388.8" rx="282.4" ry="39.5" fill="none" stroke="rgba(47,184,255,.28)" stroke-width="1.1"/><ellipse cx="300.0" cy="477.6" rx="236.8" ry="33.2" fill="none" stroke="rgba(47,184,255,.28)" stroke-width="1.1"/><circle class="f01-fecha-gd" cx="359.2" cy="196.4" r="3.6" fill="#D9B26A"/><circle class="f01-fecha-gd" cx="196.4" cy="270.4" r="2.6" fill="#2FB8FF"/><circle class="f01-fecha-gd" cx="433.2" cy="344.4" r="2.6" fill="#2FB8FF"/><circle class="f01-fecha-gd" cx="270.4" cy="418.4" r="3.6" fill="#2FB8FF"/><circle class="f01-fecha-gd" cx="329.6" cy="314.8" r="2.6" fill="#D9B26A"/><circle class="f01-fecha-gd" cx="152.0" cy="388.8" r="2.6" fill="#2FB8FF"/><circle class="f01-fecha-gd" cx="388.8" cy="122.4" r="3.6" fill="#2FB8FF"/><circle class="f01-fecha-gd" cx="462.8" cy="226.0" r="2.6" fill="#2FB8FF"/><circle class="f01-fecha-gd" cx="226.0" cy="137.2" r="2.6" fill="#D9B26A"/><circle class="f01-fecha-gd" cx="300.0" cy="240.8" r="3.6" fill="#2FB8FF"/></svg></div>
+<canvas id="f01-fecha-earth" width="800" height="800" style="position:absolute;left:140px;top:150px;width:800px;height:800px;opacity:0.62"></canvas>
 <div class="f01-fecha-a f01-fecha-ring" id="f01-fecha-r1" style="left:110px;top:90px;width:860px;height:860px"></div>
 <div class="f01-fecha-a f01-fecha-ring" id="f01-fecha-r2" style="left:230px;top:210px;width:620px;height:620px"></div>
 <div class="f01-fecha-a f01-fecha-ring" id="f01-fecha-r3" style="left:350px;top:330px;width:380px;height:380px"></div>
@@ -43,6 +43,7 @@
 </div>
 </div>
 <script src="assets/vendor/gsap.min.js"></script>
+<script src="assets/vendor/earth.js"></script>
 <script>
 (function(){
 const D=3.349;
@@ -56,7 +57,9 @@ const tcp={v:0.000};const tce=document.getElementById("f01-fecha-tc");const fmt=
 
 tl.fromTo("#f01-fecha-stage",{scale:1},{scale:1.06,duration:D,ease:"none",transformOrigin:"50% 52%"},0);
 tl.fromTo("#f01-fecha-rays",{rotation:0,opacity:0},{rotation:25,opacity:.55,duration:D,ease:"none"},0);
-tl.fromTo("#f01-fecha-globe",{rotation:-8,scale:.9},{rotation:8,scale:1.02,duration:D,ease:"none"},0);
+tl.fromTo("#f01-fecha-earth",{scale:.85},{scale:1.0,duration:D,ease:"none"},0);
+(function(){const cv=document.getElementById("f01-fecha-earth");const e={v:0};const dr=()=>{const t=tl.time();HFEarth.draw(cv,{lon:-10+(-72-(-10))*e.v,lat:18+(10-(18))*e.v,t:t,marks:[[8.98,-79.52,""]],markAlpha:Math.max(0,Math.min(1,(t-1.8)/0.6))})};dr();tl.fromTo(e,{v:0},{v:1,duration:3.349,ease:"power2.out",onUpdate:dr},0);})();
+
 tl.fromTo(["#f01-fecha-r3","#f01-fecha-r2","#f01-fecha-r1"],{scale:.4,opacity:0},{scale:1,opacity:1,duration:1.4,ease:"expo.out",stagger:.18},0);
 tl.fromTo("#f01-fecha-glow",{opacity:0,scale:.6},{opacity:1,scale:1,duration:1.6,ease:"power2.out"},0);
 tl.fromTo("#f01-fecha-dm",{opacity:0,y:40,scale:1.08},{opacity:1,y:0,scale:1,duration:.8,ease:"power4.out"},0.1);

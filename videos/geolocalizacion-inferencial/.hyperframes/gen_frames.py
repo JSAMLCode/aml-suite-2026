@@ -65,6 +65,7 @@ def wrap(fid, dur, css, body, js, final=False):
 </div>
 </div>
 <script src="assets/vendor/gsap.min.js"></script>
+<script src="assets/vendor/earth.js"></script>
 <script>
 (function(){{
 const D={dur};
@@ -118,6 +119,14 @@ def globe(fid, gid, size, pin=False, op=1.0):
                      f'<circle cx="{px:.1f}" cy="{py-r*0.02:.1f}" r="{r*0.03:.1f}" fill="#051C2C"/></g>')
     return f'<svg id="{gid}" width="{size}" height="{size}" viewBox="0 0 {size} {size}" style="position:absolute;opacity:{op}">{"".join(parts)}</svg>'
 
+def earth_html(eid, x, y, size, op=1.0):
+    return f'<canvas id="{eid}" width="{size}" height="{size}" style="position:absolute;left:{x}px;top:{y}px;width:{size}px;height:{size}px;opacity:{op}"></canvas>'
+
+def earth_js(eid, lon0, lon1, lat0, lat1, start, dur, marks='[]', ease='power2.inOut', mark_from=0.0):
+    return (f'(function(){{const cv=document.getElementById("{eid}");const e={{v:0}};'
+            f'const dr=()=>{{const t=tl.time();HFEarth.draw(cv,{{lon:{lon0}+({lon1}-({lon0}))*e.v,lat:{lat0}+({lat1}-({lat0}))*e.v,t:t,marks:{marks},markAlpha:Math.max(0,Math.min(1,(t-{mark_from})/0.6))}})}};'
+            f'dr();tl.fromTo(e,{{v:0}},{{v:1,duration:{dur},ease:"{ease}",onUpdate:dr}},{start});}})();\n')
+
 def rays(fid, rid, cx, cy, size, op=.5):
     return (f'<div id="{rid}" style="position:absolute;left:{cx-size/2}px;top:{cy-size/2}px;width:{size}px;height:{size}px;border-radius:50%;opacity:{op};'
             f'background:repeating-conic-gradient(from 0deg,rgba(120,180,255,.13) 0deg 3deg,transparent 3deg 14deg);'
@@ -128,7 +137,7 @@ files={}
 i=0; fid='01-fecha'; D=durs[i]
 pgh,pgj=pg(fid,0,.12,D)
 body=f"""{rays(fid,fid+'-rays',540,540,1500,.55)}<div class="{fid}-glow" id="{fid}-glow" style="left:190px;top:200px;width:700px;height:700px"></div>
-<div class="{fid}-a" style="left:240px;top:240px;width:600px;height:600px">{globe(fid,fid+'-globe',600,False,.45)}</div>
+{earth_html(fid+'-earth',140,150,800,.62)}
 <div class="{fid}-a {fid}-ring" id="{fid}-r1" style="left:110px;top:90px;width:860px;height:860px"></div>
 <div class="{fid}-a {fid}-ring" id="{fid}-r2" style="left:230px;top:210px;width:620px;height:620px"></div>
 <div class="{fid}-a {fid}-ring" id="{fid}-r3" style="left:350px;top:330px;width:380px;height:380px"></div>
@@ -141,7 +150,8 @@ css=f".{fid}-ring{{border-radius:50%;border:1.5px solid rgba(47,184,255,.28)}}"
 js=hdr_js(fid)+pgj+f"""
 tl.fromTo("#{fid}-stage",{{scale:1}},{{scale:1.06,duration:D,ease:"none",transformOrigin:"50% 52%"}},0);
 tl.fromTo("#{fid}-rays",{{rotation:0,opacity:0}},{{rotation:25,opacity:.55,duration:D,ease:"none"}},0);
-tl.fromTo("#{fid}-globe",{{rotation:-8,scale:.9}},{{rotation:8,scale:1.02,duration:D,ease:"none"}},0);
+tl.fromTo("#{fid}-earth",{{scale:.85}},{{scale:1.0,duration:D,ease:"none"}},0);
+"""+earth_js(fid+'-earth',-10,-72,18,10,0,D,'[[8.98,-79.52,""]]','power2.out',1.8)+f"""
 tl.fromTo(["#{fid}-r3","#{fid}-r2","#{fid}-r1"],{{scale:.4,opacity:0}},{{scale:1,opacity:1,duration:1.4,ease:"expo.out",stagger:.18}},0);
 tl.fromTo("#{fid}-glow",{{opacity:0,scale:.6}},{{opacity:1,scale:1,duration:1.6,ease:"power2.out"}},0);
 tl.fromTo("#{fid}-dm",{{opacity:0,y:40,scale:1.08}},{{opacity:1,y:0,scale:1,duration:.8,ease:"power4.out"}},0.1);
@@ -242,14 +252,16 @@ body=f"""{hdr(fid,'Las señales','8 señales combinadas')}
 <div class="{fid}-at" id="{fid}-at">{words(fid,'Ocho señales técnicas, combinadas, estiman la ubicación',())}</div>
 <svg class="{fid}-a" style="left:0;top:0" width="1080" height="1080">{''.join(svg_lines)}</svg>
 <div class="{fid}-glow" id="{fid}-hg" style="left:360px;top:440px;width:360px;height:360px"></div>
-<div class="{fid}-nd" id="{fid}-hub" style="left:420px;top:500px;width:240px;height:240px;border-radius:50%;background:#2251FF;font-size:30px;font-weight:700;flex-direction:column;gap:6px;overflow:hidden"><div style="position:relative;width:120px;height:120px">{globe(fid,fid+'-hglobe',120,True,1)}</div><div>Ubicación estimada</div></div>
+<div class="{fid}-a" id="{fid}-hub" style="left:390px;top:470px;width:300px;height:300px">{earth_html(fid+'-earth',0,0,300,1)}</div>
+<div class="{fid}-nd" id="{fid}-hlab" style="left:415px;top:752px;width:250px;height:48px;border-radius:100px;background:#2251FF;font-size:22px;font-weight:600">Ubicación estimada</div>
 {''.join(nb)}
 <div class="{fid}-src" id="{fid}-src">Fuente: Acuerdo 1-2026 SBP, art. 14</div>
 {pgh}"""
 js=hdr_js(fid,0.3)+pgj+title_js(fid,0.1,0.9)+f"""
 tl.fromTo("#{fid}-hub",{{opacity:0,scale:.5}},{{opacity:1,scale:1,duration:.7,ease:"back.out(1.8)"}},0.4);
 tl.fromTo("#{fid}-hg",{{opacity:0}},{{opacity:1,duration:1}},0.4);
-tl.fromTo("#{fid}-hglobe",{{rotation:-20}},{{rotation:20,duration:D,ease:"none"}},0);
+tl.fromTo("#{fid}-hlab",{{opacity:0,y:10}},{{opacity:1,y:0,duration:.5}},0.8);
+"""+earth_js(fid+'-earth',-40,-100,15,8,0,D,'[[8.98,-79.52,""]]','none',0.6)+f"""
 tl.fromTo("#{fid}-src",{{opacity:0}},{{opacity:1,duration:.6}},1.0);
 """+"\n".join(nj)
 files[fid]=wrap(fid,D,"",body,js)
@@ -384,7 +396,7 @@ pgh,pgj=pg(fid,0,1,D)
 creds=['CP/AML FIBA · ISO 37301 · 37001 · 37000 · 31000','AI Compliance Expert · LegalTech Architect','Lean Six Sigma Green Belt · Docente · Speaker']
 body=f"""{rays(fid,fid+'-rays',540,250,1400,.7)}
 <div class="{fid}-glow" id="{fid}-glow" style="left:340px;top:50px;width:400px;height:400px"></div>
-<div class="{fid}-a" id="{fid}-gw" style="left:420px;top:130px;width:240px;height:240px">{globe(fid,fid+'-globe',240,True,1)}</div>
+<div class="{fid}-a" id="{fid}-gw" style="left:385px;top:80px;width:310px;height:310px">{earth_html(fid+'-earth',0,0,310,1)}</div>
 <div class="{fid}-a {fid}-D" id="{fid}-name" style="left:0;right:0;top:450px;text-align:center;font-size:74px;font-weight:700;letter-spacing:.06em">JOSÉ ANTONIO SERRANO</div>
 <div class="{fid}-a" id="{fid}-rule" style="left:290px;top:552px;width:500px;height:2px;background:{GOLD};transform-origin:50% 50%;box-shadow:0 0 14px rgba(217,178,106,.6)"></div>
 <div class="{fid}-a {fid}-D" id="{fid}-role" style="left:0;right:0;top:580px;text-align:center;font-size:36px;font-weight:600;letter-spacing:.24em;color:{GOLD}">AML · CUMPLIMIENTO · GRC</div>
@@ -396,8 +408,7 @@ js=pgj+f"""
 tl.fromTo("#{fid}-rays",{{rotation:0,opacity:0}},{{rotation:18,opacity:.7,duration:D,ease:"none"}},0);
 tl.fromTo("#{fid}-glow",{{opacity:0,scale:.6}},{{opacity:1,scale:1,duration:1.2,ease:"power2.out"}},0);
 tl.fromTo("#{fid}-gw",{{opacity:0,scale:.6}},{{opacity:1,scale:1,duration:1,ease:"back.out(1.6)"}},0.1);
-tl.fromTo("#{fid}-globe",{{rotation:-15}},{{rotation:15,duration:D,ease:"none"}},0);
-tl.fromTo("#{fid}-globe-pin",{{y:-30,opacity:0}},{{y:0,opacity:1,duration:.6,ease:"bounce.out"}},0.7);
+"""+earth_js(fid+'-earth',-30,-79,20,9,0,D*0.8,'[[8.98,-79.52,""]]','power3.out',1.6)+f"""
 tl.fromTo("#{fid}-name",{{opacity:0,y:30,filter:"blur(10px)"}},{{opacity:1,y:0,filter:"blur(0px)",duration:.9,ease:"power3.out"}},0.5);
 tl.fromTo("#{fid}-rule",{{scaleX:0}},{{scaleX:1,duration:.8,ease:"power3.inOut"}},1.0);
 tl.fromTo("#{fid}-role",{{opacity:0,y:10}},{{opacity:1,y:0,duration:.7}},1.3);
