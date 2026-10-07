@@ -29,7 +29,14 @@ export const S8Fuente: React.FC = () => {
             ]}
           />
           <div style={{marginTop: 10}}>
-            <Words size={40} weight={700} words={[{t: 'Superintendencia de Bancos de Panamá', at: wf(ID, 'sbp'), color: C.mute}]} />
+            <Words
+              size={38}
+              weight={700}
+              words={[
+                {t: 'Superintendencia de Bancos de Panamá', at: wf(ID, 'superintendencia|sbp'), color: C.mute},
+                {t: '· SBP', at: wf(ID, 'superintendencia|sbp') + 8, color: C.goldL},
+              ]}
+            />
           </div>
         </div>
         <Stamp text="ART. 14" at={wf(ID, 'catorce')} color={C.gold} rot={-4} size={44} style={{left: 64, top: 540}} />

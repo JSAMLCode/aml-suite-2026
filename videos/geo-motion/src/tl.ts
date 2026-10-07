@@ -18,10 +18,24 @@ export const line = (id: string) => {
 };
 
 // Fotograma local (desde el inicio de la frase) de la palabra n-ésima que empieza por `word`
+// Acepta alternativas ('sbp|superintendencia') para que la escena sobreviva a un cambio de guion
 export const wf = (id: string, word: string, nth = 0) => {
-  const hits = line(id).words.filter((w) => norm(w.w).startsWith(norm(word)));
-  if (!hits[nth]) throw new Error(`"${word}" no está en la frase ${id}`);
-  return hits[nth].f;
+  for (const alt of word.split('|')) {
+    const hits = line(id).words.filter((w) => norm(w.w).startsWith(norm(alt)));
+    if (hits[nth]) return hits[nth].f;
+  }
+  throw new Error(`"${word}" no está en la frase ${id}`);
+};
+
+export const CHAPTERS: Record<string, string> = {
+  '01': 'El plazo',
+  '02': 'Artículo 53',
+  '03': 'Artículo 14',
+  '04': 'Las señales',
+  '05': 'Para qué sirve',
+  '06': 'Nueve meses',
+  '07': 'La pregunta',
+  '08': 'Fuente',
 };
 
 // Tramo de cada escena: desde su frase hasta la siguiente (o la firma)

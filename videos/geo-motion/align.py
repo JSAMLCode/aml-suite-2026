@@ -7,7 +7,10 @@ import json, re, wave
 import numpy as np
 
 SRC = '../geolocalizacion-inferencial'
-req = json.load(open(f'{SRC}/audio_request.json'))
+# Guion: script.json (actual). Audio: VOICE_DIR o la voz original
+import os
+req = json.load(open(os.environ.get('SCRIPT', 'script.json')))
+VOICE_DIR = os.environ.get('VOICE_DIR', f'{SRC}/assets/voice')
 
 
 def load(p):
@@ -24,7 +27,7 @@ def syl(w):
 
 out = []
 for line in req['lines']:
-    x, sr = load(f"{SRC}/assets/voice/{line['id']}.wav")
+    x, sr = load(f"{VOICE_DIR}/{line['id']}.wav")
     hop = sr // 100
     db = np.array([20 * np.log10(np.sqrt(np.mean(x[i:i + hop] ** 2)) + 1e-9) for i in range(0, len(x) - hop, hop)])
     v = db > -45

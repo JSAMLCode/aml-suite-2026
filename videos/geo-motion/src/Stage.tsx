@@ -1,9 +1,9 @@
 import React from 'react';
-import {AbsoluteFill, Audio, Sequence, staticFile} from 'remotion';
+import {AbsoluteFill, Sequence} from 'remotion';
 import {C} from './theme';
 import {loadFonts} from './fonts';
 import {TL, span} from './tl';
-import {EditorHud, Flash, Grain, Vignette} from './ui';
+import {Flash} from './ui';
 import {S0Open, S1Fecha} from './scenes/S1Fecha';
 import {S2Art53} from './scenes/S2Art53';
 import {S3Art14} from './scenes/S3Art14';
@@ -14,6 +14,8 @@ import {S7Pregunta} from './scenes/S7Pregunta';
 import {S8Fuente, S9Firma} from './scenes/S8Fuente';
 
 loadFonts();
+
+// Escenario 1080×1080: todas las escenas. Cada formato lo coloca y le añade su marco.
 
 const SCENES: [string, React.FC][] = [
   ['01', S1Fecha],
@@ -26,8 +28,8 @@ const SCENES: [string, React.FC][] = [
   ['08', S8Fuente],
 ];
 
-export const Geo: React.FC = () => (
-  <AbsoluteFill style={{background: C.navy}}>
+export const Stage: React.FC = () => (
+  <AbsoluteFill style={{background: C.navy, overflow: 'hidden'}}>
     <Sequence durationInFrames={TL.open}>
       <S0Open />
     </Sequence>
@@ -44,12 +46,5 @@ export const Geo: React.FC = () => (
       <Flash key={id} at={span(id).from} max={0.35} />
     ))}
 
-    <Vignette />
-    <Grain />
-    <Sequence from={span('02').from} durationInFrames={TL.sign - span('02').from}>
-      <EditorHud offset={span('02').from} />
-    </Sequence>
-
-    <Audio src={staticFile('mix.wav')} />
   </AbsoluteFill>
 );

@@ -1,5 +1,5 @@
 import React from 'react';
-import {AbsoluteFill, useCurrentFrame} from 'remotion';
+import {AbsoluteFill, useCurrentFrame, useVideoConfig} from 'remotion';
 import {C, FONT, FPS, IN, ease, gold, shake, sp} from './theme';
 import {H, W} from './tl';
 
@@ -116,6 +116,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
 
 // Capa de sala de edición: esquinas, timecode, punto REC y firma
 export const EditorHud: React.FC<{offset?: number}> = ({offset = 0}) => {
+  const {width: W, height: H} = useVideoConfig();
   const f = useCurrentFrame() + offset;
   const s = Math.floor(f / FPS);
   const tc = `00:${pad(Math.floor(s / 60))}:${pad(s % 60)}:${pad(f % FPS)}`;
@@ -140,6 +141,7 @@ export const EditorHud: React.FC<{offset?: number}> = ({offset = 0}) => {
 };
 
 export const Grain: React.FC = () => {
+  const {width: W, height: H} = useVideoConfig();
   const f = useCurrentFrame();
   return (
     <AbsoluteFill style={{pointerEvents: 'none', mixBlendMode: 'overlay', opacity: 0.16}}>

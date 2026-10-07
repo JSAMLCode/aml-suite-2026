@@ -6,8 +6,8 @@ import path from 'node:path';
 const frames = process.argv.slice(2).map(Number);
 const browserExecutable = '/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell';
 const serveUrl = await bundle({entryPoint: path.resolve('src/index.ts')});
-const composition = await selectComposition({serveUrl, id: process.env.COMP ?? 'GeoInferencial', browserExecutable});
+const composition = await selectComposition({serveUrl, id: process.env.COMP ?? 'Geo-1x1', browserExecutable});
 for (const frame of frames) {
-  await renderStill({serveUrl, composition, frame, output: `${process.env.OUTDIR ?? "out/frames"}/f${String(frame).padStart(3, '0')}.png`, browserExecutable, chromiumOptions: {gl: 'swangle'}});
+  await renderStill({serveUrl, composition, frame, output: `${process.env.OUTDIR ?? "out/frames"}/${process.env.COMP ?? ""}f${String(frame).padStart(3, '0')}.png`, browserExecutable, chromiumOptions: {gl: 'swangle'}});
   console.log('ok', frame);
 }
