@@ -1,6 +1,6 @@
 ---
 format: 1080x1080
-duration: 77s
+duration: 66s
 message: "El 30 de junio de 2027 vence el plazo del art. 53: la geolocalización inferencial ya no es opcional, y alguien debe ser dueño del proyecto."
 arc: Hook → Mandato → Definición → Señales → Usos → Plazo real → Pregunta de gobernanza → Fuente
 audience: "Oficiales de cumplimiento, riesgo y tecnología de bancos en Panamá"
@@ -10,7 +10,7 @@ music: none
 
 ## Frame 1 — La fecha
 
-- scene: Fecha monumental "30 · 06 · 2027" compuesta en tipografía grande sobre crema; el 2027 se resalta en cobalto.
+- scene: Fecha monumental sobre fondo marino con viñeta y rejilla; anillos de radar; empuje de cámara lento; "2027" en cian cuenta hacia arriba.
 - voiceover: "30 de junio de 2027. Ese es el plazo."
 - duration: 5s
 - transition_in: cut
@@ -26,7 +26,7 @@ keyMessage: Hay una fecha límite concreta y ya está en marcha.
 
 ## Frame 2 — Ya no es opcional
 
-- scene: Etiqueta "Art. 53" sobre la frase "Ya no es opcional"; la palabra "opcional" se tacha y queda "obligatoria" en cobalto.
+- scene: Título de acción "Para los bancos con apertura digital o remota, la geolocalización inferencial ya no es opcional"; interruptor que pasa de Opcional a Obligatorio con destello cian; fuente art. 53.
 - voiceover: "El artículo 53 obliga a los bancos que abren cuentas por medios digitales o remotos a incorporar la geolocalización inferencial. Ya no es opcional."
 - duration: 10s
 - transition_in: crossfade
@@ -42,7 +42,7 @@ keyMessage: Para bancos con apertura digital o remota, la geolocalización infer
 
 ## Frame 3 — Qué es
 
-- scene: Un pin de mapa sin coordenadas: dos puntos, "solicitante" y "dispositivo", se ubican dentro de una zona difusa; etiqueta "Art. 14 · fuente primaria de evaluación de riesgo".
+- scene: Título de acción sobre estimar ubicación sin coordenadas; plano de puntos con dos halos difusos (solicitante, dispositivo); foco pulsante; fuente art. 14.
 - voiceover: "El artículo 14 la exige como fuente primaria de evaluación de riesgo. Y la define así: estimar la ubicación del solicitante y del dispositivo, sin necesidad de coordenadas físicas directas."
 - duration: 12s
 - transition_in: push-slide LEFT
@@ -57,7 +57,7 @@ keyMessage: Es una estimación de ubicación del solicitante y del dispositivo, 
 
 ## Frame 4 — Las señales
 
-- scene: Cuadrícula 4×2 de tarjetas que se ensamblan en cascada: dirección IP, tipo de red, proveedor de internet, VPN, proxies, redes de anonimización, zona horaria, configuración regional.
+- scene: Exhibit hub-and-spoke: nodo central "Ubicación estimada" con las 8 señales como nodos de vidrio que se conectan al nombrarse.
 - voiceover: "Las señales: dirección IP, tipo de red, proveedor de internet, VPN, proxies, redes de anonimización, zona horaria y configuración regional del dispositivo."
 - duration: 12s
 - transition_in: push-slide LEFT
@@ -73,7 +73,7 @@ keyMessage: Son ocho señales técnicas combinadas, no una sola.
 
 ## Frame 5 — Para qué sirve
 
-- scene: Dos paneles espejo: izquierda "Verificar el domicilio declarado" (check cobalto); derecha "Frenar aperturas" desde jurisdicciones de alto riesgo, sancionadas o que no cuadran con lo declarado (señal de alto).
+- scene: Exhibit de flujo de decisión: solicitud → ubicación estimada → ✓ coincide con domicilio declarado / ✕ frenar por jurisdicción de alto riesgo, sancionada o inconsistente.
 - voiceover: "Sirve para dos cosas. Verificar el domicilio que declara el cliente. Y frenar aperturas desde jurisdicciones de alto riesgo, sancionadas, o que no cuadran con lo declarado."
 - duration: 11s
 - transition_in: crossfade
@@ -89,7 +89,7 @@ keyMessage: Valida el domicilio declarado y bloquea aperturas desde jurisdiccion
 
 ## Frame 6 — Nueve meses
 
-- scene: Línea de tiempo horizontal que avanza hasta "30·06·2027" con cuatro hitos que se encienden en orden: construir o comprar · integrar con la plataforma de apertura · calibrar · documentar en el manual.
+- scene: Exhibit tipo Gantt (esquema ilustrativo, no a escala) con cuatro frentes terminando en la línea de plazo 30·06·2027.
 - voiceover: "Nueve meses parecen muchos. Pero hay que decidir si se construye o se compra. Integrar con la plataforma de apertura. Calibrar. Y documentar en el manual."
 - duration: 13s
 - transition_in: push-slide LEFT
@@ -105,7 +105,7 @@ keyMessage: Cuatro tareas encadenadas llenan los nueve meses.
 
 ## Frame 7 — La pregunta
 
-- scene: Dos bloques "Tecnología" y "Cumplimiento" frente a frente con un signo de interrogación al centro; el resto del cuadro se despeja.
+- scene: Cuadro sostenido: haz de luz sobre dos bloques de vidrio Tecnología y Cumplimiento con un gran "?" cian al centro.
 - voiceover: "¿Su banco ya definió quién es el dueño de este proyecto? ¿Tecnología, o Cumplimiento?"
 - duration: 8s
 - transition_in: crossfade
@@ -121,7 +121,7 @@ keyMessage: El proyecto necesita un dueño definido, Tecnología o Cumplimiento.
 
 ## Frame 8 — Fuente
 
-- scene: Tarjeta limpia de cierre: "Fuente: Acuerdo 1-2026 de la SBP, art. 14 y art. 53", firma Serrano Lawyers & Consultants · Procompliance y hashtags #PBC #Cumplimiento.
+- scene: Tarjeta de fuente estilo nota al pie: Acuerdo 1-2026 de la SBP, arts. 14 y 53; firma Serrano Lawyers & Consultants · Procompliance; #PBC #Cumplimiento.
 - voiceover: "Fuente: Acuerdo uno guion dos mil veintiséis de la SBP, artículos catorce y cincuenta y tres."
 - duration: 6s
 - transition_in: crossfade

@@ -1,1 +1,15 @@
 · tts: kokoro · voice ef_dora · 8 line(s)
+  voice 01: assets/voice/01.wav (3.349s, 0 words)
+  voice 02: assets/voice/02.wav (9.728s, 0 words)
+  voice 03: assets/voice/03.wav (11.392s, 0 words)
+  voice 04: assets/voice/04.wav (9.579s, 0 words)
+  voice 05: assets/voice/05.wav (9.941s, 0 words)
+  voice 06: assets/voice/06.wav (8.853s, 0 words)
+  voice 07: assets/voice/07.wav (4.672s, 0 words)
+  voice 08: assets/voice/08.wav (5.547s, 0 words)
+· bgm: disabled
+✓ audio engine → /home/user/aml-suite-2026/videos/geolocalizacion-inferencial/audio_engine_meta.json
+  heygen: no  ·  ran: tts,bgm
+  voices: 8  ·  bgm: none  ·  sfx: 0
+  total voice duration: 63.061s
+✓ audio generate: 8 voice + no bgm → /home/user/aml-suite-2026/videos/geolocalizacion-inferencial/audio_meta.json
