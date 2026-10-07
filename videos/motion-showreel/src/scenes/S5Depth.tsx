@@ -33,7 +33,7 @@ const Row: React.FC<{w: number; c?: string; h?: number}> = ({w, c = C.mute, h = 
 export const S5Depth: React.FC = () => {
   const f = useCurrentFrame();
   const enter = sp(f, 0, {damping: 20, stiffness: 60});
-  const orbit = ease(f, 0, 100, [-38, 18], INOUT);
+  const orbit = ease(f, 0, 100, [-20, 12], INOUT);
   const dolly = ease(f, 0, 100, [-900, -250], INOUT);
   const sh = shake(f, STAMP, 12, 12);
   const stamp = sp(f, STAMP - 6, {damping: 10, stiffness: 320, mass: 0.7});
@@ -69,15 +69,15 @@ export const S5Depth: React.FC = () => {
           <div
             style={{
               position: 'absolute',
-              left: 70,
-              bottom: 90,
+              left: 64,
+              bottom: 70,
               padding: '14px 26px',
               border: `6px solid ${C.coral}`,
               borderRadius: 12,
               color: C.coral,
-              fontSize: 54,
+              fontSize: 44,
               fontWeight: 900,
-              letterSpacing: 6,
+              letterSpacing: 5,
               transform: `rotate(-12deg) scale(${f < STAMP - 6 ? 0 : 3 - 2 * stamp})`,
               opacity: f < STAMP - 6 ? 0 : Math.min(1, stamp * 2),
             }}
@@ -123,7 +123,9 @@ export const S5Depth: React.FC = () => {
       />
       <AbsoluteFill style={{transformStyle: 'preserve-3d', transform: `translate(${sh.x}px, ${sh.y}px) translateZ(${dolly}px) rotateX(6deg) rotateY(${orbit}deg)`}}>
         {cards.map((c, i) => {
-          const a = (i - 1) * 42;
+          const x = (i - 1) * 600;
+          const a = (1 - i) * 22;
+          const z = i === 1 ? 120 : -120;
           const fly = ease(f, 98 + (2 - i) * 4, 116 + (2 - i) * 4, [0, 1], IN);
           const pop = sp(f, 4 + i * 6, {damping: 16, stiffness: 110});
           return (
@@ -134,7 +136,7 @@ export const S5Depth: React.FC = () => {
                 left: 960 - 260,
                 top: 540 - 310,
                 transformStyle: 'preserve-3d',
-                transform: `rotateY(${a}deg) translateZ(${520 + fly * 2400}px) translateY(${(1 - pop) * 500}px)`,
+                transform: `translateX(${x}px) translateZ(${z + fly * 2400}px) rotateY(${a}deg) translateY(${(1 - pop) * 500}px)`,
                 filter: `blur(${fly * 12}px)`,
                 opacity: pop,
               }}

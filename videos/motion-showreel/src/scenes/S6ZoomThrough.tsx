@@ -3,11 +3,12 @@ import {AbsoluteFill, Easing, useCurrentFrame} from 'remotion';
 import {C, FONT, ease, sp} from '../theme';
 import {SectionLabel} from '../ui';
 
-// Cajas de ancho fijo: la "O" queda en una posición conocida para el zoom
+// Cajas de ancho conocido por letra: la "O" queda en una posición conocida para el zoom
 const LETTERS = ['M', 'O', 'T', 'I', 'O', 'N'];
-const BOXW = 250;
-const LEFT0 = 960 - (LETTERS.length * BOXW) / 2;
-const RING_X = LEFT0 + BOXW * 1 + BOXW / 2;
+const WIDTHS = [290, 262, 206, 118, 262, 254]; // avance óptico de Nunito Sans Black a 300 px
+const TOTAL = WIDTHS.reduce((a, b) => a + b, 0);
+const LEFTS = WIDTHS.map((_, i) => 960 - TOTAL / 2 + WIDTHS.slice(0, i).reduce((a, b) => a + b, 0));
+const RING_X = LEFTS[1] + WIDTHS[1] / 2;
 const RING_Y = 540;
 const ZOOM_IN = 42;
 const ZOOM_OUT = 84;
@@ -54,17 +55,17 @@ export const S6ZoomThrough: React.FC = () => {
           const p = sp(f, 2 + i * 3, {damping: 15, stiffness: 150});
           const style: React.CSSProperties = {
             position: 'absolute',
-            left: LEFT0 + i * BOXW,
+            left: LEFTS[i],
             top: RING_Y - 170,
-            width: BOXW,
+            width: WIDTHS[i],
             height: 340,
             overflow: 'hidden',
           };
           if (i === 1) {
             return (
               <div key={i} style={style}>
-                <svg width={BOXW} height={340} style={{transform: `translateY(${(1 - p) * 340}px)`}}>
-                  <circle cx={BOXW / 2} cy={170} r={98} fill="none" stroke={C.gold} strokeWidth={46} />
+                <svg width={WIDTHS[1]} height={340} style={{transform: `translateY(${(1 - p) * 340}px)`}}>
+                  <circle cx={WIDTHS[1] / 2} cy={170} r={98} fill="none" stroke={C.gold} strokeWidth={46} />
                 </svg>
               </div>
             );

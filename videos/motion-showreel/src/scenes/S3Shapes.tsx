@@ -1,6 +1,6 @@
 import React from 'react';
 import {AbsoluteFill, interpolateColors, useCurrentFrame} from 'remotion';
-import {interpolatePath, translatePath} from '@remotion/paths';
+import {getLength, getPointAtLength, translatePath} from '@remotion/paths';
 import {makeCircle, makePolygon, makeRect, makeStar, makeTriangle} from '@remotion/shapes';
 import {noise3D} from '@remotion/noise';
 import {C, FONT, IN, INOUT, ease, sp} from '../theme';
@@ -21,14 +21,43 @@ const SHAPES = [
 const MORPHS = [14, 34, 54, 74, 92]; // inicio de cada transformación
 const MORPH_LEN = 12;
 
+// Morph por puntos: cada forma se muestrea con el mismo número de puntos y se
+// alinea el punto de arranque con la forma anterior para que no se retuerza.
+const SAMPLES = 144;
+type Pt = {x: number; y: number};
+const sample = (d: string): Pt[] => {
+  const len = getLength(d);
+  return Array.from({length: SAMPLES}, (_, i) => getPointAtLength(d, (i / SAMPLES) * len) ?? {x: 0, y: 0});
+};
+const align = (a: Pt[], b: Pt[]): Pt[] => {
+  let best = 0;
+  let bestD = Infinity;
+  for (let sh = 0; sh < SAMPLES; sh++) {
+    let d = 0;
+    for (let i = 0; i < SAMPLES; i += 4) {
+      const q = b[(i + sh) % SAMPLES];
+      d += (a[i].x - q.x) ** 2 + (a[i].y - q.y) ** 2;
+    }
+    if (d < bestD) {
+      bestD = d;
+      best = sh;
+    }
+  }
+  return b.map((_, i) => b[(i + best) % SAMPLES]);
+};
+const PTS: Pt[][] = [];
+SHAPES.forEach((d, i) => PTS.push(i === 0 ? sample(d) : align(PTS[i - 1], sample(d))));
+const toPath = (pts: Pt[]) => 'M ' + pts.map((p) => `${p.x.toFixed(2)} ${p.y.toFixed(2)}`).join(' L ') + ' Z';
+const lerpPts = (a: Pt[], b: Pt[], t: number) => a.map((p, i) => ({x: p.x + (b[i].x - p.x) * t, y: p.y + (b[i].y - p.y) * t}));
+
 const shapeAt = (f: number) => {
   for (let i = MORPHS.length - 1; i >= 0; i--) {
     if (f >= MORPHS[i]) {
       const p = ease(f, MORPHS[i], MORPHS[i] + MORPH_LEN, [0, 1], INOUT);
-      return interpolatePath(p, SHAPES[i], SHAPES[i + 1]);
+      return toPath(lerpPts(PTS[i], PTS[i + 1], p));
     }
   }
-  return SHAPES[0];
+  return toPath(PTS[0]);
 };
 
 const COLS = 32;
@@ -44,6 +73,7 @@ export const S3Shapes: React.FC = () => {
 
   const exit = ease(f, 104, 120, [0, 1], IN);
   const fill = interpolateColors(exit, [0, 0.5], [C.gold, C.navy2]);
+  const shape = shapeAt(f);
   const scale = (0.2 + 0.8 * enter + pop) * (1 + exit * 13);
 
   return (
@@ -95,8 +125,8 @@ export const S3Shapes: React.FC = () => {
               <stop offset="1" stopColor={exit > 0 ? fill : C.goldD} />
             </linearGradient>
           </defs>
-          <path d={shapeAt(f)} fill="url(#gg)" />
-          <path d={shapeAt(f)} fill="none" stroke={C.cream} strokeOpacity={0.5 * (1 - exit)} strokeWidth={3} transform={`translate(${BOX / 2} ${BOX / 2}) scale(1.12) translate(${-BOX / 2} ${-BOX / 2})`} />
+          <path d={shape} fill="url(#gg)" />
+          <path d={shape} fill="none" stroke={C.cream} strokeOpacity={0.5 * (1 - exit)} strokeWidth={3} transform={`translate(${BOX / 2} ${BOX / 2}) scale(1.12) translate(${-BOX / 2} ${-BOX / 2})`} />
         </svg>
       </div>
 
