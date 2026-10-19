@@ -18,7 +18,7 @@ const App: React.FC = () => (
     autoPlay
     initiallyMuted
     clickToPlay
-    style={{height: '100vh', aspectRatio: `${W}/${H}`, maxWidth: '100vw'}}
+    style={{width: '100%', maxWidth: 'min(100%, 56vh)', aspectRatio: `${W}/${H}`}}
   />
 );
 
