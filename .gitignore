@@ -17,3 +17,9 @@ showreel/logP.txt
 showreel/log*.txt
 showreel/framesG_*/
 showreel/tg_*/
+# Hyperframes LFS fixtures (no LFS en este repo)
+tools/hyperframes/packages/producer/tests/**/*.mp4
+tools/hyperframes/packages/producer/tests/**/output/compiled.html
+tools/hyperframes/.agents/skills/changelog-video/assets/
+tools/hyperframes/.claude/skills/changelog-video/assets/
+node_modules/
