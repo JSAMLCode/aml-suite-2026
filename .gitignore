@@ -23,3 +23,6 @@ tools/hyperframes/packages/producer/tests/**/output/compiled.html
 tools/hyperframes/.agents/skills/changelog-video/assets/
 tools/hyperframes/.claude/skills/changelog-video/assets/
 node_modules/
+lefthook.yml
+tools/hyperframes/packages/producer/tests/**/output/
+tools/hyperframes/packages/producer/tests/**/*.png
