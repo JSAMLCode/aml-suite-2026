@@ -26,3 +26,7 @@ node_modules/
 lefthook.yml
 tools/hyperframes/packages/producer/tests/**/output/
 tools/hyperframes/packages/producer/tests/**/*.png
+tools/hyperframes/packages/producer/tests/distributed/mov-prores/output/
+tools/hyperframes/packages/producer/tests/distributed/webm-vp9/output/
+tools/hyperframes/packages/producer/tests/hf2550-video-subcomposition-ghost/src/
+tools/hyperframes/packages/producer/tests/webm-transparency/output/
