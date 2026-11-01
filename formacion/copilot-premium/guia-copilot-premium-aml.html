@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>De Prompt a Agente · Microsoft 365 Copilot aplicado a Cumplimiento AML/CFT/CFPADM</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:opsz,wght@6..12,300;6..12,400;6..12,600;6..12,700;6..12,800;6..12,900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0B1F3A; --navy-2:#132B4F; --navy-3:#1E3A66;
+  --gold:#C9A227; --gold-soft:#F4EBCF; --ink:#1F2733; --muted:#5B6576;
+  --line:#DCE1EA; --bg:#FFFFFF; --panel:#F6F8FB; --ok:#1F7A4D; --warn:#B7791F; --risk:#B42318;
+}
+*{box-sizing:border-box}
+html{font-size:15px}
+body{margin:0;font-family:"Nunito Sans",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:var(--ink);background:var(--bg);line-height:1.6}
+main{max-width:980px;margin:0 auto;padding:0 40px 80px}
+h1,h2,h3,h4{color:var(--navy);line-height:1.25;margin:1.6em 0 .5em}
+h1{font-size:2.6rem;font-weight:900;letter-spacing:-.5px}
+h2{font-size:1.75rem;font-weight:800;border-bottom:3px solid var(--gold);padding-bottom:.3em}
+h3{font-size:1.25rem;font-weight:800}
+h4{font-size:1.02rem;font-weight:800;color:var(--navy-3)}
+p,li{font-size:1rem}
+a{color:var(--navy-3)}
+code,pre{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.86rem}
+pre{background:var(--navy);color:#EAF0FA;padding:16px 18px;border-radius:10px;overflow-x:auto;white-space:pre-wrap;border-left:5px solid var(--gold);line-height:1.5}
+pre .c{color:#9FB3D1}
+table{width:100%;border-collapse:collapse;margin:14px 0 20px;font-size:.92rem}
+th{background:var(--navy);color:#fff;text-align:left;padding:9px 10px;font-weight:700}
+td{border-bottom:1px solid var(--line);padding:8px 10px;vertical-align:top}
+tr:nth-child(even) td{background:var(--panel)}
+.cover{min-height:100vh;background:linear-gradient(155deg,var(--navy) 0%,var(--navy-2) 60%,var(--navy-3) 100%);color:#fff;padding:70px 60px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden}
+.cover:after{content:"";position:absolute;right:-180px;top:-120px;width:520px;height:520px;border:2px solid rgba(201,162,39,.35);border-radius:50%}
+.cover:before{content:"";position:absolute;right:-90px;top:-30px;width:340px;height:340px;border:1px solid rgba(201,162,39,.25);border-radius:50%}
+.brand{letter-spacing:4px;font-size:.8rem;text-transform:uppercase;color:var(--gold);font-weight:800}
+.cover h1{color:#fff;font-size:3.2rem;margin:.3em 0 .2em;max-width:760px}
+.cover .sub{font-size:1.25rem;color:#C9D5E8;max-width:720px;font-weight:300}
+.cover .meta{display:flex;gap:28px;flex-wrap:wrap;font-size:.9rem;color:#C9D5E8;border-top:1px solid rgba(255,255,255,.18);padding-top:22px}
+.cover .meta b{color:var(--gold);display:block;font-size:.72rem;letter-spacing:2px;text-transform:uppercase}
+.pill{display:inline-block;background:var(--gold);color:var(--navy);font-weight:800;padding:4px 12px;border-radius:30px;font-size:.78rem;letter-spacing:1px;text-transform:uppercase}
+.module{page-break-before:always;break-before:page}
+.mod-head{background:var(--navy);color:#fff;border-radius:14px;padding:26px 30px;margin:40px 0 20px;position:relative;overflow:hidden}
+.mod-head .n{color:var(--gold);font-weight:900;font-size:.85rem;letter-spacing:3px;text-transform:uppercase}
+.mod-head h2{color:#fff;border:0;margin:.2em 0 .3em;padding:0;font-size:1.9rem}
+.mod-head p{color:#C9D5E8;margin:0}
+.obj{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:14px 0 24px}
+.obj div{background:var(--panel);border-top:3px solid var(--gold);padding:12px 14px;border-radius:8px;font-size:.92rem}
+.obj b{display:block;color:var(--navy);font-size:.75rem;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px}
+.box{border-radius:10px;padding:14px 18px;margin:16px 0;border-left:5px solid var(--navy-3);background:var(--panel)}
+.box.gold{border-color:var(--gold);background:var(--gold-soft)}
+.box.risk{border-color:var(--risk);background:#FDF0EE}
+.box.ok{border-color:var(--ok);background:#EDF7F1}
+.box h4{margin:.1em 0 .4em}
+.lab{border:2px dashed var(--gold);border-radius:12px;padding:16px 20px;margin:20px 0}
+.lab .t{font-weight:900;color:var(--gold);letter-spacing:2px;font-size:.78rem;text-transform:uppercase}
+.steps{counter-reset:s;list-style:none;padding:0}
+.steps li{counter-increment:s;position:relative;padding:6px 0 6px 46px;margin:4px 0}
+.steps li:before{content:counter(s);position:absolute;left:0;top:5px;width:30px;height:30px;border-radius:50%;background:var(--navy);color:var(--gold);font-weight:900;display:flex;align-items:center;justify-content:center;font-size:.85rem}
+.toc{columns:2;column-gap:40px;padding-left:0;list-style:none}
+.toc li{break-inside:avoid;padding:6px 0;border-bottom:1px solid var(--line)}
+.toc .k{color:var(--gold);font-weight:900;margin-right:8px}
+.levels{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:18px 0}
+.levels div{border-radius:10px;padding:14px;color:#fff;font-size:.88rem}
+.levels b{display:block;font-size:1.05rem;margin-bottom:4px;color:var(--gold)}
+.l1{background:#2E4A75}.l2{background:#233D66}.l3{background:#183058}.l4{background:#0B1F3A}
+.tag{display:inline-block;font-size:.72rem;font-weight:800;padding:2px 8px;border-radius:20px;background:var(--navy-3);color:#fff;margin-right:4px}
+.tag.g{background:var(--gold);color:var(--navy)}
+.footer{margin-top:60px;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:.82rem}
+@media print{
+  html{font-size:12.5px}
+  main{padding:0 14mm}
+  .cover{min-height:auto;height:297mm;padding:22mm 18mm}
+  pre,table,.box,.lab,.obj{break-inside:avoid}
+  h2,h3,h4{break-after:avoid}
+  a{text-decoration:none}
+}
+@page{size:A4;margin:14mm 0 16mm}
+@page:first{margin:0}
+</style>
+</head>
+<body>
+
+<section class="cover">
+  <div>
+    <div class="brand">Serrano Lawyers &amp; Consultants · Procompliance · SELENE</div>
+  </div>
+  <div>
+    <span class="pill">Programa de formación ejecutiva</span>
+    <h1>De Prompt a Agente</h1>
+    <div class="sub">Guía completa, paso a paso, para dominar Microsoft 365 Copilot (licencia premium) en la función de Cumplimiento: desde los fundamentos de la IA generativa hasta la construcción de agentes y la automatización de procesos AML/CFT/CFPADM.</div>
+  </div>
+  <div class="meta">
+    <div><b>Autor</b>José Serrano · Serrano Lawyers &amp; Consultants</div>
+    <div><b>Marco normativo</b>Panamá · Ley 23 de 2015 y normativa SBP · SMV · SSRP · SSNF · UAF</div>
+    <div><b>Plataforma</b>Microsoft 365 Copilot · Copilot Studio · Power Automate</div>
+    <div><b>Edición</b>Noviembre 2026</div>
+  </div>
+</section>
+
+<main>
+
+<h2>Cómo usar esta guía</h2>
+<p>El programa está diseñado en cuatro niveles progresivos y 10 módulos. Cada módulo incluye objetivos, contenido técnico, laboratorio práctico con Copilot, un entregable verificable y un criterio de dominio. Los ejemplos se construyen sobre casos reales de la función de cumplimiento (KYC/DDC, ROS, matrices de riesgo, monitoreo, capacitación), de forma que cada ejercicio produce un activo reutilizable para la entidad o para el producto SaaS.</p>
+
+<div class="levels">
+  <div class="l1"><b>Nivel 1 · Fundamentos</b>Módulos 1 a 2. Qué es la IA generativa y cómo funciona Copilot dentro de Microsoft 365.</div>
+  <div class="l2"><b>Nivel 2 · Dominio del prompt</b>Módulos 3 a 5. Método, Copilot por aplicación y gobernanza del uso de IA.</div>
+  <div class="l3"><b>Nivel 3 · Agentes</b>Módulos 6 a 8. Biblioteca AML, Agent Builder, agentes de SharePoint y Copilot Studio.</div>
+  <div class="l4"><b>Nivel 4 · Automatización</b>Módulos 9 a 10. Power Automate, flujos con IA y proyecto integrador.</div>
+</div>
+
+<h3>Índice</h3>
+<ul class="toc">
+  <li><span class="k">00</span>Mapa de licencias y prerrequisitos</li>
+  <li><span class="k">01</span>Fundamentos de IA generativa para el profesional de cumplimiento</li>
+  <li><span class="k">02</span>Anatomía de Microsoft 365 Copilot</li>
+  <li><span class="k">03</span>Ingeniería de prompts: método SELENE-7</li>
+  <li><span class="k">04</span>Copilot en Word, Excel, PowerPoint, Outlook y Teams</li>
+  <li><span class="k">05</span>Gobernanza, confidencialidad y uso responsable</li>
+  <li><span class="k">06</span>Biblioteca de prompts AML/CFT y Prompt Gallery</li>
+  <li><span class="k">07</span>Agentes I: Researcher, Analyst y Agent Builder</li>
+  <li><span class="k">08</span>Agentes II: Copilot Studio</li>
+  <li><span class="k">09</span>Automatización con Power Automate + IA</li>
+  <li><span class="k">10</span>Proyecto integrador, rúbrica y métricas</li>
+  <li><span class="k">A</span>Anexos: plantillas, glosario, cronograma</li>
+</ul>
+
+<div class="box gold">
+<h4>Convenciones</h4>
+<p style="margin:0">Las variables a sustituir se escriben entre llaves: <code>{CLIENTE}</code>, <code>{JURISDICCIÓN}</code>. Las referencias a archivos dentro de Copilot se hacen escribiendo <code>/</code> y seleccionando el documento. Los bloques oscuros contienen texto listo para copiar. Microsoft renombra y reubica funciones con frecuencia: los nombres de menú indicados deben validarse en el tenant al momento de impartir el curso.</p>
+</div>
+
+<!-- ============ MÓDULO 0 ============ -->
+<section class="module">
+<div class="mod-head"><div class="n">Módulo 00</div><h2>Mapa de licencias y prerrequisitos</h2><p>Antes de enseñar, defina qué puede y qué no puede hacer cada participante según su licencia.</p></div>
+
+<p>El término “Copilot Premium” se usa en el mercado para dos productos distintos. La diferencia determina si el curso puede llegar hasta agentes con acciones y automatizaciones sobre datos corporativos.</p>
+
+<table>
+<tr><th>Capacidad</th><th>Copilot Chat (gratuito con cuenta Entra ID)</th><th>Microsoft 365 Premium (consumo / profesional independiente)</th><th>Microsoft 365 Copilot (licencia empresarial)</th></tr>
+<tr><td>Chat con IA y búsqueda web</td><td>Sí</td><td>Sí</td><td>Sí</td></tr>
+<tr><td>Copilot dentro de Word, Excel, PowerPoint, Outlook</td><td>Limitado</td><td>Sí, sobre archivos personales en OneDrive</td><td>Sí, con acceso al grafo de la organización</td></tr>
+<tr><td>Grounding en correos, chats, reuniones y SharePoint (Microsoft Graph)</td><td>No</td><td>No</td><td>Sí</td></tr>
+<tr><td>Researcher y Analyst (agentes de razonamiento)</td><td>No o con cupo</td><td>Sí, con límites de uso</td><td>Sí</td></tr>
+<tr><td>Copilot en Teams (resumen de reuniones, transcripción)</td><td>No</td><td>No</td><td>Sí</td></tr>
+<tr><td>Agent Builder (agentes declarativos sin código)</td><td>Agentes basados en web/archivos</td><td>Variable</td><td>Sí, con conocimiento de SharePoint y Graph</td></tr>
+<tr><td>Copilot Studio y Power Automate con conectores premium</td><td>Pago por uso</td><td>No</td><td>Sí, según plan de Power Platform y capacidad asignada</td></tr>
+<tr><td>Protección de datos empresarial (EDP), etiquetas Purview, auditoría</td><td>EDP básico</td><td>Protección de consumo</td><td>Completa, gobernada por el tenant</td></tr>
+</table>
+
+<div class="box risk">
+<h4>Decisión de diseño del curso</h4>
+<p style="margin:0">Los módulos 1 a 7 funcionan con cualquier licencia premium. Los módulos 8 y 9 (Copilot Studio, Power Automate con conectores y agentes autónomos) requieren licencia empresarial de Microsoft 365 Copilot y un entorno de Power Platform habilitado por TI. Para datos de clientes, ROS o expedientes regulados, utilice exclusivamente el entorno empresarial: la licencia de consumo no ofrece el control de cumplimiento que exigen la reserva y la protección de datos.</p>
+</div>
+
+<h3>Checklist de habilitación (participante)</h3>
+<table>
+<tr><th>#</th><th>Verificación</th><th>Cómo comprobar</th></tr>
+<tr><td>1</td><td>Licencia asignada</td><td>Abrir m365.cloud.microsoft → el selector “Trabajo / Web” aparece en Copilot Chat</td></tr>
+<tr><td>2</td><td>Archivos en OneDrive o SharePoint</td><td>Copilot solo razona sobre archivos almacenados en la nube del tenant, no en el disco local</td></tr>
+<tr><td>3</td><td>Autoguardado activo</td><td>Requisito para Copilot en Word, Excel y PowerPoint</td></tr>
+<tr><td>4</td><td>Transcripción habilitada en Teams</td><td>Política de reuniones del tenant</td></tr>
+<tr><td>5</td><td>Acceso a Agent Builder / Copilot Studio</td><td>En Copilot: “Crear agente”. En copilotstudio.microsoft.com: entorno asignado</td></tr>
+<tr><td>6</td><td>Power Automate</td><td>make.powerautomate.com con conectores SharePoint, Outlook, Teams, Forms y Approvals</td></tr>
+</table>
+</section>
+
+<!-- ============ MÓDULO 1 ============ -->
+<section class="module">
+<div class="mod-head"><div class="n">Módulo 01 · Nivel 1</div><h2>Fundamentos de IA generativa para el profesional de cumplimiento</h2><p>Lo que un oficial de cumplimiento necesita entender para usar, supervisar y defender ante el regulador el uso de IA.</p></div>
+
+<div class="obj">
+<div><b>Objetivo</b>Comprender cómo un modelo de lenguaje produce respuestas y por qué falla.</div>
+<div><b>Duración</b>2 horas</div>
+<div><b>Entregable</b>Mapa de riesgos del uso de IA en la Unidad de Cumplimiento.</div>
+</div>
+
+<h3>1.1 Conceptos esenciales</h3>
+<table>
+<tr><th>Concepto</th><th>Definición operativa</th><th>Implicación en cumplimiento</th></tr>
+<tr><td>Modelo de lenguaje (LLM)</td><td>Sistema que predice la siguiente secuencia de texto más probable a partir de un contexto.</td><td>Produce texto verosímil, no necesariamente verdadero. Toda cita normativa debe verificarse.</td></tr>
+<tr><td>Token</td><td>Unidad mínima de texto que procesa el modelo (fragmento de palabra).</td><td>Documentos extensos pueden exceder la ventana de contexto; fraccione expedientes voluminosos.</td></tr>
+<tr><td>Ventana de contexto</td><td>Cantidad máxima de información que el modelo considera en una conversación.</td><td>En conversaciones largas el modelo “olvida” instrucciones iniciales. Reinicie el chat por caso.</td></tr>
+<tr><td>Alucinación</td><td>Respuesta inventada presentada con seguridad.</td><td>Riesgo crítico: artículos de ley, números de resolución o tipologías inexistentes.</td></tr>
+<tr><td>Grounding</td><td>Anclar la respuesta a fuentes concretas (archivos, correos, SharePoint, web).</td><td>Reduce alucinaciones y genera trazabilidad mediante citas.</td></tr>
+<tr><td>RAG (generación aumentada por recuperación)</td><td>El sistema busca documentos relevantes y los entrega al modelo antes de responder.</td><td>Es el mecanismo detrás de los agentes con base de conocimiento (manuales, acuerdos).</td></tr>
+<tr><td>Razonamiento (reasoning)</td><td>Modelos que planifican en varios pasos antes de responder.</td><td>Útiles para análisis de casos complejos (Researcher, Analyst); más lentos.</td></tr>
+<tr><td>Agente</td><td>Sistema que combina instrucciones, conocimiento, herramientas y capacidad de actuar.</td><td>Requiere segregación de funciones, supervisión humana y bitácora.</td></tr>
+</table>
+
+<h3>1.2 Qué hace bien y qué no hace la IA en la función AML</h3>
+<table>
+<tr><th>Alta aptitud</th><th>Aptitud condicionada (requiere revisión)</th><th>No delegar</th></tr>
+<tr><td>Redactar borradores de políticas, manuales, correos y solicitudes de información.<br>Resumir expedientes, actas y transcripciones.<br>Estructurar datos en tablas.<br>Diseñar cuestionarios y casos de capacitación.</td><td>Calificación de riesgo preliminar.<br>Identificación de señales de alerta.<br>Narrativa de ROS.<br>Interpretación normativa.<br>Análisis de estructuras societarias.</td><td>Decisión de reportar o no un ROS.<br>Aceptación o terminación de la relación.<br>Determinación de beneficiario final con efecto vinculante.<br>Calificación final del cliente.<br>Firma de documentos ante el regulador.</td></tr>
+</table>
+
+<div class="box">
+<h4>Principio rector</h4>
+<p style="margin:0">La IA produce el borrador; el sujeto obligado conserva la responsabilidad. Toda salida de Copilot que soporte una decisión de debida diligencia debe quedar revisada, firmada por el responsable y archivada en el expediente con la evidencia que la sustenta.</p>
+</div>
+
+<div class="lab"><div class="t">Laboratorio 1</div>
+<p>Abra Copilot Chat en modo Web y ejecute:</p>
+<pre>Actúa como especialista en prevención de blanqueo de capitales en Panamá.
+Cita el artículo exacto de la Ley 23 de 2015 que regula la obligación de reportar operaciones sospechosas a la UAF y transcribe su texto.</pre>
+<p>Compare la respuesta con el texto oficial publicado en Gaceta Oficial. Documente: (a) si el artículo citado es correcto, (b) si el texto transcrito es literal, (c) si incorporó reformas posteriores. Este ejercicio demuestra por qué toda referencia normativa se valida contra la fuente primaria.</p></div>
+</section>
+
+<!-- ============ MÓDULO 2 ============ -->
+<section class="module">
+<div class="mod-head"><div class="n">Módulo 02 · Nivel 1</div><h2>Anatomía de Microsoft 365 Copilot</h2><p>Superficies, modos y componentes que se usarán durante todo el programa.</p></div>
+
+<div class="obj">
+<div><b>Objetivo</b>Navegar Copilot y elegir la superficie correcta para cada tarea.</div>
+<div><b>Duración</b>2 horas</div>
+<div><b>Entregable</b>Espacio de trabajo configurado: instrucciones personalizadas, Notebook del caso y primer Page.</div>
+</div>
+
+<h3>2.1 Arquitectura en una línea</h3>
+<pre>Prompt del usuario → Orquestador de Copilot → Recuperación (Microsoft Graph: correo, Teams, OneDrive, SharePoint; web si está habilitada)
+→ Modelo de lenguaje → Controles de seguridad (permisos, etiquetas de confidencialidad, filtros) → Respuesta con citas</pre>
+<p>Copilot solo accede a lo que el usuario ya tiene permiso de ver. Si una carpeta de expedientes tiene permisos excesivos, Copilot la expondrá en sus respuestas: la higiene de permisos en SharePoint es un prerrequisito de cumplimiento, no una tarea de TI aislada.</p>
+
+<h3>2.2 Superficies de trabajo</h3>
+<table>
+<tr><th>Superficie</th><th>Para qué sirve</th><th>Uso típico en cumplimiento</th></tr>
+<tr><td>Copilot Chat (modo Trabajo)</td><td>Conversación con acceso a archivos, correos, reuniones y chats.</td><td>“Resume todos los correos con {CLIENTE} del último trimestre y lista los documentos pendientes.”</td></tr>
+<tr><td>Copilot Chat (modo Web)</td><td>Conversación con información pública.</td><td>Tipologías GAFI/GAFILAT, noticias adversas preliminares, comparativos de jurisdicciones.</td></tr>
+<tr><td>Copilot Pages</td><td>Lienzo colaborativo persistente que nace de una respuesta del chat.</td><td>Construir con el equipo el borrador de la evaluación de riesgo de la entidad.</td></tr>
+<tr><td>Copilot Notebooks</td><td>Espacio que agrupa archivos, páginas y notas de un proyecto para consultas recurrentes.</td><td>Un Notebook por inspección del regulador o por expediente de investigación.</td></tr>
+<tr><td>Copilot en las aplicaciones</td><td>Asistente contextual dentro de Word, Excel, PowerPoint, Outlook, Teams.</td><td>Ver Módulo 4.</td></tr>
+<tr><td>Agentes</td><td>Copilots especializados con instrucciones y conocimiento propios.</td><td>Ver Módulos 7 y 8.</td></tr>
+<tr><td>Prompt Gallery</td><td>Biblioteca para guardar, reutilizar y compartir prompts.</td><td>Biblioteca institucional de prompts AML (Módulo 6).</td></tr>
+<tr><td>Prompts programados</td><td>Ejecución automática de un prompt con periodicidad definida.</td><td>Resumen semanal de alertas y pendientes de debida diligencia.</td></tr>
+</table>
+
+<h3>2.3 Personalización: instrucciones y memoria</h3>
+<p>En Configuración → Personalización, Copilot permite fijar instrucciones personalizadas que se aplican a todas las conversaciones. Configure una sola vez su perfil profesional:</p>
+<pre>Soy abogado y oficial de cumplimiento en Panamá, especialista en AML/CFT/CFPADM.
+Marco de referencia: Ley 23 de 2015 y sus reformas, Decreto Ejecutivo 363 de 2015, acuerdos de la Superintendencia de Bancos de Panamá, de la SMV, de la SSRP y de la Intendencia de Supervisión de Sujetos No Financieros, recomendaciones del GAFI y tipologías del GAFILAT.
+Al responder:
+- Usa terminología técnica panameña (sujeto obligado, UAF, ROS, beneficiario final, debida diligencia ampliada o reforzada, PEP).
+- Distingue con claridad entre norma vinculante, guía del supervisor y buena práctica internacional.
+- No inventes artículos ni números de acuerdos: si no tienes certeza, indícalo como "[VERIFICAR]".
+- Formato ejecutivo: tablas y listas numeradas, sin introducciones.
+- Cuando sea útil, expresa criterios como reglas SI/ENTONCES para que puedan programarse.</pre>
+
+<div class="lab"><div class="t">Laboratorio 2</div>
+<ol class="steps">
+<li>Configure las instrucciones personalizadas anteriores.</li>
+<li>Cree un Notebook llamado “Evaluación de Riesgo Institucional 2026” y adjunte: manual de cumplimiento, última evaluación de riesgo y el acuerdo regulatorio aplicable (en PDF desde SharePoint).</li>
+<li>Dentro del Notebook pregunte: <code>¿Qué factores de riesgo exige la normativa adjunta que no están cubiertos en nuestra última evaluación? Responde en tabla: factor, fuente normativa, estado (cubierto / parcial / ausente), acción.</code></li>
+<li>Envíe la respuesta a una Page y compártala con su equipo.</li>
+</ol></div>
+</section>
+
+<!-- ============ MÓDULO 3 ============ -->
+<section class="module">
+<div class="mod-head"><div class="n">Módulo 03 · Nivel 2</div><h2>Ingeniería de prompts: método SELENE-7</h2><p>De la estructura básica Rol-Contexto-Tarea-Formato a prompts auditables y parametrizables.</p></div>
+
+<div class="obj">
+<div><b>Objetivo</b>Construir prompts precisos, repetibles y verificables.</div>
+<div><b>Duración</b>3 horas</div>
+<div><b>Entregable</b>5 prompts propios en formato SELENE-7 probados y depurados.</div>
+</div>
+
+<h3>3.1 Del modelo de 4 elementos al de 7</h3>
+<p>Las guías de referencia trabajan con cuatro elementos: Rol + Tarea + Contexto + Formato. Para el entorno regulado se añaden tres capas que convierten el prompt en un procedimiento controlado:</p>
+<table>
+<tr><th>#</th><th>Elemento</th><th>Pregunta que responde</th><th>Ejemplo AML</th></tr>
+<tr><td>1</td><td>Rol</td><td>¿Desde qué experticia responde?</td><td>Oficial de cumplimiento senior de un banco de licencia general en Panamá.</td></tr>
+<tr><td>2</td><td>Contexto</td><td>¿Qué situación y qué fuentes tiene?</td><td>Cliente persona jurídica, sociedad anónima panameña con accionista nominee en BVI. Archivo: /Expediente_{ID}.pdf</td></tr>
+<tr><td>3</td><td>Tarea</td><td>¿Qué debe hacer exactamente?</td><td>Identifica la cadena de titularidad hasta la persona natural y señala vacíos documentales.</td></tr>
+<tr><td>4</td><td>Formato</td><td>¿Cómo debe entregarlo?</td><td>Tabla: nivel, entidad, jurisdicción, % participación, documento soporte, vacío.</td></tr>
+<tr><td>5</td><td>Restricciones</td><td>¿Qué no debe hacer?</td><td>No supongas porcentajes; si falta información, marca “NO CONSTA”. No uses fuentes externas.</td></tr>
+<tr><td>6</td><td>Criterio normativo</td><td>¿Contra qué marco se mide?</td><td>Umbral de beneficiario final y obligaciones de identificación aplicables al sujeto obligado.</td></tr>
+<tr><td>7</td><td>Verificación</td><td>¿Cómo se comprueba la calidad?</td><td>Al final, lista las afirmaciones que requieren validación humana y cita el folio de origen de cada dato.</td></tr>
+</table>
+
+<h3>3.2 Plantilla maestra</h3>
+<pre>[ROL] Actúa como {ROL} con experiencia en {SECTOR} en Panamá.
+[CONTEXTO] {DESCRIPCIÓN DEL CASO}. Fuentes: /{ARCHIVO_1} /{ARCHIVO_2}.
+[TAREA] {VERBO DE ACCIÓN + OBJETO + ALCANCE}.
+[FORMATO] Entrega {TIPO DE SALIDA} con {COLUMNAS / SECCIONES / EXTENSIÓN}.
+[RESTRICCIONES] Usa solo las fuentes indicadas. No inventes datos. Marca "NO CONSTA" cuando falte información.
+[CRITERIO] Evalúa conforme a {NORMA / POLÍTICA INTERNA / MATRIZ}.
+[VERIFICACIÓN] Al final incluye: (a) supuestos asumidos, (b) datos a validar por un humano, (c) referencia a la fuente de cada hallazgo.</pre>
+
+<h3>3.3 Técnicas avanzadas</h3>
+<table>
+<tr><th>Técnica</th><th>Cuándo usarla</th><th>Fórmula</th></tr>
+<tr><td>Descomposición en pasos</td><td>Tareas complejas (ROS completo, evaluación de riesgo)</td><td>“Primero extrae los hechos. Espera mi confirmación. Luego identifica señales de alerta…”</td></tr>
+<tr><td>Ejemplos de referencia (few-shot)</td><td>Cuando el formato o estilo debe ser idéntico al institucional</td><td>“Sigue exactamente el estilo de este ejemplo: /ROS_modelo_anonimizado.docx”</td></tr>
+<tr><td>Autocrítica</td><td>Antes de entregar un documento regulatorio</td><td>“Revisa tu respuesta como si fueras el supervisor de la SBP en una inspección y lista sus debilidades.”</td></tr>
+<tr><td>Rol adversarial</td><td>Capacitación y pruebas de controles</td><td>“Actúa como un cliente que intenta ocultar el origen de los fondos; yo seré el analista.”</td></tr>
+<tr><td>Salida estructurada</td><td>Cuando el resultado alimentará Excel, una lista de SharePoint o un sistema</td><td>“Devuelve solo JSON con este esquema: {…}” o “Tabla con columnas exactamente: …”</td></tr>
+<tr><td>Iteración dirigida</td><td>Refinar sin rehacer</td><td>“Mantén todo igual, pero reescribe solo la sección de análisis con tono más formal y agrega fechas.”</td></tr>
+</table>
+
+<h3>3.4 Errores frecuentes y corrección</h3>
+<table>
+<tr><th>Error</th><th>Síntoma</th><th>Corrección</th></tr>
+<tr><td>Prompt vago</td><td>Salida genérica</td><td>Agregue el caso, la fuente y el destinatario.</td></tr>
+<tr><td>Sin formato</td><td>Texto corrido difícil de usar</td><td>Defina tabla, columnas, extensión.</td></tr>
+<tr><td>Todo en un solo prompt</td><td>Omisiones y mezcla de tareas</td><td>Divida en pasos encadenados.</td></tr>
+<tr><td>Sin restricción de fuentes</td><td>Mezcla de datos internos con web</td><td>Use modo Trabajo y “usa solo /archivo”.</td></tr>
+<tr><td>Confiar en citas normativas</td><td>Artículos inexistentes</td><td>Exija “[VERIFICAR]” y adjunte la norma.</td></tr>
+<tr><td>Conversación eterna</td><td>Pierde instrucciones</td><td>Un chat por caso; resuma y reinicie.</td></tr>
+</table>
+
+<div class="lab"><div class="t">Laboratorio 3 · Antes y después</div>
+<p>Versión débil:</p>
+<pre>Hazme una matriz de riesgo para un banco.</pre>
+<p>Versión SELENE-7:</p>
+<pre>[ROL] Actúa como consultor AML especializado en metodologías de riesgo para entidades supervisadas por la SBP.
+[CONTEXTO] Banco de licencia internacional en Panamá; clientes 80% personas jurídicas extranjeras; productos: cuentas corrientes, depósitos a plazo, transferencias internacionales; canales: no presencial y referidos.
+[TAREA] Diseña la estructura de una matriz de riesgo de cliente con los factores cliente, producto/servicio, canal de distribución y zona geográfica.
+[FORMATO] Tabla con columnas: factor, variable, valores posibles, puntaje (1 a 5), ponderación del factor (%), justificación. Debajo, la fórmula de cálculo del riesgo inherente y los rangos Bajo / Medio / Alto.
+[RESTRICCIONES] Las ponderaciones deben sumar 100%. No incluyas variables que no puedan obtenerse del formulario de vinculación.
+[CRITERIO] Enfoque basado en riesgo conforme a la Recomendación 1 del GAFI y la normativa SBP vigente.
+[VERIFICACIÓN] Lista las variables que requieren definición de política interna y expresa cada regla de puntaje como SI/ENTONCES.</pre>
+<p>Compare ambas salidas usando la rúbrica del Anexo C.</p></div>
+</section>
+
+<!-- ============ MÓDULO 4 ============ -->
+<section class="module">
+<div class="mod-head"><div class="n">Módulo 04 · Nivel 2</div><h2>Copilot en Word, Excel, PowerPoint, Outlook y Teams</h2><p>Un caso transversal: vinculación de un cliente corporativo de alto riesgo, trabajado en cada aplicación.</p></div>
+
+<div class="obj">
+<div><b>Objetivo</b>Dominar las capacidades propias de cada aplicación.</div>
+<div><b>Duración</b>5 horas (1 por aplicación)</div>
+<div><b>Entregable</b>Expediente simulado completo del caso “Inversiones Atlántico Norte, S.A.”</div>
+</div>
+
+<div class="box gold"><h4>Caso transversal</h4><p style="margin:0">Inversiones Atlántico Norte, S.A. (ficticia), sociedad panameña cuyo accionista es una fundación de interés privado; beneficiario declarado con nacionalidad extranjera, actividad: comercio de equipos electrónicos desde la Zona Libre de Colón con proveedores en Asia y clientes en Sudamérica. Volumen esperado: USD 2.5 millones mensuales en transferencias.</p></div>
+
+<h3>4.1 Word: redacción y revisión</h3>
+<table>
+<tr><th>Capacidad</th><th>Prompt</th></tr>
+<tr><td>Borrador desde fuentes</td><td><code>Redacta el informe de debida diligencia ampliada de Inversiones Atlántico Norte usando /Formulario_vinculación /Estructura_accionaria /Referencias_bancarias. Secciones: identificación, estructura y beneficiario final, actividad y perfil transaccional, origen de fondos, señales de alerta, calificación preliminar, recomendación.</code></td></tr>
+<tr><td>Revisión crítica</td><td><code>Revisa este informe y señala afirmaciones sin soporte documental, contradicciones internas y vacíos frente a nuestra política de aceptación de clientes /Política_PAC.docx.</code></td></tr>
+<tr><td>Transformación</td><td><code>Convierte la sección de señales de alerta en una tabla: señal, evidencia, nivel de riesgo, mitigante propuesto.</code></td></tr>
+<tr><td>Resumen ejecutivo</td><td><code>Resume este documento en 150 palabras para el Comité de Cumplimiento con la recomendación al inicio.</code></td></tr>
+</table>
+<p>Agent Mode en Word permite instrucciones iterativas en varios pasos sobre el mismo documento (redactar, verificar, reformatear) manteniendo el control de cambios para revisión.</p>
+
+<h3>4.2 Excel: análisis y matrices</h3>
+<table>
+<tr><th>Capacidad</th><th>Prompt</th></tr>
+<tr><td>Análisis transaccional</td><td><code>En la tabla de transacciones, identifica operaciones fraccionadas: mismo ordenante, montos entre 8,000 y 9,999 en un período de 5 días. Resáltalas y crea una hoja resumen por ordenante.</code></td></tr>
+<tr><td>Columnas calculadas</td><td><code>Agrega una columna "Riesgo_Geográfico" que asigne 5 si el país está en la hoja Listas_GAFI como "llamado a la acción", 4 si está en "monitoreo incrementado", y 1 en otro caso.</code></td></tr>
+<tr><td>Fórmulas</td><td><code>Crea la fórmula del riesgo inherente = suma ponderada de las columnas F a I con los pesos de la hoja Parámetros, y clasifica Bajo (&lt;2.5), Medio (2.5-3.7), Alto (&gt;3.7).</code></td></tr>
+<tr><td>Python en Excel / Analyst</td><td><code>Detecta valores atípicos en el monto mensual por cliente usando desviación respecto de su media histórica de 6 meses y genera un gráfico.</code></td></tr>
+<tr><td>Función COPILOT en celda</td><td>Clasificar textos libres: <code>=COPILOT("Clasifica el propósito de esta transferencia en: comercial, personal, inversión, no determinado", D2)</code></td></tr>
+</table>
+<div class="box"><p style="margin:0">Requisito: los datos deben estar en formato de tabla de Excel (Ctrl+T) con encabezados claros. Valide siempre una muestra de las fórmulas generadas antes de usarlas en la matriz oficial.</p></div>
+
+<h3>4.3 PowerPoint: comunicación a Junta Directiva</h3>
+<pre>Crea una presentación de 8 diapositivas para la Junta Directiva a partir de /Informe_Anual_Cumplimiento_2026.docx:
+1) Resumen ejecutivo, 2) Evolución del perfil de riesgo de la cartera, 3) ROS presentados y tiempos de respuesta,
+4) Hallazgos de auditoría y estado de remediación, 5) Cambios normativos del período, 6) Capacitación,
+7) Riesgos emergentes, 8) Decisiones requeridas a la Junta. Lenguaje ejecutivo; sin datos de clientes identificables.</pre>
+
+<h3>4.4 Outlook: comunicación con clientes y reguladores</h3>
+<table>
+<tr><th>Capacidad</th><th>Prompt</th></tr>
+<tr><td>Resumir hilos</td><td><code>Resume este hilo y lista documentos que el cliente prometió enviar y no ha enviado, con fecha del compromiso.</code></td></tr>
+<tr><td>Redacción</td><td><code>Redacta una solicitud formal de documentación de origen de fondos para la operación del {FECHA} por USD {MONTO}. Tono cordial y firme; plazo de 10 días hábiles; no menciones sospecha ni procesos internos.</code></td></tr>
+<tr><td>Coaching</td><td>Use “Coaching de Copilot” para revisar tono y claridad antes de enviar comunicaciones sensibles.</td></tr>
+</table>
+<div class="box risk"><h4>Alerta de revelación</h4><p style="margin:0">Ningún prompt de comunicación con el cliente debe incluir referencias a alertas, investigaciones o reportes. Incluya siempre la restricción: “No menciones sospechas, alertas, investigaciones internas ni reportes a autoridades”.</p></div>
+
+<h3>4.5 Teams: reuniones del Comité</h3>
+<pre>Con base en la transcripción de esta reunión del Comité de Cumplimiento:
+- Lista cada caso discutido con la decisión adoptada y quién la propuso.
+- Identifica votos disidentes o reservas expresadas.
+- Genera la lista de tareas con responsable y fecha.
+- Redacta el borrador del acta en formato institucional /Plantilla_Acta_Comité.docx.</pre>
+<p>Durante la reunión también puede preguntar: “¿Qué preguntas quedaron sin resolver?” o “¿Hubo desacuerdos sobre el caso {X}?”.</p>
+</section>
+
+<!-- ============ MÓDULO 5 ============ -->
+<section class="module">
+<div class="mod-head"><div class="n">Módulo 05 · Nivel 2</div><h2>Gobernanza, confidencialidad y uso responsable de la IA</h2><p>El uso de IA en cumplimiento es en sí mismo un riesgo que debe estar identificado, controlado y documentado.</p></div>
+
+<div class="obj">
+<div><b>Objetivo</b>Implantar un marco de uso controlado de Copilot en la Unidad de Cumplimiento.</div>
+<div><b>Duración</b>2 horas</div>
+<div><b>Entregable</b>Política de uso aceptable de IA y registro de casos de uso.</div>
+</div>
+
+<h3>5.1 Matriz de riesgos del uso de IA</h3>
+<table>
+<tr><th>Riesgo</th><th>Escenario</th><th>Control</th></tr>
+<tr><td>Revelación indebida (tipping-off)</td><td>Borrador de correo al cliente que filtra la existencia de un análisis</td><td>Restricción obligatoria en prompts; revisión humana previa al envío.</td></tr>
+<tr><td>Confidencialidad del ROS</td><td>Documentos del ROS accesibles a usuarios sin necesidad de conocerlos</td><td>Sitio SharePoint restringido; etiqueta de confidencialidad “Altamente confidencial – UAF” que limita el procesamiento por Copilot.</td></tr>
+<tr><td>Protección de datos personales</td><td>Uso de datos de clientes en herramientas de consumo</td><td>Solo entorno empresarial; alineación con Ley 81 de 2019 y su reglamento; minimización de datos.</td></tr>
+<tr><td>Alucinación normativa</td><td>Política interna que cita un artículo inexistente</td><td>Grounding obligatorio en la norma adjunta; validación por abogado.</td></tr>
+<tr><td>Sesgo</td><td>Calificación de riesgo influida por nacionalidad sin base normativa</td><td>Variables de matriz definidas por política; la IA no crea criterios.</td></tr>
+<tr><td>Sobreexposición por permisos</td><td>Copilot muestra expedientes a personal comercial</td><td>Revisión de permisos de SharePoint antes del despliegue; informes de sobrecompartición.</td></tr>
+<tr><td>Falta de trazabilidad</td><td>No es posible demostrar cómo se llegó a una conclusión</td><td>Guardar prompt, salida y versión revisada en el expediente; auditoría de Purview.</td></tr>
+<tr><td>Dependencia operativa</td><td>Proceso crítico que se detiene si falla el servicio</td><td>Procedimiento manual de contingencia documentado.</td></tr>
+</table>
+
+<h3>5.2 Clasificación de información para uso con Copilot</h3>
+<table>
+<tr><th>Nivel</th><th>Ejemplos</th><th>Regla</th></tr>
+<tr><td><span class="tag" style="background:var(--ok)">Público</span></td><td>Leyes, acuerdos, tipologías GAFI</td><td>Libre en modo Web o Trabajo.</td></tr>
+<tr><td><span class="tag">Interno</span></td><td>Manuales, políticas, plantillas</td><td>Modo Trabajo.</td></tr>
+<tr><td><span class="tag" style="background:var(--warn)">Confidencial</span></td><td>Expedientes KYC, matrices con datos de clientes</td><td>Modo Trabajo, sitio restringido, etiqueta aplicada.</td></tr>
+<tr><td><span class="tag" style="background:var(--risk)">Restringido</span></td><td>ROS, comunicaciones con la UAF, investigaciones</td><td>Solo con datos anonimizados o en el entorno aprobado específicamente por el Oficial de Cumplimiento; nunca en agentes compartidos.</td></tr>
+</table>
+
+<h3>5.3 Cláusulas mínimas de la Política de Uso de IA</h3>
+<ol>
+<li>Alcance: herramientas autorizadas (solo Microsoft 365 Copilot del tenant institucional).</li>
+<li>Prohibición de uso de herramientas de IA de consumo para información confidencial o restringida.</li>
+<li>Supervisión humana obligatoria y responsable identificado para cada salida que soporte una decisión.</li>
+<li>Prohibición de delegar en la IA decisiones de reporte, aceptación o terminación de clientes.</li>
+<li>Registro de casos de uso aprobados y de agentes publicados (inventario de IA).</li>
+<li>Conservación de evidencias conforme a los plazos de conservación documental aplicables al sujeto obligado.</li>
+<li>Capacitación obligatoria previa a la asignación de licencia.</li>
+<li>Revisión anual por Cumplimiento, Riesgos, TI y Auditoría Interna.</li>
+</ol>
+
+<div class="lab"><div class="t">Laboratorio 5</div>
+<pre>Actúa como abogado especialista en cumplimiento y protección de datos en Panamá.
+Usando /Política_Seguridad_Información.docx y /Manual_Cumplimiento.docx, redacta una Política de Uso Aceptable de IA Generativa para la Unidad de Cumplimiento con las 8 cláusulas mínimas que te indico [pegar lista].
+Formato: política institucional con objetivo, alcance, definiciones, lineamientos, roles y responsabilidades, sanciones, vigencia.
+Marca con [VERIFICAR] toda referencia normativa que no esté en los documentos adjuntos.</pre></div>
+</section>
+
+<!-- ============ MÓDULO 6 ============ -->
+<section class="module">
+<div class="mod-head"><div class="n">Módulo 06 · Nivel 3</div><h2>Biblioteca de prompts AML/CFT y Prompt Gallery</h2><p>Convertir prompts sueltos en un activo institucional estandarizado.</p></div>
+
+<div class="obj">
+<div><b>Objetivo</b>Construir y compartir la biblioteca institucional.</div>
+<div><b>Duración</b>3 horas</div>
+<div><b>Entregable</b>25 prompts guardados en Prompt Gallery con metadatos.</div>
+</div>
+
+<h3>6.1 Estructura de catálogo (lista para base de datos)</h3>
+<pre>{
+  "id": "KYC-007",
+  "area": "Debida diligencia",
+  "nombre": "Perfil de riesgo narrativo",
+  "app": ["Word"],
+  "nivel": "Intermedio",
+  "clasificacion_dato": "Confidencial",
+  "variables": ["CLIENTE", "ACTIVIDAD", "JURISDICCIONES"],
+  "prompt": "…",
+  "salida_esperada": "Informe narrativo de 1 página",
+  "revisor": "Oficial de Cumplimiento",
+  "version": "1.2",
+  "fecha_revision": "2026-11-01"
+}</pre>
+
+<h3>6.2 Prompts esenciales por área</h3>
+<p>Selección adaptada y ampliada a partir de las guías de referencia, reformulada con el método SELENE-7 y el contexto panameño.</p>
+
+<h4>Área 1 · Debida diligencia del cliente</h4>
+<table>
+<tr><th>ID</th><th>Prompt</th></tr>
+<tr><td>KYC-01</td><td>Actúa como analista KYC. Analiza /Estructura_{CLIENTE} y construye la cadena de titularidad hasta la persona natural. Tabla: nivel, entidad, jurisdicción, % participación, documento soporte. Marca “NO CONSTA” en vacíos y lista los documentos a solicitar.</td></tr>
+<tr><td>KYC-02</td><td>Actúa como oficial de cumplimiento. Diseña la entrevista de debida diligencia ampliada para {PERFIL}. Tabla: pregunta, justificación, señal de alerta que permite detectar, documento soporte esperado.</td></tr>
+<tr><td>KYC-03</td><td>Genera el checklist documental para vincular a una PEP extranjera: identificación, domicilio, fuente de fondos, fuente de patrimonio, aprobación de alta gerencia, monitoreo intensificado.</td></tr>
+<tr><td>KYC-04</td><td>Compara /Formulario_vinculación con /Documentos_soporte y lista inconsistencias (domicilios, fechas, firmas, actividad declarada vs. documentada).</td></tr>
+<tr><td>KYC-05</td><td>Redacta la solicitud de actualización de información para un cliente cuyo perfil transaccional cambió. Correo formal, sin mencionar alertas ni investigaciones.</td></tr>
+<tr><td>KYC-06</td><td>Diseña preguntas indirectas para detectar uso de la cuenta como mula de dinero en la apertura de cuenta de una persona natural joven.</td></tr>
+</table>
+
+<h4>Área 2 · Operaciones sospechosas</h4>
+<table>
+<tr><th>ID</th><th>Prompt</th></tr>
+<tr><td>ROS-01</td><td>Con los hechos anonimizados que te proporciono, redacta la narrativa de ROS en orden cronológico: quién, qué, cuándo, dónde, cómo y por qué es inusual frente al perfil. No califiques jurídicamente el delito; describe hechos y señales.</td></tr>
+<tr><td>ROS-02</td><td>Construye la línea de tiempo de las operaciones de la tabla adjunta y señala patrones (fraccionamiento, circularidad, rapidez de entrada y salida).</td></tr>
+<tr><td>ROS-03</td><td>Revisa este borrador de ROS como si fueras analista de la UAF: ¿está clara la inusualidad?, ¿hay hechos sin vincular?, ¿faltan montos o fechas? Devuelve comentarios por párrafo.</td></tr>
+<tr><td>ROS-04</td><td>Redacta la nota de archivo que documenta la decisión de NO reportar una alerta, indicando la documentación que justificó la operación y el analista responsable.</td></tr>
+<tr><td>ROS-05</td><td>Explica la tipología observada (por ejemplo, lavado basado en comercio con sobrefacturación) en un párrafo técnico para la sección de análisis, sin citar fuentes que no puedas identificar.</td></tr>
+</table>
+
+<h4>Área 3 · Evaluación y gestión de riesgos</h4>
+<table>
+<tr><th>ID</th><th>Prompt</th></tr>
+<tr><td>RIE-01</td><td>Diseña la matriz de riesgo de cliente (cliente, producto, canal, geografía) con puntajes 1 a 5, ponderaciones y reglas SI/ENTONCES.</td></tr>
+<tr><td>RIE-02</td><td>Evalúa el riesgo de un nuevo producto {PRODUCTO}: amenazas, vulnerabilidades, riesgo inherente, controles, riesgo residual. Formato de informe de evaluación de producto.</td></tr>
+<tr><td>RIE-03</td><td>Redacta la declaración de apetito de riesgo AML/CFT/CFPADM de la entidad con límites cuantitativos sugeridos para revisión de la Junta.</td></tr>
+<tr><td>RIE-04</td><td>Convierte esta metodología narrativa /Metodología_riesgo.docx en reglas de negocio programables: variable, condición, puntaje, fuente del dato.</td></tr>
+<tr><td>RIE-05</td><td>Elabora el cronograma de revisión periódica de la matriz y de actualización de expedientes según nivel de riesgo, con disparadores de revisión extraordinaria.</td></tr>
+</table>
+
+<h4>Área 4 · Capacitación y políticas</h4>
+<table>
+<tr><th>ID</th><th>Prompt</th></tr>
+<tr><td>CAP-01</td><td>Diseña un caso práctico de role-play: analista junior frente a cliente que oculta el propósito de la cuenta. Roles, objetivos de cada parte, pistas y solución.</td></tr>
+<tr><td>CAP-02</td><td>Genera 20 preguntas de evaluación (opción múltiple con justificación de la respuesta correcta) sobre /Manual_Cumplimiento.docx.</td></tr>
+<tr><td>CAP-03</td><td>Compara /Manual_vigente con /Acuerdo_nuevo y genera tabla de brechas: disposición, exigencia, estado actual del manual, ajuste requerido.</td></tr>
+</table>
+
+<h4>Área 5 · Monitoreo y reportes</h4>
+<table>
+<tr><th>ID</th><th>Prompt</th></tr>
+<tr><td>MON-01</td><td>Resume las alertas de la semana de /Alertas_semana.xlsx: total por escenario, tiempo de atención, alertas vencidas, analistas con mayor carga.</td></tr>
+<tr><td>MON-02</td><td>Propón calibración de umbrales a partir de la tasa de falsos positivos por escenario. Tabla: escenario, alertas, falsos positivos %, umbral actual, propuesta, riesgo de la propuesta.</td></tr>
+<tr><td>MON-03</td><td>Redacta el informe mensual de cumplimiento para la Gerencia General con indicadores clave, desviaciones y acciones.</td></tr>
+</table>
+
+<h3>6.3 Publicación en Prompt Gallery</h3>
+<ol class="steps">
+<li>Ejecute el prompt en Copilot Chat y valide el resultado.</li>
+<li>Pase el cursor sobre su mensaje y seleccione “Guardar prompt”.</li>
+<li>Asigne un título con el ID del catálogo (por ejemplo, “KYC-01 Cadena de titularidad”).</li>
+<li>Compártalo con el equipo de Cumplimiento desde la Prompt Gallery.</li>
+<li>Para resúmenes recurrentes, use la opción de programar el prompt (diario, semanal) y elija entrega por notificación o correo.</li>
+</ol>
+</section>
+
+<!-- ============ MÓDULO 7 ============ -->
+<section class="module">
+<div class="mod-head"><div class="n">Módulo 07 · Nivel 3</div><h2>Agentes I: Researcher, Analyst y Agent Builder</h2><p>Del asistente que responde al agente que ejecuta un rol especializado.</p></div>
+
+<div class="obj">
+<div><b>Objetivo</b>Usar agentes de razonamiento y crear agentes declarativos sin código.</div>
+<div><b>Duración</b>4 horas</div>
+<div><b>Entregable</b>Agente “SELENE · Asistente Normativo AML Panamá” publicado para el equipo.</div>
+</div>
+
+<h3>7.1 Qué es un agente</h3>
+<table>
+<tr><th>Componente</th><th>Función</th><th>Analogía en cumplimiento</th></tr>
+<tr><td>Instrucciones</td><td>Define rol, alcance, tono y límites</td><td>Descripción de puesto y manual de procedimientos</td></tr>
+<tr><td>Conocimiento</td><td>Fuentes que consulta (SharePoint, archivos, web)</td><td>Biblioteca normativa y políticas internas</td></tr>
+<tr><td>Acciones / herramientas</td><td>Lo que puede hacer (buscar, crear, enviar, actualizar)</td><td>Facultades delegadas</td></tr>
+<tr><td>Disparadores</td><td>Qué lo activa (usuario, evento, horario)</td><td>Procedimiento que inicia ante un evento</td></tr>
+<tr><td>Supervisión</td><td>Aprobaciones y bitácora</td><td>Línea de reporte y control dual</td></tr>
+</table>
+
+<h3>7.2 Agentes de razonamiento incorporados</h3>
+<table>
+<tr><th>Agente</th><th>Para qué</th><th>Prompt de ejemplo</th></tr>
+<tr><td>Researcher</td><td>Investigación profunda en varias fuentes (web y datos de trabajo) con informe citado</td><td><code>Investiga las tipologías de blanqueo vinculadas a zonas francas publicadas por GAFI y GAFILAT en los últimos 5 años, contrástalas con nuestros escenarios de monitoreo /Escenarios_monitoreo.xlsx y propone nuevos escenarios. Informe con citas.</code></td></tr>
+<tr><td>Analyst</td><td>Análisis de datos con razonamiento y ejecución de código</td><td><code>Analiza /Transacciones_2026.xlsx: agrupa por cliente, calcula la variación mensual frente a su perfil declarado, identifica a los 20 con mayor desviación y explica tu metodología.</code></td></tr>
+</table>
+<div class="box"><p style="margin:0">Researcher es apropiado para la búsqueda de noticias adversas preliminares sobre personas jurídicas o PEP, pero sus hallazgos deben confirmarse en fuentes primarias y en las herramientas de listas oficialmente contratadas por la entidad.</p></div>
+
+<h3>7.3 Construcción paso a paso con Agent Builder</h3>
+<ol class="steps">
+<li>En Copilot Chat, seleccione “Crear agente” (o desde el panel de Agentes → Nuevo agente).</li>
+<li>Pestaña Describir: explique en lenguaje natural qué debe hacer el agente. Copilot generará una primera configuración.</li>
+<li>Pestaña Configurar: revise y reemplace el nombre, la descripción y las instrucciones por la versión depurada (ver plantilla abajo).</li>
+<li>Conocimiento: agregue el sitio SharePoint “Biblioteca Normativa AML” (leyes, decretos, acuerdos SBP, SMV, SSRP, ISSNF, resoluciones UAF, manual interno). Desactive búsqueda web si quiere respuestas exclusivamente sobre fuentes internas.</li>
+<li>Capacidades: habilite intérprete de código si el agente debe analizar tablas.</li>
+<li>Iniciadores de conversación: cargue 4 a 6 preguntas frecuentes.</li>
+<li>Pruebe en el panel derecho con el banco de pruebas (sección 7.5).</li>
+<li>Cree y comparta solo con el grupo de seguridad de Cumplimiento.</li>
+</ol>
+
+<h3>7.4 Plantilla de instrucciones del agente</h3>
+<pre>NOMBRE: SELENE · Asistente Normativo AML Panamá
+
+ROL
+Eres un asistente especializado en prevención de blanqueo de capitales, financiamiento del terrorismo y
+financiamiento de la proliferación de armas de destrucción masiva en la República de Panamá.
+Asistes a oficiales y analistas de cumplimiento. No sustituyes su criterio.
+
+FUENTES
+1. Responde exclusivamente con base en los documentos de la base de conocimiento.
+2. Prioriza: ley > decreto ejecutivo > acuerdo del supervisor > resolución > manual interno > guía internacional.
+3. Cita siempre documento, artículo y fecha de la fuente.
+4. Si la respuesta no está en las fuentes, responde: "No encuentro sustento en la base normativa cargada. [VERIFICAR]".
+
+ALCANCE
+- Interpretación de obligaciones del sujeto obligado.
+- Requisitos de debida diligencia simplificada, ordinaria y ampliada.
+- Plazos, umbrales y conservación de registros.
+- Comparación de obligaciones entre supervisores.
+
+LÍMITES
+- No emitas decisiones sobre reportar o no un ROS; ofrece criterios y recuerda que la decisión es del Oficial de Cumplimiento.
+- No proceses datos identificables de clientes; si los recibes, solicita anonimizarlos.
+- No redactes comunicaciones al cliente que revelen análisis, alertas o reportes.
+
+FORMATO
+- Respuesta directa en la primera línea.
+- Luego tabla: obligación | fuente | artículo | observación.
+- Cierra con "Puntos a validar" cuando haya ambigüedad o reformas recientes.</pre>
+
+<h3>7.5 Banco de pruebas del agente</h3>
+<table>
+<tr><th>#</th><th>Prueba</th><th>Resultado esperado</th></tr>
+<tr><td>1</td><td>Pregunta con respuesta en las fuentes</td><td>Respuesta con cita correcta</td></tr>
+<tr><td>2</td><td>Pregunta fuera de las fuentes</td><td>Mensaje “No encuentro sustento…”</td></tr>
+<tr><td>3</td><td>“¿Debo reportar este caso?”</td><td>Ofrece criterios y remite la decisión al Oficial</td></tr>
+<tr><td>4</td><td>Se pegan datos de un cliente real</td><td>Solicita anonimizar</td></tr>
+<tr><td>5</td><td>“Redacta un correo al cliente explicando que lo estamos investigando”</td><td>Se niega y propone redacción neutral</td></tr>
+<tr><td>6</td><td>Pregunta sobre un acuerdo reformado</td><td>Identifica la versión vigente o advierte la reforma</td></tr>
+</table>
+
+<h3>7.6 Agentes de SharePoint</h3>
+<p>Cada sitio o biblioteca de SharePoint puede generar un agente acotado a su contenido. Cree uno sobre la biblioteca “Expedientes en remediación” para que los analistas consulten estados y pendientes sin navegar carpetas. Ajuste las fuentes y la descripción desde el menú del sitio y aprúebelo como agente oficial del sitio.</p>
+</section>
+
+<!-- ============ MÓDULO 8 ============ -->
+<section class="module">
+<div class="mod-head"><div class="n">Módulo 08 · Nivel 3</div><h2>Agentes II: Copilot Studio</h2><p>Agentes con temas, herramientas, conectores, flujos y comportamiento autónomo.</p></div>
+
+<div class="obj">
+<div><b>Objetivo</b>Diseñar un agente que ejecute un proceso de cumplimiento de extremo a extremo.</div>
+<div><b>Duración</b>6 horas</div>
+<div><b>Entregable</b>Agente “SELENE · Intake KYC” operando en Teams.</div>
+</div>
+
+<h3>8.1 Cuándo pasar de Agent Builder a Copilot Studio</h3>
+<table>
+<tr><th>Necesidad</th><th>Agent Builder</th><th>Copilot Studio</th></tr>
+<tr><td>Preguntas y respuestas sobre documentos</td><td>Sí</td><td>Sí</td></tr>
+<tr><td>Conversaciones guiadas con preguntas obligatorias (temas)</td><td>No</td><td>Sí</td></tr>
+<tr><td>Escribir en listas, enviar correos, crear aprobaciones</td><td>Limitado</td><td>Sí (herramientas y flujos)</td></tr>
+<tr><td>Disparadores por evento (nuevo archivo, nuevo correo)</td><td>No</td><td>Sí (agentes autónomos)</td></tr>
+<tr><td>Variables, condiciones y lógica</td><td>No</td><td>Sí</td></tr>
+<tr><td>Publicación en Teams, web o canales externos</td><td>Microsoft 365</td><td>Múltiples canales</td></tr>
+<tr><td>Análisis, métricas y control de versiones</td><td>Básico</td><td>Completo, con entornos y soluciones</td></tr>
+</table>
+
+<h3>8.2 Diseño funcional del agente “Intake KYC”</h3>
+<pre>OBJETIVO: Recibir la solicitud de vinculación de un cliente, capturar los datos mínimos, calcular el riesgo
+preliminar con la matriz institucional, generar el checklist documental y enrutar la aprobación.
+
+FLUJO
+1. Ejecutivo comercial inicia el agente en Teams: "Nueva vinculación".
+2. Tema "Captura": tipo de cliente (PN / PJ), país de constitución/nacionalidad, actividad (catálogo),
+   producto, canal, volumen mensual esperado, PEP (S/N), estructura con terceros (S/N).
+3. Herramienta "Calcular riesgo" (flujo de Power Automate) → aplica reglas → devuelve puntaje y nivel.
+4. Tema "Checklist": según nivel y tipo, devuelve documentos requeridos.
+5. Herramienta "Registrar solicitud" → crea elemento en lista SharePoint "Solicitudes_KYC".
+6. SI nivel = Alto o PEP = S → herramienta "Solicitar aprobación" a Oficial de Cumplimiento
+   (y a alta gerencia si PEP).
+7. Agente confirma número de solicitud y plazos al ejecutivo.</pre>
+
+<h3>8.3 Reglas de la matriz expresadas para el agente</h3>
+<pre>CLIENTE
+SI tipo = "PJ" Y estructura_terceros = "S"                 ENTONCES p_cliente = 4
+SI PEP = "S"                                               ENTONCES p_cliente = 5
+SI actividad EN catálogo_alto_riesgo                       ENTONCES p_cliente = MAX(p_cliente, 4)
+GEOGRAFÍA
+SI país EN lista_GAFI_llamado_accion                       ENTONCES p_geo = 5  Y bloqueo = "Revisión obligatoria"
+SI país EN lista_GAFI_monitoreo_incrementado               ENTONCES p_geo = 4
+SI país EN lista_jurisdicciones_baja_tributacion           ENTONCES p_geo = MAX(p_geo, 3)
+PRODUCTO / CANAL
+SI canal = "No presencial"                                 ENTONCES p_canal = 4
+SI producto = "Transferencias internacionales"             ENTONCES p_prod = 4
+CÁLCULO
+riesgo = p_cliente*{W1} + p_geo*{W2} + p_prod*{W3} + p_canal*{W4}     (W1+W2+W3+W4 = 1)
+nivel  = "Bajo" SI riesgo &lt; {U1};  "Medio" SI riesgo &lt; {U2};  "Alto" en otro caso
+OVERRIDE
+SI PEP = "S" O bloqueo existe                              ENTONCES nivel = "Alto"</pre>
+<div class="box gold"><p style="margin:0">Los pesos y umbrales <code>{W}</code> y <code>{U}</code> se parametrizan en una lista de SharePoint “Parámetros_Matriz” aprobada por el Comité, no en las instrucciones del agente. Así, un cambio de metodología no exige modificar el agente y queda trazado el cambio de parámetros.</p></div>
+
+<h3>8.4 Construcción paso a paso en Copilot Studio</h3>
+<ol class="steps">
+<li>Ingrese a copilotstudio.microsoft.com, elija el entorno de Cumplimiento y cree un agente nuevo describiéndolo en lenguaje natural.</li>
+<li>Pestaña Información general: pegue instrucciones con el mismo esquema del Módulo 7.4 (rol, fuentes, alcance, límites, formato).</li>
+<li>Conocimiento: agregue el sitio SharePoint de políticas y el catálogo de actividades.</li>
+<li>Temas: cree el tema “Captura KYC” con nodos de pregunta; use entidades de opción múltiple para tipo de cliente, canal y producto; guarde cada respuesta en variables.</li>
+<li>Herramientas: agregue un flujo de agente (Power Automate) “Calcular riesgo” que reciba las variables y devuelva puntaje y nivel.</li>
+<li>Agregue el conector SharePoint “Crear elemento” para registrar la solicitud.</li>
+<li>Agregue la acción de Approvals para casos de nivel Alto o PEP.</li>
+<li>Configure autenticación con Microsoft Entra ID para que cada acción quede atribuida al usuario.</li>
+<li>Pruebe en el panel de prueba, revise el mapa de actividad y corrija.</li>
+<li>Publique en Teams y Microsoft 365 Copilot; limite la disponibilidad al grupo comercial y de cumplimiento.</li>
+<li>Active análisis y revise semanalmente las conversaciones con escalamiento o error.</li>
+</ol>
+
+<h3>8.5 Agentes autónomos con disparadores</h3>
+<table>
+<tr><th>Disparador</th><th>Acción del agente</th><th>Control humano</th></tr>
+<tr><td>Nuevo documento en “Expedientes/Entrantes”</td><td>Clasifica el tipo documental, extrae datos clave y compara con la solicitud</td><td>Analista valida discrepancias</td></tr>
+<tr><td>Correo al buzón cumplimiento@ con asunto “Requerimiento”</td><td>Identifica autoridad, plazo y cliente; crea registro y tarea</td><td>Oficial asigna responsable</td></tr>
+<tr><td>Programado mensual</td><td>Identifica expedientes con fecha de actualización vencida según nivel de riesgo</td><td>Supervisor aprueba lista de remediación</td></tr>
+</table>
+<div class="box risk"><p style="margin:0">Un agente autónomo nunca debe enviar comunicaciones a clientes ni a autoridades sin aprobación humana explícita. Configure el paso de aprobación como obligatorio en el flujo, no como sugerencia en las instrucciones.</p></div>
+</section>
+
+<!-- ============ MÓDULO 9 ============ -->
+<section class="module">
+<div class="mod-head"><div class="n">Módulo 09 · Nivel 4</div><h2>Automatización con Power Automate + IA</h2><p>Procesos de cumplimiento orquestados: datos estructurados, IA donde aporta valor y aprobación donde se exige criterio.</p></div>
+
+<div class="obj">
+<div><b>Objetivo</b>Automatizar tres procesos recurrentes de la Unidad de Cumplimiento.</div>
+<div><b>Duración</b>6 horas</div>
+<div><b>Entregable</b>Tres flujos documentados y probados.</div>
+</div>
+
+<h3>9.1 Principios de diseño</h3>
+<ol>
+<li>Determinístico primero: lo que puede resolverse con reglas (umbrales, listas, fechas) no se delega al modelo.</li>
+<li>IA para lo no estructurado: clasificar documentos, extraer datos de textos, resumir, redactar borradores.</li>
+<li>Aprobación humana en cada punto de decisión regulatoria.</li>
+<li>Bitácora: cada ejecución deja registro (quién, qué, cuándo, resultado) en una lista auditable.</li>
+<li>Manejo de errores: ruta alternativa y notificación al responsable cuando un paso falla.</li>
+</ol>
+
+<h3>9.2 Arquitectura de datos mínima (SharePoint)</h3>
+<table>
+<tr><th>Lista</th><th>Campos clave</th></tr>
+<tr><td>Clientes</td><td>ID, tipo, nombre, país, actividad, PEP, nivel_riesgo, fecha_ultima_actualizacion, fecha_proxima_revision, responsable</td></tr>
+<tr><td>Solicitudes_KYC</td><td>ID, cliente, estado, puntaje, nivel, checklist, aprobador, fecha_aprobacion</td></tr>
+<tr><td>Parámetros_Matriz</td><td>variable, valor, puntaje, peso, vigente_desde, aprobado_por</td></tr>
+<tr><td>Bitácora_IA</td><td>flujo, ejecución, entrada_resumen, salida_resumen, usuario, revisado_por, fecha</td></tr>
+</table>
+
+<h3>9.3 Flujo 1 · Vinculación con calificación automática</h3>
+<pre>DISPARADOR   Microsoft Forms "Solicitud de vinculación" → nueva respuesta
+PASO 1       Obtener detalles de la respuesta
+PASO 2       Obtener elementos de Parámetros_Matriz (vigentes)
+PASO 3       Calcular puntajes por factor (Condiciones / Switch) y riesgo ponderado (expresiones)
+PASO 4       IA: prompt "Resume la actividad declarada y señala incoherencias entre actividad,
+             volumen y país" → texto
+PASO 5       Crear elemento en Solicitudes_KYC
+PASO 6       Condición: nivel = Alto O PEP = Sí
+               Sí  → Iniciar y esperar aprobación (Oficial de Cumplimiento)
+                     → Si PEP: segunda aprobación (alta gerencia)
+               No  → Asignar a analista
+PASO 7       Actualizar estado y notificar en Teams al ejecutivo comercial
+PASO 8       Crear elemento en Bitácora_IA</pre>
+
+<h3>9.4 Flujo 2 · Actualización periódica de expedientes</h3>
+<pre>DISPARADOR   Periódico: día 1 de cada mes, 7:00
+PASO 1       Obtener elementos de Clientes donde fecha_proxima_revision &lt;= hoy + 30 días
+PASO 2       Agrupar por responsable
+PASO 3       Para cada responsable: crear tabla HTML y enviar correo con lista de expedientes
+PASO 4       Para los vencidos: crear tarea en Planner y notificar al supervisor
+PASO 5       Generar resumen para el Oficial: total por nivel de riesgo, vencidos, en proceso
+
+REGLA        fecha_proxima_revision = fecha_ultima_actualizacion + periodo(nivel)
+             periodo(Alto) = {P_ALTO} meses; periodo(Medio) = {P_MEDIO}; periodo(Bajo) = {P_BAJO}
+             (parametrizar conforme a la política y normativa aplicable al sujeto obligado)</pre>
+
+<h3>9.5 Flujo 3 · Vigilancia normativa</h3>
+<pre>DISPARADOR   Nuevo archivo en biblioteca "Normativa/Entrante" (PDF de acuerdo, resolución o circular)
+PASO 1       IA: extraer emisor, número, fecha, materia, obligaciones nuevas, plazos de adecuación
+PASO 2       IA: comparar con /Manual_Cumplimiento y listar secciones afectadas
+PASO 3       Crear elemento en "Registro_Normativo" con resumen y brechas
+PASO 4       Publicar aviso en canal Teams "Cumplimiento · Normativa"
+PASO 5       Aprobación del Oficial para abrir plan de adecuación
+PASO 6       Si aprobado: crear tareas por sección afectada con fecha límite</pre>
+
+<h3>9.6 Prompt estructurado para pasos de IA dentro de flujos</h3>
+<pre>Eres un extractor de datos regulatorios. Analiza el documento adjunto.
+Devuelve SOLO JSON válido, sin texto adicional, con este esquema:
+{
+  "emisor": "string",
+  "tipo": "Ley|Decreto|Acuerdo|Resolución|Circular|Otro",
+  "numero": "string",
+  "fecha": "AAAA-MM-DD",
+  "materia": "string (máx. 30 palabras)",
+  "sujetos_obligados": ["string"],
+  "obligaciones_nuevas": [{"descripcion": "string", "articulo": "string", "plazo": "string|null"}],
+  "deroga_o_modifica": ["string"],
+  "confianza": "alta|media|baja"
+}
+Si un campo no consta en el documento, usa null. No infieras.</pre>
+<p>El esquema JSON permite que el paso siguiente del flujo (Analizar JSON) consuma la salida sin intervención manual y que la información se cargue directamente en listas, Excel o en la base de datos del sistema SaaS.</p>
+
+<div class="lab"><div class="t">Laboratorio 9</div>
+<ol class="steps">
+<li>En Copilot de Power Automate, describa el Flujo 2 en lenguaje natural y deje que genere el borrador.</li>
+<li>Revise cada acción, conecte las listas reales y reemplace las expresiones generadas por las reglas parametrizadas.</li>
+<li>Pruebe con 10 registros ficticios que cubran todos los niveles y casos límite (fechas nulas, responsable vacío).</li>
+<li>Documente el flujo con el prompt: <code>Documenta este flujo para auditoría: objetivo, disparador, pasos, controles, manejo de errores, responsable.</code></li>
+</ol></div>
+</section>
+
+<!-- ============ MÓDULO 10 ============ -->
+<section class="module">
+<div class="mod-head"><div class="n">Módulo 10 · Nivel 4</div><h2>Proyecto integrador, rúbrica y métricas</h2><p>Demostrar dominio con un sistema funcional que resuelve un problema real de la Unidad de Cumplimiento.</p></div>
+
+<h3>10.1 Enunciado</h3>
+<p>Cada participante (o equipo) diseña, construye y presenta un “Sistema de Cumplimiento Asistido” compuesto por:</p>
+<ol>
+<li>Biblioteca de al menos 10 prompts SELENE-7 en Prompt Gallery.</li>
+<li>Un agente declarativo con base normativa y banco de pruebas aprobado.</li>
+<li>Un flujo de Power Automate con paso de IA, aprobación humana y bitácora.</li>
+<li>Ficha de gobernanza: caso de uso, riesgos, controles, responsable, clasificación de datos.</li>
+<li>Presentación de 8 diapositivas al “Comité de Cumplimiento” generada con Copilot.</li>
+</ol>
+
+<h3>10.2 Rúbrica de evaluación</h3>
+<table>
+<tr><th>Criterio</th><th>Peso</th><th>Excelente (5)</th><th>Insuficiente (1)</th></tr>
+<tr><td>Rigor normativo</td><td>25%</td><td>Fuentes primarias citadas y validadas; distingue norma de buena práctica</td><td>Citas no verificadas o incorrectas</td></tr>
+<tr><td>Calidad de prompts</td><td>15%</td><td>7 elementos, variables, restricciones y verificación</td><td>Prompts genéricos</td></tr>
+<tr><td>Diseño del agente</td><td>20%</td><td>Instrucciones con límites, banco de pruebas superado</td><td>Sin límites ni pruebas</td></tr>
+<tr><td>Automatización</td><td>20%</td><td>Reglas parametrizadas, aprobación, bitácora, manejo de errores</td><td>Flujo lineal sin control</td></tr>
+<tr><td>Gobernanza y datos</td><td>15%</td><td>Clasificación, permisos y riesgo de revelación controlados</td><td>Datos sensibles expuestos</td></tr>
+<tr><td>Comunicación ejecutiva</td><td>5%</td><td>Presentación clara orientada a decisiones</td><td>Presentación descriptiva</td></tr>
+</table>
+
+<h3>10.3 Métricas de adopción y valor</h3>
+<table>
+<tr><th>Indicador</th><th>Fórmula</th><th>Meta sugerida a 90 días</th></tr>
+<tr><td>Tiempo de elaboración de informe de DDA</td><td>Promedio horas antes vs. después</td><td>Reducción ≥ 40%</td></tr>
+<tr><td>Tiempo de cierre de alertas</td><td>Días promedio de atención</td><td>Reducción ≥ 25%</td></tr>
+<tr><td>Expedientes vencidos</td><td>Vencidos / total en cartera</td><td>&lt; 5%</td></tr>
+<tr><td>Uso activo</td><td>Usuarios con uso semanal / licencias</td><td>≥ 80%</td></tr>
+<tr><td>Calidad</td><td>Salidas corregidas sustancialmente / revisadas</td><td>Tendencia decreciente</td></tr>
+<tr><td>Incidentes de IA</td><td>Eventos de revelación, datos expuestos o errores normativos</td><td>0</td></tr>
+</table>
+</section>
+
+<!-- ============ ANEXOS ============ -->
+<section class="module">
+<div class="mod-head"><div class="n">Anexos</div><h2>Plantillas, glosario y cronograma</h2><p>Material de apoyo para el facilitador y el participante.</p></div>
+
+<h3>Anexo A · Cronograma sugerido (8 semanas · 40 horas)</h3>
+<table>
+<tr><th>Semana</th><th>Módulos</th><th>Horas</th><th>Hito</th></tr>
+<tr><td>1</td><td>00, 01, 02</td><td>5</td><td>Entorno configurado y mapa de riesgos IA</td></tr>
+<tr><td>2</td><td>03</td><td>4</td><td>5 prompts SELENE-7 validados</td></tr>
+<tr><td>3</td><td>04</td><td>5</td><td>Expediente simulado completo</td></tr>
+<tr><td>4</td><td>05, 06</td><td>5</td><td>Política de IA y biblioteca publicada</td></tr>
+<tr><td>5</td><td>07</td><td>5</td><td>Agente normativo publicado</td></tr>
+<tr><td>6</td><td>08</td><td>6</td><td>Agente Intake KYC en Teams</td></tr>
+<tr><td>7</td><td>09</td><td>6</td><td>Tres flujos operativos</td></tr>
+<tr><td>8</td><td>10</td><td>4</td><td>Presentación del proyecto integrador</td></tr>
+</table>
+
+<h3>Anexo B · Ficha de caso de uso de IA (inventario)</h3>
+<pre>ID caso de uso:              IA-CUM-{000}
+Nombre:
+Proceso de cumplimiento:     (KYC / Monitoreo / ROS / Riesgo / Capacitación / Reportes)
+Herramienta:                 (Chat / App / Agente / Flujo)
+Clasificación de datos:      (Público / Interno / Confidencial / Restringido)
+Decisión que soporta:
+Responsable humano:
+Controles:                   (revisión, aprobación, restricciones de prompt, etiquetas)
+Riesgos residuales:
+Evidencia que se archiva:
+Fecha de aprobación / revisión:</pre>
+
+<h3>Anexo C · Rúbrica rápida de calidad de una salida de Copilot</h3>
+<table>
+<tr><th>Pregunta</th><th>Sí / No</th></tr>
+<tr><td>¿Cada afirmación relevante tiene fuente identificable?</td><td></td></tr>
+<tr><td>¿Las citas normativas fueron verificadas contra el texto oficial?</td><td></td></tr>
+<tr><td>¿Se respetó el formato solicitado?</td><td></td></tr>
+<tr><td>¿Se marcaron los vacíos de información en lugar de suponer?</td><td></td></tr>
+<tr><td>¿El texto está libre de revelaciones indebidas?</td><td></td></tr>
+<tr><td>¿Puede ser firmado por el responsable sin cambios sustanciales?</td><td></td></tr>
+</table>
+
+<h3>Anexo D · Glosario operativo</h3>
+<table>
+<tr><th>Término</th><th>Definición</th></tr>
+<tr><td>Agent Builder</td><td>Herramienta sin código dentro de Microsoft 365 Copilot para crear agentes declarativos.</td></tr>
+<tr><td>Agente declarativo</td><td>Agente definido por instrucciones, conocimiento y capacidades, que usa el motor de Copilot.</td></tr>
+<tr><td>Agente autónomo</td><td>Agente que actúa ante disparadores sin que un usuario inicie la conversación.</td></tr>
+<tr><td>Conector</td><td>Integración que permite a un flujo o agente leer o escribir en otro sistema.</td></tr>
+<tr><td>Copilot Studio</td><td>Plataforma para construir agentes avanzados con temas, herramientas y canales.</td></tr>
+<tr><td>EDP</td><td>Protección de datos empresarial: los prompts y respuestas no se usan para entrenar modelos y se rigen por los términos del tenant.</td></tr>
+<tr><td>Grounding</td><td>Anclaje de la respuesta en fuentes específicas.</td></tr>
+<tr><td>Microsoft Graph</td><td>Capa que conecta correos, archivos, reuniones y personas de la organización.</td></tr>
+<tr><td>Purview</td><td>Suite de gobierno de datos: etiquetas de confidencialidad, DLP y auditoría.</td></tr>
+<tr><td>Tema (Topic)</td><td>Ruta de conversación guiada en Copilot Studio.</td></tr>
+</table>
+
+<h3>Anexo E · Traducción a producto (SaaS)</h3>
+<p>Cada componente del curso tiene una equivalencia directa en un producto de gestión de riesgos:</p>
+<table>
+<tr><th>Componente del curso</th><th>Equivalente en producto</th></tr>
+<tr><td>Prompt SELENE-7 con variables</td><td>Plantilla de prompt versionada con campos del formulario</td></tr>
+<tr><td>Parámetros_Matriz</td><td>Tabla de configuración de la matriz por cliente (tenant)</td></tr>
+<tr><td>Reglas SI/ENTONCES</td><td>Motor de reglas de scoring</td></tr>
+<tr><td>Bitácora_IA</td><td>Registro de auditoría inmutable</td></tr>
+<tr><td>Aprobaciones</td><td>Flujo de workflow con segregación de funciones</td></tr>
+<tr><td>Agente normativo</td><td>Módulo de consulta normativa con RAG sobre base legal curada</td></tr>
+<tr><td>Esquema JSON de extracción</td><td>Contrato de API entre el módulo de IA y la base de datos</td></tr>
+</table>
+
+<div class="footer">
+Serrano Lawyers &amp; Consultants · Procompliance · SELENE — Material de formación. Microsoft, Microsoft 365, Copilot, Copilot Studio, Power Automate, SharePoint y Teams son marcas de Microsoft Corporation. Las referencias normativas deben validarse contra los textos oficiales vigentes publicados en Gaceta Oficial y por cada organismo supervisor. Los nombres de funciones y menús de Microsoft 365 Copilot pueden cambiar; verifique en su tenant. Casos y clientes de los ejercicios son ficticios.
+</div>
+</section>
+
+</main>
+</body>
+</html>
