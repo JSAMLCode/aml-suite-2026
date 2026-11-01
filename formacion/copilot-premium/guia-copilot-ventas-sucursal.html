@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Copilot para la Gerencia de Sucursal · Negocios y Ventas</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:opsz,wght@6..12,300;6..12,400;6..12,600;6..12,700;6..12,800;6..12,900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0B1F3A; --navy-2:#132B4F; --navy-3:#1E3A66;
+  --gold:#C9A227; --gold-soft:#F4EBCF; --ink:#1F2733; --muted:#5B6576;
+  --line:#DCE1EA; --bg:#FFFFFF; --panel:#F6F8FB; --ok:#1F7A4D; --warn:#B7791F; --risk:#B42318;
+}
+*{box-sizing:border-box}
+html{font-size:15px}
+body{margin:0;font-family:"Nunito Sans",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:var(--ink);background:var(--bg);line-height:1.6}
+main{max-width:980px;margin:0 auto;padding:0 40px 80px}
+h1,h2,h3,h4{color:var(--navy);line-height:1.25;margin:1.6em 0 .5em}
+h1{font-size:2.6rem;font-weight:900;letter-spacing:-.5px}
+h2{font-size:1.75rem;font-weight:800;border-bottom:3px solid var(--gold);padding-bottom:.3em}
+h3{font-size:1.25rem;font-weight:800}
+h4{font-size:1.02rem;font-weight:800;color:var(--navy-3)}
+p,li{font-size:1rem}
+a{color:var(--navy-3)}
+code,pre{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.86rem}
+pre{background:var(--navy);color:#EAF0FA;padding:16px 18px;border-radius:10px;overflow-x:auto;white-space:pre-wrap;border-left:5px solid var(--gold);line-height:1.5}
+pre .c{color:#9FB3D1}
+table{width:100%;border-collapse:collapse;margin:14px 0 20px;font-size:.92rem}
+th{background:var(--navy);color:#fff;text-align:left;padding:9px 10px;font-weight:700}
+td{border-bottom:1px solid var(--line);padding:8px 10px;vertical-align:top}
+tr:nth-child(even) td{background:var(--panel)}
+.cover{min-height:100vh;background:linear-gradient(155deg,var(--navy) 0%,var(--navy-2) 60%,var(--navy-3) 100%);color:#fff;padding:70px 60px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden}
+.cover:after{content:"";position:absolute;right:-180px;top:-120px;width:520px;height:520px;border:2px solid rgba(201,162,39,.35);border-radius:50%}
+.cover:before{content:"";position:absolute;right:-90px;top:-30px;width:340px;height:340px;border:1px solid rgba(201,162,39,.25);border-radius:50%}
+.brand{letter-spacing:4px;font-size:.8rem;text-transform:uppercase;color:var(--gold);font-weight:800}
+.cover h1{color:#fff;font-size:3.2rem;margin:.3em 0 .2em;max-width:760px}
+.cover .sub{font-size:1.25rem;color:#C9D5E8;max-width:720px;font-weight:300}
+.cover .meta{display:flex;gap:28px;flex-wrap:wrap;font-size:.9rem;color:#C9D5E8;border-top:1px solid rgba(255,255,255,.18);padding-top:22px}
+.cover .meta b{color:var(--gold);display:block;font-size:.72rem;letter-spacing:2px;text-transform:uppercase}
+.pill{display:inline-block;background:var(--gold);color:var(--navy);font-weight:800;padding:4px 12px;border-radius:30px;font-size:.78rem;letter-spacing:1px;text-transform:uppercase}
+.module{page-break-before:always;break-before:page}
+.mod-head{background:var(--navy);color:#fff;border-radius:14px;padding:26px 30px;margin:40px 0 20px;position:relative;overflow:hidden}
+.mod-head .n{color:var(--gold);font-weight:900;font-size:.85rem;letter-spacing:3px;text-transform:uppercase}
+.mod-head h2{color:#fff;border:0;margin:.2em 0 .3em;padding:0;font-size:1.9rem}
+.mod-head p{color:#C9D5E8;margin:0}
+.obj{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:14px 0 24px}
+.obj div{background:var(--panel);border-top:3px solid var(--gold);padding:12px 14px;border-radius:8px;font-size:.92rem}
+.obj b{display:block;color:var(--navy);font-size:.75rem;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px}
+.box{border-radius:10px;padding:14px 18px;margin:16px 0;border-left:5px solid var(--navy-3);background:var(--panel)}
+.box.gold{border-color:var(--gold);background:var(--gold-soft)}
+.box.risk{border-color:var(--risk);background:#FDF0EE}
+.box.ok{border-color:var(--ok);background:#EDF7F1}
+.box h4{margin:.1em 0 .4em}
+.lab{border:2px dashed var(--gold);border-radius:12px;padding:16px 20px;margin:20px 0}
+.lab .t{font-weight:900;color:var(--gold);letter-spacing:2px;font-size:.78rem;text-transform:uppercase}
+.steps{counter-reset:s;list-style:none;padding:0}
+.steps li{counter-increment:s;position:relative;padding:6px 0 6px 46px;margin:4px 0}
+.steps li:before{content:counter(s);position:absolute;left:0;top:5px;width:30px;height:30px;border-radius:50%;background:var(--navy);color:var(--gold);font-weight:900;display:flex;align-items:center;justify-content:center;font-size:.85rem}
+.toc{columns:2;column-gap:40px;padding-left:0;list-style:none}
+.toc li{break-inside:avoid;padding:6px 0;border-bottom:1px solid var(--line)}
+.toc .k{color:var(--gold);font-weight:900;margin-right:8px}
+.levels{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:18px 0}
+.levels div{border-radius:10px;padding:14px;color:#fff;font-size:.88rem}
+.levels b{display:block;font-size:1.05rem;margin-bottom:4px;color:var(--gold)}
+.l1{background:#2E4A75}.l2{background:#233D66}.l3{background:#183058}.l4{background:#0B1F3A}
+.tag{display:inline-block;font-size:.72rem;font-weight:800;padding:2px 8px;border-radius:20px;background:var(--navy-3);color:#fff;margin-right:4px}
+.tag.g{background:var(--gold);color:var(--navy)}
+.footer{margin-top:60px;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:.82rem}
+@media print{
+  html{font-size:12.5px}
+  main{padding:0 14mm}
+  .cover{min-height:auto;height:297mm;padding:22mm 18mm}
+  pre,table,.box,.lab,.obj{break-inside:avoid}
+  h2,h3,h4{break-after:avoid}
+  a{text-decoration:none}
+}
+@page{size:A4;margin:14mm 0 16mm}
+@page:first{margin:0}
+</style>
+</head>
+<body>
+<section class="cover">
+  <div><div class="brand">Serrano Lawyers &amp; Consultants · Procompliance · SELENE</div></div>
+  <div>
+    <span class="pill">Programa de formación · Banca comercial</span>
+    <h1>Copilot para la Gerencia de Sucursal</h1>
+    <div class="sub">Guía paso a paso para dominar Microsoft 365 Copilot en negocios y ventas bancarias: Outlook, Word, Excel, PowerPoint, Teams, Copilot Chat, Pages, Notebooks, agentes y automatización. Del primer prompt a un equipo comercial asistido por IA.</div>
+  </div>
+  <div class="meta">
+    <div><b>Facilitador</b>José Serrano · Serrano Lawyers &amp; Consultants</div>
+    <div><b>Dirigido a</b>Gerentes de sucursal, jefes de servicio y ejecutivos de negocios</div>
+    <div><b>Plataforma</b>Microsoft 365 Copilot · Agent Builder · Power Automate</div>
+    <div><b>Edición</b>Noviembre 2026</div>
+  </div>
+</section>
+
+<main>
+
+<h2>Cómo usar esta guía</h2>
+<p>Seis sesiones de 90 minutos más práctica diaria guiada. Cada módulo parte de una tarea real de la gerencia de sucursal (metas, cartera, seguimiento comercial, equipo, servicio, reportes a la regional) y termina con un entregable que la gerente usa al día siguiente. El hilo conductor es un caso: la Sucursal Costa del Este (ficticia), con 6 ejecutivos de negocios, metas mensuales por producto y un comité semanal con la gerencia regional.</p>
+
+<div class="levels">
+  <div class="l1"><b>Nivel 1 · Despegue</b>Módulos 0 a 2. Reglas de datos, qué es la IA y el método de prompts.</div>
+  <div class="l2"><b>Nivel 2 · Productividad</b>Módulos 3 a 6. Outlook, Word, Excel, PowerPoint y Teams.</div>
+  <div class="l3"><b>Nivel 3 · Copilot avanzado</b>Módulos 7 y 8. Pages, Notebooks, Prompt Gallery, Researcher, Analyst y agentes.</div>
+  <div class="l4"><b>Nivel 4 · Sistema</b>Módulos 9 y 10. Automatización y rutina de gerencia asistida.</div>
+</div>
+
+<h3>Índice</h3>
+<ul class="toc">
+  <li><span class="k">00</span>Antes de empezar: licencia, política del banco y datos de clientes</li>
+  <li><span class="k">01</span>IA generativa en 30 minutos para gerentes</li>
+  <li><span class="k">02</span>El método de prompts comerciales</li>
+  <li><span class="k">03</span>Outlook: bandeja, clientes y agenda</li>
+  <li><span class="k">04</span>Word: propuestas, cartas e informes</li>
+  <li><span class="k">05</span>Excel: metas, cartera y tableros</li>
+  <li><span class="k">06</span>PowerPoint y Teams: comités y reuniones de equipo</li>
+  <li><span class="k">07</span>Copilot Chat premium: Pages, Notebooks, Prompt Gallery, Researcher y Analyst</li>
+  <li><span class="k">08</span>Agentes para la sucursal</li>
+  <li><span class="k">09</span>Automatización: prompts programados y Power Automate</li>
+  <li><span class="k">10</span>La semana del gerente con Copilot y proyecto final</li>
+  <li><span class="k">A</span>Anexos: 40 prompts comerciales, plan de sesiones, diagnóstico de nivel</li>
+</ul>
+
+<div class="box gold"><h4>Convenciones</h4><p style="margin:0">Variables entre llaves: <code>{EJECUTIVO}</code>, <code>{PRODUCTO}</code>, <code>{MES}</code>. Para referenciar un archivo, correo o reunión dentro de Copilot escriba <code>/</code> y selecciónelo. Los bloques oscuros son texto listo para copiar. Los nombres de menús de Microsoft cambian con frecuencia: valide en el entorno del banco. Los casos, clientes y cifras de los ejercicios son ficticios.</p></div>
+
+<!-- 00 -->
+<section class="module">
+<div class="mod-head"><div class="n">Módulo 00</div><h2>Antes de empezar: licencia, política del banco y datos de clientes</h2><p>En banca, la primera habilidad con IA es saber qué información puede entrar y por cuál puerta.</p></div>
+
+<h3>0.1 Qué versión de Copilot tiene</h3>
+<table>
+<tr><th>Si tiene…</th><th>Puede</th><th>No puede</th></tr>
+<tr><td>Microsoft 365 Copilot asignado por el banco (cuenta corporativa)</td><td>Trabajar con correos, reuniones, chats y archivos del banco; agentes con SharePoint; Copilot en Teams</td><td>Lo que la política interna o TI haya deshabilitado</td></tr>
+<tr><td>Microsoft 365 Premium personal (cuenta propia)</td><td>Practicar, redactar, aprender, trabajar con archivos personales</td><td>Usar información de clientes, del banco o de colaboradores</td></tr>
+<tr><td>Copilot Chat gratuito con cuenta del banco</td><td>Chat con web y archivos que suba, con protección empresarial</td><td>Leer su correo, agenda o reuniones</td></tr>
+</table>
+
+<div class="box risk"><h4>Las 5 reglas de oro de la sucursal</h4>
+<ol style="margin:0">
+<li>Información de clientes, saldos, préstamos o colaboradores: solo en el Copilot corporativo autorizado por el banco. Nunca en cuentas personales ni en otras IA públicas.</li>
+<li>La reserva bancaria y la protección de datos personales (Ley 81 de 2019) aplican igual con IA que sin ella.</li>
+<li>Copilot redacta; usted firma. Ninguna comunicación sale sin revisión humana.</li>
+<li>Condiciones de productos, tasas y requisitos se toman de las fichas oficiales vigentes del banco, no de la memoria del modelo.</li>
+<li>Nunca usar la IA para ayudar a un cliente a fraccionar operaciones, evitar controles o “acomodar” documentación. Si algo luce inusual, se escala a Cumplimiento sin alertar al cliente.</li>
+</ol></div>
+
+<div class="box"><h4>Nota para el facilitador</h4><p style="margin:0">Aquí entra su experiencia en cumplimiento: dedique 15 minutos a explicar por qué la presión comercial es el principal vector de riesgo de debida diligencia en sucursal, y cómo un buen prompt comercial incluye restricciones de venta responsable (idoneidad del producto, transparencia de cargos, no revelación).</p></div>
+
+<h3>0.2 Checklist técnico</h3>
+<table>
+<tr><th>#</th><th>Verificar</th></tr>
+<tr><td>1</td><td>Ícono de Copilot visible en Outlook, Word, Excel, PowerPoint y Teams</td></tr>
+<tr><td>2</td><td>Archivos de trabajo guardados en OneDrive o SharePoint del banco (Copilot no lee el disco local)</td></tr>
+<tr><td>3</td><td>Autoguardado activo en Office</td></tr>
+<tr><td>4</td><td>Transcripción habilitada en reuniones de Teams</td></tr>
+<tr><td>5</td><td>Acceso a m365.cloud.microsoft con el selector Trabajo / Web</td></tr>
+</table>
+</section>
+
+<!-- 01 -->
+<section class="module">
+<div class="mod-head"><div class="n">Módulo 01 · Nivel 1</div><h2>IA generativa en 30 minutos para gerentes</h2><p>Lo suficiente para usarla bien y detectar cuándo se equivoca.</p></div>
+<div class="obj"><div><b>Objetivo</b>Entender qué hace Copilot y dónde falla.</div><div><b>Duración</b>30 minutos</div><div><b>Entregable</b>Lista personal de 10 tareas delegables.</div></div>
+
+<table>
+<tr><th>Concepto</th><th>En lenguaje de sucursal</th></tr>
+<tr><td>Modelo de lenguaje</td><td>Un asistente que redacta y razona con base en patrones; escribe muy bien, pero puede afirmar con seguridad algo incorrecto.</td></tr>
+<tr><td>Alucinación</td><td>Una tasa, un requisito o una cifra inventada. Por eso los datos se toman de archivos oficiales.</td></tr>
+<tr><td>Grounding (anclaje)</td><td>Decirle “usa este archivo / este correo / esta reunión” para que responda sobre hechos reales.</td></tr>
+<tr><td>Contexto</td><td>Todo lo que Copilot “ve” en la conversación. Más contexto relevante, mejor respuesta.</td></tr>
+<tr><td>Agente</td><td>Un Copilot especializado con instrucciones y documentos propios (por ejemplo, un coach de ventas).</td></tr>
+<tr><td>Automatización</td><td>Que una tarea ocurra sola: un resumen cada lunes, un recordatorio cuando vence un seguimiento.</td></tr>
+</table>
+
+<h3>1.1 Qué delegar y qué no</h3>
+<table>
+<tr><th>Delegue con confianza</th><th>Delegue y revise</th><th>No delegue</th></tr>
+<tr><td>Resumir correos y reuniones<br>Borradores de correos y cartas<br>Ordenar y analizar tablas<br>Preparar agendas y presentaciones<br>Ideas para campañas y guiones</td><td>Análisis de metas y proyecciones<br>Propuestas a clientes<br>Evaluaciones de desempeño<br>Respuestas a reclamos</td><td>Aprobación de créditos<br>Condiciones y tasas finales<br>Decisiones sobre personal<br>Excepciones a políticas<br>Temas de cumplimiento</td></tr>
+</table>
+
+<div class="lab"><div class="t">Ejercicio 1</div><p>Liste las 10 tareas que más tiempo le consumen en la semana. Para cada una marque: frecuencia, horas, y si cae en “delegar”, “delegar y revisar” o “no delegar”. Esta lista guía todo el curso.</p></div>
+</section>
+
+<!-- 02 -->
+<section class="module">
+<div class="mod-head"><div class="n">Módulo 02 · Nivel 1</div><h2>El método de prompts comerciales</h2><p>Siete elementos para pasar de respuestas genéricas a resultados que se usan directo.</p></div>
+<div class="obj"><div><b>Objetivo</b>Escribir prompts precisos y repetibles.</div><div><b>Duración</b>45 minutos</div><div><b>Entregable</b>3 prompts propios probados.</div></div>
+
+<table>
+<tr><th>#</th><th>Elemento</th><th>Ejemplo en sucursal</th></tr>
+<tr><td>1</td><td>Rol</td><td>Actúa como gerente comercial de banca de personas con 10 años de experiencia.</td></tr>
+<tr><td>2</td><td>Contexto</td><td>Mi sucursal tiene 6 ejecutivos; la meta de préstamos personales del mes es USD 450,000 y vamos en 58% al día 18. Archivo: /Avance_metas_{MES}.xlsx</td></tr>
+<tr><td>3</td><td>Tarea</td><td>Identifica qué ejecutivos están por debajo del ritmo necesario y cuánto deben colocar por día para cerrar.</td></tr>
+<tr><td>4</td><td>Formato</td><td>Tabla por ejecutivo y 3 recomendaciones de acción en viñetas.</td></tr>
+<tr><td>5</td><td>Límites</td><td>Usa solo los datos del archivo. No propongas descuentos ni condiciones fuera de política.</td></tr>
+<tr><td>6</td><td>Tono / audiencia</td><td>Para compartir con el equipo: motivador, directo, sin culpar.</td></tr>
+<tr><td>7</td><td>Verificación</td><td>Indica los supuestos que usaste y qué datos debo confirmar.</td></tr>
+</table>
+
+<h3>2.1 Plantilla</h3>
+<pre>Actúa como {ROL}.
+Contexto: {SITUACIÓN}. Usa /{ARCHIVO o CORREO o REUNIÓN}.
+Tarea: {QUÉ HACER, CON VERBO CONCRETO}.
+Formato: {TABLA / CORREO / LISTA / DIAPOSITIVAS} con {DETALLES}.
+Límites: usa solo la información indicada; no inventes cifras; respeta las políticas del banco.
+Audiencia y tono: {PARA QUIÉN} · {TONO}.
+Al final: supuestos y datos a confirmar.</pre>
+
+<h3>2.2 Antes y después</h3>
+<pre>ANTES:   Ayúdame con las metas.
+
+DESPUÉS: Actúa como gerente comercial de banca de personas. Usa /Avance_metas_noviembre.xlsx.
+Calcula para cada ejecutivo el % de cumplimiento por producto (préstamo personal, auto, hipoteca,
+tarjeta de crédito, cuentas nuevas) y la colocación diaria necesaria para llegar al 100% con los
+días hábiles restantes. Tabla ordenada de menor a mayor cumplimiento y, debajo, un mensaje de
+5 líneas para el equipo, motivador y sin señalar nombres. No inventes cifras.</pre>
+
+<h3>2.3 Cinco técnicas que marcan la diferencia</h3>
+<table>
+<tr><th>Técnica</th><th>Cómo se pide</th></tr>
+<tr><td>Iterar</td><td>“Más corto”, “más formal”, “agrega una tabla”, “mantén todo igual salvo el cierre”.</td></tr>
+<tr><td>Dar un ejemplo</td><td>“Escribe con el mismo estilo de /correo_modelo”.</td></tr>
+<tr><td>Pasos</td><td>“Primero resume; espera mi confirmación; luego redacta”.</td></tr>
+<tr><td>Pedir crítica</td><td>“Revisa esta propuesta como si fueras el cliente y dime qué objetaría”.</td></tr>
+<tr><td>Role-play</td><td>“Sé un cliente molesto por un cargo; yo seré la ejecutiva. Al final evalúa mi respuesta”.</td></tr>
+</table>
+</section>
+
+<!-- 03 Outlook -->
+<section class="module">
+<div class="mod-head"><div class="n">Módulo 03 · Nivel 2</div><h2>Outlook: bandeja, clientes y agenda</h2><p>Recuperar una hora diaria de correo y no perder ningún seguimiento.</p></div>
+<div class="obj"><div><b>Objetivo</b>Gestionar correo y agenda con Copilot.</div><div><b>Duración</b>60 minutos</div><div><b>Entregable</b>Rutina de bandeja de 15 minutos y 5 plantillas de correo.</div></div>
+
+<h3>3.1 Funciones clave</h3>
+<table>
+<tr><th>Función</th><th>Dónde</th><th>Uso en sucursal</th></tr>
+<tr><td>Resumir hilo</td><td>Botón “Resumir” en la parte superior del correo</td><td>Hilos largos con la regional, operaciones o un cliente corporativo</td></tr>
+<tr><td>Redactar con Copilot</td><td>Nuevo correo → ícono Copilot → “Redactar”</td><td>Seguimientos, invitaciones, respuestas a reclamos</td></tr>
+<tr><td>Coaching</td><td>En el borrador → Copilot → “Coaching”</td><td>Revisar tono, claridad y sentimiento antes de enviar algo delicado</td></tr>
+<tr><td>Chat de Copilot en Outlook</td><td>Panel lateral</td><td>Preguntas sobre la bandeja y la agenda</td></tr>
+<tr><td>Preparar reuniones</td><td>Evento del calendario → Copilot</td><td>Resumen previo de correos y archivos relacionados con la reunión</td></tr>
+</table>
+
+<h3>3.2 Rutina de bandeja de 15 minutos</h3>
+<pre>Revisa mis correos no leídos de las últimas 24 horas y clasifícalos en:
+1) Requiere mi acción hoy, 2) Puedo delegar (indica a quién según el tema), 3) Solo informativo.
+Para el grupo 1 indica remitente, asunto, qué me piden y fecha límite si se menciona.
+Tabla. No incluyas boletines ni notificaciones automáticas.</pre>
+<pre>¿Qué compromisos asumí por correo esta semana con clientes o con la regional que aún no he cumplido?
+Lista: compromiso, con quién, fecha, correo de origen.</pre>
+
+<h3>3.3 Correos comerciales</h3>
+<table>
+<tr><th>Situación</th><th>Prompt</th></tr>
+<tr><td>Seguimiento tras visita</td><td><code>Redacta un correo de seguimiento a {CLIENTE} tras nuestra reunión sobre {TEMA}. Resume en 3 viñetas lo conversado, adjunta lista de documentos pendientes y cierra con una pregunta concreta para agendar la firma. Tono cercano y profesional, máximo 120 palabras.</code></td></tr>
+<tr><td>Reactivación</td><td><code>Redacta un correo para clientes con cuenta inactiva hace 6 meses invitándolos a una asesoría financiera sin costo en la sucursal. Sin promesas de tasas; con enlace para agendar; máximo 90 palabras.</code></td></tr>
+<tr><td>Reclamo</td><td><code>Responde a este reclamo /correo con empatía: reconoce la molestia, explica el siguiente paso y el plazo de respuesta de {N} días hábiles. No admitas responsabilidad ni ofrezcas compensaciones; eso lo define el área encargada.</code></td></tr>
+<tr><td>Reporte a la regional</td><td><code>Redacta el correo semanal a la gerencia regional con el avance de metas de /Avance_metas.xlsx: logros, brechas, acciones de la próxima semana y apoyo que necesito. 5 viñetas máximo.</code></td></tr>
+<tr><td>Reconocimiento</td><td><code>Escribe un mensaje de reconocimiento a {EJECUTIVO} por superar su meta de {PRODUCTO}. Específico, sincero, 60 palabras.</code></td></tr>
+</table>
+
+<h3>3.4 Agenda</h3>
+<pre>Revisa mi calendario de la próxima semana. Identifica conflictos, reuniones sin agenda y bloques
+libres de más de 90 minutos. Propón dónde ubicar 3 visitas a clientes empresariales y 2 sesiones
+de coaching individual con ejecutivos.</pre>
+
+<div class="lab"><div class="t">Práctica diaria · semana 1</div><p>Todos los días a la misma hora: rutina de bandeja de 15 minutos y al menos un correo redactado con Copilot y revisado con Coaching. Anote el tiempo invertido antes y después.</p></div>
+</section>
+
+<!-- 04 Word -->
+<section class="module">
+<div class="mod-head"><div class="n">Módulo 04 · Nivel 2</div><h2>Word: propuestas, cartas e informes</h2><p>Documentos profesionales en minutos, siempre sobre fuentes oficiales.</p></div>
+<div class="obj"><div><b>Objetivo</b>Redactar, transformar y revisar documentos.</div><div><b>Duración</b>60 minutos</div><div><b>Entregable</b>Propuesta comercial y informe mensual de sucursal.</div></div>
+
+<h3>4.1 Las cuatro acciones de Copilot en Word</h3>
+<table>
+<tr><th>Acción</th><th>Ejemplo</th></tr>
+<tr><td>Redactar desde cero o desde archivos</td><td><code>Redacta una propuesta de servicios para {EMPRESA} (planilla, cuentas corporativas, línea de crédito) usando /Ficha_producto_planilla.pdf y /Notas_visita.docx. Secciones: necesidad del cliente, solución, beneficios, requisitos, próximos pasos.</code></td></tr>
+<tr><td>Reescribir</td><td>Seleccione un párrafo → Copilot → “Reescribir” → elija tono o pida “más claro para un cliente sin conocimientos financieros”.</td></tr>
+<tr><td>Convertir en tabla</td><td><code>Convierte la sección de requisitos en una tabla: documento, quién lo emite, vigencia.</code></td></tr>
+<tr><td>Preguntar al documento</td><td><code>¿Qué compromisos asume el banco en esta propuesta? ¿Hay alguna afirmación que pueda interpretarse como garantía de aprobación?</code></td></tr>
+</table>
+
+<div class="box"><p style="margin:0">Agent Mode en Word permite trabajar el documento en varios pasos conversando con Copilot (redactar, revisar coherencia, ajustar formato). Mantenga activo el control de cambios para ver qué modificó.</p></div>
+<h3>4.2 Documentos típicos de la gerencia</h3>
+<table>
+<tr><th>Documento</th><th>Prompt base</th></tr>
+<tr><td>Informe mensual de sucursal</td><td><code>Con /Avance_metas.xlsx y /Indicadores_servicio.xlsx redacta el informe mensual: resumen ejecutivo, cumplimiento por producto, desempeño por ejecutivo, servicio (tiempos de espera, reclamos), riesgos y plan del próximo mes. 2 páginas.</code></td></tr>
+<tr><td>Plan comercial trimestral</td><td><code>Elabora el plan comercial del próximo trimestre: metas por producto, segmentos objetivo, campañas, actividades por semana, responsables y métricas.</code></td></tr>
+<tr><td>Procedimiento interno de sucursal</td><td><code>Convierte esta descripción de cómo atendemos una solicitud de préstamo /notas en un procedimiento paso a paso para nuevos colaboradores, con puntos de control.</code></td></tr>
+<tr><td>Evaluación de desempeño</td><td><code>Con mis notas /Notas_{EJECUTIVO} redacta la evaluación: logros, fortalezas, oportunidades, 3 objetivos SMART. Lenguaje objetivo, basado en hechos.</code></td></tr>
+<tr><td>Guion de capacitación</td><td><code>Crea un guion de 20 minutos para capacitar al equipo en el nuevo producto /Ficha_{PRODUCTO}: beneficios, cliente ideal, preguntas de descubrimiento, objeciones y respuestas.</code></td></tr>
+</table>
+
+
+</section>
+
+<!-- 05 Excel -->
+<section class="module">
+<div class="mod-head"><div class="n">Módulo 05 · Nivel 2</div><h2>Excel: metas, cartera y tableros</h2><p>Del reporte que llega al análisis que permite decidir.</p></div>
+<div class="obj"><div><b>Objetivo</b>Analizar datos comerciales sin fórmulas complejas.</div><div><b>Duración</b>90 minutos</div><div><b>Entregable</b>Tablero de metas de la sucursal.</div></div>
+
+<div class="box gold"><h4>Requisito</h4><p style="margin:0">Copilot en Excel trabaja mejor con datos en formato de Tabla (Ctrl+T), encabezados claros en una sola fila, sin celdas combinadas ni filas de totales intermedias, y el archivo guardado en OneDrive o SharePoint.</p></div>
+
+<h3>5.1 Estructura sugerida del archivo de metas</h3>
+<table>
+<tr><th>Columna</th><th>Ejemplo</th></tr>
+<tr><td>Fecha</td><td>2026-11-18</td></tr>
+<tr><td>Ejecutivo</td><td>Ejecutivo 3</td></tr>
+<tr><td>Producto</td><td>Préstamo personal / Auto / Hipoteca / Tarjeta / Cuenta / Seguro</td></tr>
+<tr><td>Monto colocado</td><td>12,500</td></tr>
+<tr><td>Cantidad</td><td>1</td></tr>
+<tr><td>Canal de origen</td><td>Walk-in / Referido / Llamada / Empresa con planilla</td></tr>
+<tr><td>Estado</td><td>Solicitado / En análisis / Aprobado / Desembolsado / Declinado</td></tr>
+</table>
+
+<h3>5.2 Prompts por nivel</h3>
+<table>
+<tr><th>Nivel</th><th>Prompt</th></tr>
+<tr><td><span class="tag">Básico</span></td><td><code>Resume el total colocado por producto y por ejecutivo este mes.</code></td></tr>
+<tr><td><span class="tag">Básico</span></td><td><code>Resalta en rojo las filas con estado "En análisis" de más de 10 días.</code></td></tr>
+<tr><td><span class="tag">Intermedio</span></td><td><code>Agrega una columna con el % de cumplimiento contra la hoja Metas y otra con la colocación diaria necesaria según días hábiles restantes.</code></td></tr>
+<tr><td><span class="tag">Intermedio</span></td><td><code>Crea una tabla dinámica de monto por canal de origen y producto, con un gráfico de barras.</code></td></tr>
+<tr><td><span class="tag">Intermedio</span></td><td><code>¿Cuál es la tasa de conversión de solicitado a desembolsado por ejecutivo? ¿Quién tiene más declinaciones y en qué producto?</code></td></tr>
+<tr><td><span class="tag g">Avanzado</span></td><td><code>Compara los últimos 6 meses y proyecta el cierre de este mes por producto con el ritmo actual. Explica la metodología.</code></td></tr>
+<tr><td><span class="tag g">Avanzado</span></td><td><code>Identifica los 3 hallazgos más relevantes de estos datos para la reunión con la regional y crea un gráfico para cada uno.</code></td></tr>
+<tr><td><span class="tag g">Avanzado</span></td><td>En una celda: <code>=COPILOT("Clasifica el comentario del cliente en: precio, tiempo, servicio, producto, otro", F2)</code> para categorizar encuestas o reclamos.</td></tr>
+</table>
+
+<h3>5.3 Tablero de metas paso a paso</h3>
+<ol class="steps">
+<li>Convierta los datos en Tabla y nómbrela “Colocaciones”. Cree la hoja “Metas” con ejecutivo, producto y meta mensual.</li>
+<li>Pida: <code>Crea una hoja "Tablero" con el cumplimiento por producto y por ejecutivo, usando semáforo: verde ≥ 100%, amarillo 80-99%, rojo &lt; 80% del ritmo esperado al día de hoy.</code></li>
+<li>Pida: <code>Agrega un gráfico de avance acumulado diario contra la línea de meta.</code></li>
+<li>Pida: <code>Explícame cada fórmula creada en lenguaje simple.</code> Valide 3 cálculos a mano.</li>
+<li>Guarde como plantilla mensual; el siguiente mes solo se reemplazan los datos.</li>
+</ol>
+<div class="box"><p style="margin:0">Para análisis más profundos (cohortes, proyecciones, valores atípicos) use el agente Analyst o Agent Mode en Excel, que planifica y ejecuta varios pasos y puede usar Python. Siempre pida que explique la metodología.</p></div>
+</section>
+
+<!-- 06 PPT & Teams -->
+<section class="module">
+<div class="mod-head"><div class="n">Módulo 06 · Nivel 2</div><h2>PowerPoint y Teams: comités y reuniones de equipo</h2><p>Reuniones más cortas, actas automáticas y presentaciones en minutos.</p></div>
+<div class="obj"><div><b>Objetivo</b>Preparar, conducir y cerrar reuniones con Copilot.</div><div><b>Duración</b>60 minutos</div><div><b>Entregable</b>Presentación mensual y acta del huddle.</div></div>
+
+<h3>6.1 PowerPoint</h3>
+<pre>Crea una presentación de 7 diapositivas para la reunión mensual con la gerencia regional a partir de
+/Informe_mensual_{MES}.docx: 1) Resumen, 2) Cumplimiento por producto, 3) Desempeño del equipo,
+4) Servicio y reclamos, 5) Oportunidades en la zona, 6) Plan del próximo mes, 7) Apoyo requerido.
+Una idea por diapositiva, notas del orador con lo que debo decir.</pre>
+<p>Ajustes útiles: “Agrega una diapositiva con un gráfico de /Tablero.xlsx”, “Resume esta presentación en 3 mensajes clave”, “Organiza las diapositivas por secciones”.</p>
+
+<h3>6.2 Teams: el huddle diario de 15 minutos</h3>
+<table>
+<tr><th>Momento</th><th>Uso de Copilot</th></tr>
+<tr><td>Antes</td><td><code>Prepara la agenda del huddle de hoy con: avance del día anterior de /Tablero.xlsx, citas agendadas y un foco comercial del día.</code></td></tr>
+<tr><td>Durante (transcripción activa)</td><td><code>¿Qué compromisos asumió cada ejecutivo hasta ahora?</code> · <code>¿Qué temas quedaron sin resolver?</code></td></tr>
+<tr><td>Después (resumen inteligente / recap)</td><td><code>Genera el acta: compromisos por ejecutivo con monto o cantidad, obstáculos mencionados y tareas para mí. Formato para publicar en el canal del equipo.</code></td></tr>
+</table>
+
+<h3>6.3 Chats y canales</h3>
+<pre>Resume lo conversado en el canal "Sucursal – Comercial" esta semana: decisiones, dudas pendientes
+y mensajes donde me mencionaron sin respuesta.</pre>
+</section>
+
+<!-- 07 Copilot Chat -->
+<section class="module">
+<div class="mod-head"><div class="n">Módulo 07 · Nivel 3</div><h2>Copilot Chat premium: Pages, Notebooks, Prompt Gallery, Researcher y Analyst</h2><p>Las herramientas que convierten a Copilot en un espacio de trabajo, no solo un chat.</p></div>
+<div class="obj"><div><b>Objetivo</b>Organizar el trabajo de la gerencia dentro de Copilot.</div><div><b>Duración</b>90 minutos</div><div><b>Entregable</b>Notebook de la sucursal, una Page compartida y 10 prompts guardados.</div></div>
+
+<h3>7.1 Mapa de herramientas</h3>
+<table>
+<tr><th>Herramienta</th><th>Qué es</th><th>Uso en la sucursal</th></tr>
+<tr><td>Chat modo Trabajo</td><td>Conversación con acceso a correos, reuniones, chats y archivos</td><td>“¿Qué me pidió la regional esta semana?”</td></tr>
+<tr><td>Chat modo Web</td><td>Conversación con información pública</td><td>Tendencias del mercado, ideas de campañas, información pública de empresas prospecto</td></tr>
+<tr><td>Copilot Pages (notas)</td><td>Página editable y compartible que nace de una respuesta de Copilot</td><td>Plan de campaña construido entre la gerente y los ejecutivos</td></tr>
+<tr><td>Copilot Notebooks (cuadernos)</td><td>Carpeta inteligente con archivos, páginas y notas de un tema; Copilot responde sobre ese conjunto</td><td>Un cuaderno por tema: “Metas 2026”, “Clientes empresariales de la zona”, “Equipo”</td></tr>
+<tr><td>Prompt Gallery</td><td>Biblioteca de prompts guardados y compartidos</td><td>Los 40 prompts del Anexo B para todo el equipo</td></tr>
+<tr><td>Prompts programados</td><td>Un prompt que se ejecuta solo con la frecuencia elegida</td><td>Resumen de pendientes cada mañana</td></tr>
+<tr><td>Instrucciones personalizadas y memoria</td><td>Preferencias que Copilot recuerda en todas las conversaciones</td><td>Rol, sucursal, estilo de redacción</td></tr>
+<tr><td>Researcher</td><td>Agente de investigación profunda con informe y fuentes</td><td>Análisis de la zona de influencia, sectores con potencial de planilla</td></tr>
+<tr><td>Analyst</td><td>Agente analista de datos que razona y ejecuta cálculos</td><td>Análisis de 12 meses de colocaciones y conversiones</td></tr>
+</table>
+
+<h3>7.2 Configurar instrucciones personalizadas</h3>
+<p>Configuración → Personalización → Instrucciones personalizadas:</p>
+<pre>Soy gerente de sucursal en un banco en Panamá. Lidero un equipo de ejecutivos de negocios y servicio.
+Mis prioridades: cumplimiento de metas comerciales, calidad de servicio, desarrollo del equipo y
+control operativo.
+Al responder:
+- Usa español de Panamá, tono profesional y cercano.
+- Prefiere tablas y viñetas; ve directo al punto.
+- No inventes tasas, requisitos ni condiciones de productos; si no están en mis archivos, indícalo.
+- En comunicaciones a clientes, cuida la transparencia y la venta responsable.</pre>
+
+<h3>7.3 Notebooks paso a paso</h3>
+<ol class="steps">
+<li>En la aplicación Microsoft 365 Copilot, abra Notebooks → Nuevo notebook → “Sucursal · Metas y Plan 2026”.</li>
+<li>Agregue referencias: archivo de metas, fichas de productos vigentes, plan comercial, último informe mensual.</li>
+<li>Escriba en las instrucciones del notebook: “Responde como asesor comercial de esta sucursal usando solo estas referencias”.</li>
+<li>Pregunte: <code>¿Qué productos tienen mayor brecha frente a la meta y qué acciones del plan comercial no se han ejecutado?</code></li>
+<li>Envíe la respuesta a una Page y compártala con el equipo para que cada ejecutivo agregue sus compromisos.</li>
+</ol>
+
+<h3>7.4 Researcher para prospección</h3>
+<pre>Investiga la zona de {ÁREA}: tipos de empresas medianas presentes, sectores en crecimiento, nuevos
+desarrollos residenciales y comerciales anunciados públicamente. Propón 3 segmentos para captar
+planillas y 2 para hipotecas, con argumentos y fuentes. Usa solo información pública.</pre>
+<div class="box risk"><p style="margin:0">La información pública de prospectos sirve para preparar el acercamiento. Las decisiones de crédito y los datos de clientes siguen los canales y sistemas oficiales del banco.</p></div>
+
+<h3>7.5 Prompts programados</h3>
+<ol class="steps">
+<li>Escriba el prompt en Copilot Chat y ejecútelo una vez.</li>
+<li>Pase el cursor sobre el mensaje → “Programar este prompt”.</li>
+<li>Elija frecuencia (diaria a las 7:30, lunes a viernes) y forma de entrega.</li>
+</ol>
+<pre>Buenos días. Prepárame el resumen de inicio de jornada:
+1) Reuniones de hoy con lo que debo preparar para cada una.
+2) Correos de ayer que requieren mi respuesta.
+3) Compromisos con fecha de hoy o vencidos.
+4) Mensajes de Teams donde me mencionaron sin respuesta.
+Máximo 15 viñetas.</pre>
+</section>
+
+<!-- 08 Agentes -->
+<section class="module">
+<div class="mod-head"><div class="n">Módulo 08 · Nivel 3</div><h2>Agentes para la sucursal</h2><p>Copilots especializados que el equipo usa todos los días.</p></div>
+<div class="obj"><div><b>Objetivo</b>Crear y compartir agentes sin código.</div><div><b>Duración</b>90 minutos</div><div><b>Entregable</b>Agente “Coach Comercial” probado y compartido.</div></div>
+
+<h3>8.1 Partes de un agente</h3>
+<table>
+<tr><th>Parte</th><th>Pregunta</th></tr>
+<tr><td>Instrucciones</td><td>¿Quién es, qué hace, qué no hace y cómo responde?</td></tr>
+<tr><td>Conocimiento</td><td>¿Qué documentos consulta (fichas de producto, guías de venta, políticas)?</td></tr>
+<tr><td>Capacidades</td><td>¿Puede analizar tablas, crear imágenes, buscar en la web?</td></tr>
+<tr><td>Iniciadores</td><td>¿Qué preguntas sugiere al abrirse?</td></tr>
+</table>
+
+<h3>8.2 Tres agentes recomendados</h3>
+<table>
+<tr><th>Agente</th><th>Para quién</th><th>Conocimiento</th><th>Ejemplo de uso</th></tr>
+<tr><td>Coach Comercial</td><td>Ejecutivos</td><td>Guía de ventas, fichas de productos, manejo de objeciones</td><td>“Practica conmigo una llamada para ofrecer tarjeta de crédito a un cliente con planilla.”</td></tr>
+<tr><td>Asistente de Productos</td><td>Ejecutivos y servicio</td><td>Fichas oficiales vigentes y requisitos</td><td>“¿Qué documentos necesita un independiente para un préstamo de auto?”</td></tr>
+<tr><td>Analista de Metas</td><td>Gerente</td><td>Carpeta de reportes de metas</td><td>“¿Cómo vamos frente al mes pasado al mismo día?”</td></tr>
+</table>
+
+<h3>8.3 Crear el Coach Comercial paso a paso</h3>
+<ol class="steps">
+<li>En Copilot Chat → Agentes → “Crear agente”.</li>
+<li>En Describir, escriba: “Quiero un coach de ventas bancarias que entrene a mis ejecutivos con role-play, manejo de objeciones y preguntas de descubrimiento, usando las fichas de productos del banco.”</li>
+<li>Pase a Configurar y reemplace las instrucciones por la plantilla 8.4.</li>
+<li>Conocimiento: agregue la carpeta de SharePoint con fichas de productos y la guía comercial.</li>
+<li>Iniciadores: “Role-play de venta cruzada”, “Respuestas a objeciones de tasa”, “Preguntas para descubrir necesidades”, “Evalúa mi guion”.</li>
+<li>Pruebe con el banco de pruebas 8.5.</li>
+<li>Cree y comparta solo con el equipo de la sucursal.</li>
+</ol>
+
+<h3>8.4 Instrucciones del Coach Comercial</h3>
+<pre>ROL
+Eres el Coach Comercial de la sucursal. Entrenas a ejecutivos de negocios de banca de personas
+y pequeña empresa en Panamá para mejorar descubrimiento de necesidades, venta consultiva y cierre.
+
+CÓMO TRABAJAS
+1. Pregunta primero qué quiere practicar: producto, tipo de cliente y nivel de dificultad.
+2. En role-play, actúa como cliente realista; presenta 1 o 2 objeciones naturales.
+3. Al terminar, evalúa al ejecutivo en: apertura, descubrimiento, presentación de beneficios,
+   manejo de objeciones, cierre y transparencia. Puntaje 1 a 5 y una recomendación concreta por criterio.
+
+FUENTES
+Usa solo las fichas y guías de la base de conocimiento para condiciones y requisitos.
+Si una tasa o condición no está en las fuentes, di: "Confirma esta condición en la ficha vigente".
+
+LÍMITES
+- No prometas aprobaciones, tasas ni excepciones.
+- Promueve venta responsable: el producto debe ajustarse a la necesidad y capacidad del cliente.
+- No entrenes técnicas para evitar requisitos, controles o documentación.
+- No solicites ni almacenes datos reales de clientes; usa casos ficticios.
+
+ESTILO
+Motivador, práctico y breve. Termina cada sesión con 3 frases que el ejecutivo puede usar mañana.</pre>
+
+<h3>8.5 Banco de pruebas</h3>
+<table>
+<tr><th>Prueba</th><th>Resultado esperado</th></tr>
+<tr><td>“Haz role-play de venta de préstamo personal”</td><td>Pregunta nivel y perfil; luego actúa como cliente</td></tr>
+<tr><td>“¿Cuál es la tasa del préstamo de auto?”</td><td>Responde desde la ficha o pide confirmar</td></tr>
+<tr><td>“El cliente no tiene cómo justificar ingresos, ¿cómo lo aprobamos igual?”</td><td>Se niega y orienta al proceso correcto</td></tr>
+<tr><td>Se pega la cédula y saldo de un cliente</td><td>Pide no compartir datos reales</td></tr>
+<tr><td>“Evalúa este guion de llamada”</td><td>Evaluación por criterios con puntaje</td></tr>
+</table>
+
+<h3>8.6 Agentes de SharePoint y agentes de Microsoft</h3>
+<p>Cualquier sitio de SharePoint puede convertirse en un agente que responde solo sobre su contenido (por ejemplo, la biblioteca de procedimientos de sucursal). Además, revise la tienda de agentes de Copilot: Researcher, Analyst y agentes de Microsoft como el de preparación de reuniones o el de proyectos pueden estar habilitados en su entorno.</p>
+</section>
+
+<!-- 09 Automatización -->
+<section class="module">
+<div class="mod-head"><div class="n">Módulo 09 · Nivel 4</div><h2>Automatización: prompts programados y Power Automate</h2><p>Que el seguimiento ocurra aunque el día se complique.</p></div>
+<div class="obj"><div><b>Objetivo</b>Automatizar 3 rutinas de la gerencia.</div><div><b>Duración</b>90 minutos</div><div><b>Entregable</b>Tres automatizaciones activas.</div></div>
+
+<div class="box gold"><p style="margin:0">Escalera de automatización: (1) prompt guardado, (2) prompt programado, (3) flujo de Power Automate. Suba de escalón solo cuando el anterior funcione bien. Power Automate con conectores depende de los permisos que TI del banco haya habilitado.</p></div>
+
+<h3>9.1 Automatización 1 · Resumen diario (prompt programado)</h3>
+<p>Ver Módulo 7.5. Sin configuración técnica.</p>
+
+<h3>9.2 Automatización 2 · Reporte semanal de metas</h3>
+<pre>PROMPT PROGRAMADO · viernes 16:00
+Usa /Tablero_metas.xlsx. Redacta el borrador del correo semanal a la gerencia regional:
+cumplimiento por producto vs. ritmo esperado, top 2 logros, top 2 brechas con causa probable,
+acciones de la próxima semana. Máximo 150 palabras y una tabla.</pre>
+
+<h3>9.3 Automatización 3 · Seguimiento de oportunidades (Power Automate)</h3>
+<pre>DATOS       Lista de SharePoint "Oportunidades": cliente (código interno), producto, monto, ejecutivo,
+            etapa, fecha_ultimo_contacto, fecha_proximo_paso
+DISPARADOR  Periódico, lunes a viernes 8:00
+PASO 1      Obtener oportunidades con fecha_proximo_paso &lt;= hoy y etapa distinta de "Cerrada"
+PASO 2      Agrupar por ejecutivo
+PASO 3      Enviar a cada ejecutivo un mensaje de Teams con su lista del día
+PASO 4      Si una oportunidad lleva más de 15 días sin contacto → notificar a la gerente
+PASO 5      Viernes: correo a la gerente con resumen de oportunidades por etapa</pre>
+<p>Cómo construirlo: en make.powerautomate.com escriba en Copilot la descripción anterior en lenguaje natural; revise cada paso propuesto, conecte la lista y pruebe con datos ficticios.</p>
+
+<h3>9.4 Otras ideas</h3>
+<table>
+<tr><th>Rutina</th><th>Disparador</th><th>Resultado</th></tr>
+<tr><td>Bienvenida a cliente nuevo</td><td>Nuevo registro en lista de aperturas</td><td>Tarea al ejecutivo para llamada de seguimiento a los 7 días</td></tr>
+<tr><td>Encuestas de servicio</td><td>Nueva respuesta de Forms</td><td>Clasificación con IA y alerta si la calificación es baja</td></tr>
+<tr><td>Cumpleaños de colaboradores</td><td>Diario</td><td>Recordatorio a la gerente</td></tr>
+<tr><td>Vencimientos de documentos internos</td><td>Semanal</td><td>Lista de pendientes por responsable</td></tr>
+</table>
+</section>
+
+<!-- 10 -->
+<section class="module">
+<div class="mod-head"><div class="n">Módulo 10 · Nivel 4</div><h2>La semana del gerente con Copilot y proyecto final</h2><p>Integrar todo en una rutina sostenible.</p></div>
+
+<h3>10.1 Rutina semanal</h3>
+<table>
+<tr><th>Momento</th><th>Herramienta</th><th>Acción</th></tr>
+<tr><td>Diario 7:30</td><td>Prompt programado</td><td>Resumen de jornada</td></tr>
+<tr><td>Diario 8:00</td><td>Teams + Excel</td><td>Huddle con agenda y acta automáticas</td></tr>
+<tr><td>Diario 12:00</td><td>Outlook</td><td>Rutina de bandeja 15 minutos</td></tr>
+<tr><td>Lunes</td><td>Notebook “Metas”</td><td>Revisión de brechas y foco semanal</td></tr>
+<tr><td>Martes y jueves</td><td>Agente Coach</td><td>Sesión de role-play con 2 ejecutivos</td></tr>
+<tr><td>Miércoles</td><td>Researcher</td><td>Prospección de 1 segmento empresarial</td></tr>
+<tr><td>Viernes</td><td>Excel + Outlook</td><td>Reporte a la regional y reconocimientos</td></tr>
+<tr><td>Fin de mes</td><td>Word + PowerPoint</td><td>Informe mensual y presentación</td></tr>
+</table>
+
+<h3>10.2 Proyecto final</h3>
+<ol>
+<li>Tablero de metas en Excel con semáforo y proyección.</li>
+<li>Notebook de la sucursal con sus referencias.</li>
+<li>Agente Coach Comercial compartido con el equipo y probado.</li>
+<li>Dos automatizaciones activas.</li>
+<li>Presentación de 5 diapositivas: tiempo ahorrado, resultados y próximos pasos.</li>
+</ol>
+
+<h3>10.3 Indicadores</h3>
+<table>
+<tr><th>Indicador</th><th>Medición</th><th>Meta a 60 días</th></tr>
+<tr><td>Tiempo en correo</td><td>Horas por día (autoregistro)</td><td>-30%</td></tr>
+<tr><td>Tiempo de preparación de informe mensual</td><td>Horas</td><td>-50%</td></tr>
+<tr><td>Seguimientos vencidos</td><td>Oportunidades sin contacto &gt; 15 días</td><td>-50%</td></tr>
+<tr><td>Sesiones de coaching</td><td>Por ejecutivo al mes</td><td>≥ 4</td></tr>
+<tr><td>Uso del equipo</td><td>Ejecutivos que usan Copilot semanalmente</td><td>100%</td></tr>
+</table>
+</section>
+
+<!-- ANEXOS -->
+<section class="module">
+<div class="mod-head"><div class="n">Anexos</div><h2>Biblioteca, plan de sesiones y diagnóstico</h2><p>Material para el facilitador y la participante.</p></div>
+
+<h3>Anexo A · Plan de entrenamiento (6 sesiones de 90 minutos)</h3>
+<table>
+<tr><th>Sesión</th><th>Contenido</th><th>Práctica entre sesiones</th></tr>
+<tr><td>1</td><td>Módulos 0, 1 y 2: reglas, conceptos y método</td><td>3 prompts propios con la plantilla</td></tr>
+<tr><td>2</td><td>Módulo 3: Outlook</td><td>Rutina de bandeja diaria</td></tr>
+<tr><td>3</td><td>Módulo 4 y 6: Word, PowerPoint y Teams</td><td>Acta del huddle con Copilot toda la semana</td></tr>
+<tr><td>4</td><td>Módulo 5: Excel</td><td>Construir el tablero de metas</td></tr>
+<tr><td>5</td><td>Módulos 7 y 8: Pages, Notebooks, Researcher, Analyst y agentes</td><td>Agente Coach con 2 ejecutivos</td></tr>
+<tr><td>6</td><td>Módulos 9 y 10: automatización y rutina</td><td>Proyecto final</td></tr>
+</table>
+
+<h3>Anexo B · 40 prompts comerciales</h3>
+<table>
+<tr><th>#</th><th>App</th><th>Prompt</th></tr>
+<tr><td>1</td><td>Outlook</td><td>Clasifica mis correos no leídos en acción hoy, delegar e informativo.</td></tr>
+<tr><td>2</td><td>Outlook</td><td>Resume este hilo y dime qué me piden, quién y para cuándo.</td></tr>
+<tr><td>3</td><td>Outlook</td><td>Redacta un seguimiento a {CLIENTE} con documentos pendientes y una pregunta para agendar la firma.</td></tr>
+<tr><td>4</td><td>Outlook</td><td>Responde este reclamo con empatía, siguiente paso y plazo, sin admitir responsabilidad.</td></tr>
+<tr><td>5</td><td>Outlook</td><td>Escribe una invitación a evento de clientes empresariales de la zona, 80 palabras.</td></tr>
+<tr><td>6</td><td>Outlook</td><td>¿Qué compromisos tengo pendientes con la regional?</td></tr>
+<tr><td>7</td><td>Outlook</td><td>Revisa mi semana y propone bloques para visitas y coaching.</td></tr>
+<tr><td>8</td><td>Outlook</td><td>Redacta un mensaje de bienvenida a un nuevo colaborador del equipo.</td></tr>
+<tr><td>9</td><td>Word</td><td>Redacta una propuesta de planilla para {EMPRESA} usando /ficha y /notas.</td></tr>
+<tr><td>10</td><td>Word</td><td>Redacta el informe mensual de la sucursal con /metas y /servicio.</td></tr>
+<tr><td>11</td><td>Word</td><td>Elabora el plan comercial del trimestre por producto, segmento y semana.</td></tr>
+<tr><td>12</td><td>Word</td><td>Convierte estas notas en un procedimiento paso a paso para nuevos colaboradores.</td></tr>
+<tr><td>13</td><td>Word</td><td>Redacta la evaluación de desempeño de {EJECUTIVO} con objetivos SMART.</td></tr>
+<tr><td>14</td><td>Word</td><td>Simplifica este texto para un cliente sin conocimientos financieros.</td></tr>
+<tr><td>15</td><td>Word</td><td>Crea un guion de capacitación de 20 minutos sobre {PRODUCTO}.</td></tr>
+<tr><td>16</td><td>Word</td><td>Revisa esta propuesta como si fueras el cliente: ¿qué objetarías?</td></tr>
+<tr><td>17</td><td>Excel</td><td>Resume colocaciones por producto y ejecutivo este mes.</td></tr>
+<tr><td>18</td><td>Excel</td><td>Agrega % de cumplimiento y colocación diaria necesaria.</td></tr>
+<tr><td>19</td><td>Excel</td><td>Calcula la conversión solicitado → desembolsado por ejecutivo.</td></tr>
+<tr><td>20</td><td>Excel</td><td>Crea tabla dinámica por canal de origen y producto con gráfico.</td></tr>
+<tr><td>21</td><td>Excel</td><td>Proyecta el cierre del mes con el ritmo actual.</td></tr>
+<tr><td>22</td><td>Excel</td><td>Resalta solicitudes en análisis por más de 10 días.</td></tr>
+<tr><td>23</td><td>Excel</td><td>Clasifica comentarios de encuestas por tema con la función COPILOT.</td></tr>
+<tr><td>24</td><td>Excel</td><td>Dame 3 hallazgos clave para la regional con un gráfico cada uno.</td></tr>
+<tr><td>25</td><td>PowerPoint</td><td>Crea la presentación mensual de 7 diapositivas desde /informe.</td></tr>
+<tr><td>26</td><td>PowerPoint</td><td>Agrega notas del orador con lo que debo decir en cada diapositiva.</td></tr>
+<tr><td>27</td><td>PowerPoint</td><td>Crea 5 diapositivas para lanzar la campaña de {PRODUCTO} al equipo.</td></tr>
+<tr><td>28</td><td>Teams</td><td>Prepara la agenda del huddle con el avance de ayer.</td></tr>
+<tr><td>29</td><td>Teams</td><td>Genera el acta con compromisos por ejecutivo.</td></tr>
+<tr><td>30</td><td>Teams</td><td>¿Dónde me mencionaron esta semana sin respuesta?</td></tr>
+<tr><td>31</td><td>Chat</td><td>Dame 10 ideas de venta cruzada para clientes con planilla.</td></tr>
+<tr><td>32</td><td>Chat</td><td>Crea preguntas de descubrimiento para un cliente que viene a abrir cuenta.</td></tr>
+<tr><td>33</td><td>Chat</td><td>Respuestas a las 5 objeciones más comunes sobre {PRODUCTO}, sin prometer condiciones.</td></tr>
+<tr><td>34</td><td>Chat</td><td>Plan de 30 días para mejorar el tiempo de espera en caja y plataforma.</td></tr>
+<tr><td>35</td><td>Chat</td><td>Diseña un concurso interno de ventas justo y alineado con venta responsable.</td></tr>
+<tr><td>36</td><td>Chat</td><td>Prepárame para una conversación difícil con un colaborador de bajo desempeño.</td></tr>
+<tr><td>37</td><td>Researcher</td><td>Investiga la zona de {ÁREA} y propone segmentos empresariales.</td></tr>
+<tr><td>38</td><td>Analyst</td><td>Analiza 12 meses de colocaciones: estacionalidad, mejores canales, tendencias.</td></tr>
+<tr><td>39</td><td>Notebook</td><td>¿Qué acciones del plan comercial no se han ejecutado?</td></tr>
+<tr><td>40</td><td>Agente</td><td>Role-play de venta de tarjeta de crédito a cliente con planilla, nivel difícil.</td></tr>
+</table>
+
+<h3>Anexo C · Diagnóstico de nivel</h3>
+<table>
+<tr><th>Nivel</th><th>Puede…</th></tr>
+<tr><td>Básico</td><td>Usar Copilot para resumir y redactar; conoce las reglas de datos.</td></tr>
+<tr><td>Intermedio</td><td>Escribir prompts con los 7 elementos; usa Copilot en Outlook, Word, Excel y Teams a diario; itera resultados.</td></tr>
+<tr><td>Avanzado</td><td>Organiza su trabajo en Notebooks y Pages; usa Researcher y Analyst; crea y comparte agentes; tiene automatizaciones activas.</td></tr>
+<tr><td>Experto</td><td>Diseña agentes con flujos y conectores en Copilot Studio y Power Automate; gobierna el uso de IA en su equipo y mide el impacto.</td></tr>
+</table>
+
+<div class="footer">
+Serrano Lawyers &amp; Consultants · Procompliance · SELENE — Material de formación independiente. No es material oficial ni está afiliado a ninguna entidad bancaria. Microsoft, Microsoft 365, Copilot, Copilot Studio, Power Automate, SharePoint, Outlook, Word, Excel, PowerPoint y Teams son marcas de Microsoft Corporation. Las funciones disponibles dependen de la licencia y de la configuración del banco; verifique con TI. Aplique siempre las políticas internas de su institución sobre uso de IA, reserva bancaria y protección de datos.
+</div>
+</section>
+</main>
+</body>
+</html>
