@@ -22,7 +22,7 @@ h2{color:var(--navy);font-size:1.3rem;font-weight:900;margin:0 0 4px}
 .sec-num{background:var(--navy);color:var(--gold);font-weight:900;border-radius:8px;padding:4px 10px;font-size:.8rem;letter-spacing:1px}
 .sub{color:var(--muted);font-size:.92rem;margin:0}
 label.f{display:block;font-weight:700;color:var(--navy);font-size:.85rem;margin:12px 0 4px}
-input[type=text],input[type=date],select,textarea{width:100%;font:inherit;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:#fff}
+input[type=text],input[type=email],input[type=date],select,textarea{width:100%;font:inherit;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:#fff}
 textarea{min-height:120px;resize:vertical}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .q{border-top:1px solid var(--line);padding:18px 0 6px}
@@ -84,7 +84,7 @@ footer{text-align:center;color:var(--muted);font-size:.78rem;padding:0 16px 40px
 </head>
 <body>
 
-<div class="progress" id="progress"><div class="txt" id="ptxt">0 de 0 respondidas</div><div class="bar"><div class="fill" id="pfill"></div></div></div>
+<div class="progress" id="progress"><div class="txt" style="display:flex;justify-content:space-between;align-items:center"><span id="ptxt">0 de 0 respondidas</span><button class="btn ghost" type="button" data-reset style="padding:4px 12px;font-size:.78rem">Reiniciar</button></div><div class="bar"><div class="fill" id="pfill"></div></div></div>
 
 <header><div class="wrap">
   <div class="brand">Serrano Lawyers &amp; Consultants · Procompliance · SELENE</div>
@@ -93,6 +93,15 @@ footer{text-align:center;color:var(--muted);font-size:.78rem;padding:0 16px 40px
 </div></header>
 
 <main>
+<section class="card" id="admin" style="display:none">
+  <div class="sec-head"><span class="sec-num">FACILITADOR</span><h2>Respuestas recibidas</h2></div>
+  <p class="sub" id="adminStatus">Cargando respuestas…</p>
+  <div style="overflow-x:auto"><table class="rec" id="adminTable"></table></div>
+  <div class="actions" style="margin-top:14px">
+    <button class="btn gold" id="btnExcel" type="button">Descargar Excel</button>
+  </div>
+  <p class="note">Solo usted, como propietario, ve este panel. Cada participante ve únicamente su formulario y su resultado.</p>
+</section>
 <div id="form-area">
 
 <section class="card">
@@ -100,6 +109,7 @@ footer{text-align:center;color:var(--muted);font-size:.78rem;padding:0 16px 40px
   <p class="sub">Responda según lo que sabe y hace hoy, sin consultar a Copilot. No hay penalización por responder “No lo sé”: ayuda a que el diagnóstico sea preciso.</p>
   <div class="grid2">
     <div><label class="f" for="nombre">Nombre</label><input type="text" id="nombre" placeholder="Nombre de la participante"></div>
+    <div><label class="f" for="correo">Correo electrónico (recibirá aquí su resultado)</label><input type="email" id="correo" placeholder="nombre@dominio.com" autocomplete="email"></div>
     <div><label class="f" for="fecha">Fecha</label><input type="date" id="fecha"></div>
     <div><label class="f" for="rol">Rol</label><input type="text" id="rol" value="Gerente de Sucursal"></div>
     <div><label class="f" for="lic">Licencia de Copilot que usa en el trabajo</label>
@@ -136,7 +146,7 @@ footer{text-align:center;color:var(--muted);font-size:.78rem;padding:0 16px 40px
 <section class="card">
   <div class="actions">
     <span class="warn" id="warn"></span>
-    <button class="btn ghost" id="btnReset" type="button">Reiniciar</button>
+    <button class="btn ghost" id="btnReset" type="button" data-reset>Reiniciar</button>
     <button class="btn gold" id="btnSubmit" type="button">Calcular mi nivel</button>
   </div>
 </section>
@@ -319,7 +329,7 @@ function renderQuestions(){
 }
 function updateProgress(){
   const c=Object.keys(answers).length;$('#progress').style.display='block';
-  $('#ptxt').textContent=`${c} de ${Q.length} preguntas respondidas`;
+  document.getElementById('ptxt').textContent=`${c} de ${Q.length} preguntas respondidas`;
   $('#pfill').style.width=(c/Q.length*100)+'%';
 }
 
@@ -411,11 +421,12 @@ function showResult(){
   </section>
   <section class="card">
     <div class="actions">
+      <button class="btn ghost" type="button" data-reset>Nuevo diagnóstico</button>
       <button class="btn ghost" type="button" onclick="review()">Ver respuestas y explicaciones</button>
       <button class="btn gold" type="button" onclick="copyResults(this)">Copiar resultados</button>
     </div>
     <textarea id="jsonOut" readonly style="margin-top:12px;min-height:90px;font-family:ui-monospace,Consolas,monospace;font-size:.78rem"></textarea>
-    <p class="note">Copie los resultados y envíelos por WhatsApp o correo al facilitador.</p>
+    <p class="note" id="saveStatus">Registrando sus respuestas…</p>
   </section>`;
   $('#result').style.display='block';
   $('#form-area').style.display='none'; $('#progress').style.display='none';
@@ -426,6 +437,8 @@ function showResult(){
     uso:Object.fromEntries(USAGE.map((u,i)=>[u,r.usage[i]===null?null:USAGE_SCALE[r.usage[i]]])),
     practico:{texto:$('#practico').value,elementos:Object.fromEntries(r.prac.checks)},
     respuestas:Q.map(q=>({id:q.id,area:AREAS[q.a].n,nivel:LEVELS[q.l],correcta:answers[q.id]===q.c,no_sabe:answers[q.id]===4}))};
+  window._last.email=$('#correo').value.trim();
+  saveResult(window._last);
 }
 function review(){
   $('#form-area').style.display='block';
@@ -454,6 +467,11 @@ async function copyResults(btn){
 
 /* ===================== EVENTOS ===================== */
 $('#btnSubmit').addEventListener('click',()=>{
+  const em=$('#correo').value.trim();
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)){
+    $('#warn').style.display='inline';$('#warn').textContent='Escriba un correo válido para recibir su resultado.';
+    $('#correo').scrollIntoView({behavior:'smooth',block:'center'});$('#correo').focus();return;
+  }
   const missing=Q.filter(q=>answers[q.id]===undefined);
   if(missing.length){
     $('#warn').style.display='inline';$('#warn').textContent=`Faltan ${missing.length} preguntas por responder.`;
@@ -461,7 +479,92 @@ $('#btnSubmit').addEventListener('click',()=>{
   }
   showResult();
 });
-$('#btnReset').addEventListener('click',e=>{const b=e.currentTarget; if(b.dataset.armed){location.reload();return;} b.dataset.armed='1'; b.textContent='Toque otra vez para borrar todo'; setTimeout(()=>{delete b.dataset.armed;b.textContent='Reiniciar';},4000);});
+document.addEventListener('click',e=>{
+  const b=e.target.closest('[data-reset]'); if(!b)return;
+  const inResult=b.closest('#result');
+  if(!inResult && !b.dataset.armed){const t=b.textContent;b.dataset.armed='1';b.textContent='Toque otra vez para borrar';setTimeout(()=>{delete b.dataset.armed;b.textContent=t;},4000);return;}
+  resetAll();
+});
+function resetAll(){
+  for(const k in answers) delete answers[k];
+  ['#nombre','#correo','#practico'].forEach(x=>$(x).value='');
+  $('#lic').value=''; $('#rol').value='Gerente de Sucursal';
+  $('#fecha').value=new Date().toISOString().slice(0,10);
+  $('#questions').innerHTML=''; renderLikert(); renderQuestions();
+  document.querySelectorAll('#form-area .card').forEach(c=>c.style.display='');
+  $('#warn').style.display='none';
+  $('#result').style.display='none'; $('#result').innerHTML='';
+  $('#form-area').style.display='block'; $('#progress').style.display='none';
+  document.querySelectorAll('[data-reset]').forEach(b=>{delete b.dataset.armed;});
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ===================== PERSISTENCIA (db) ===================== */
+let DB=null, USER=null, UID=null;
+const ready=(async()=>{
+  try{ DB=await claude.use("db"); USER=await claude.use("user"); UID=USER?await USER.id():null; }catch(e){}
+  try{ if(USER && await USER.isOwner()) initAdmin(); }catch(e){}
+})();
+async function saveResult(d){
+  const st=()=>document.getElementById('saveStatus');
+  await ready;
+  if(!DB||!UID){ if(st()) st().textContent='No fue posible registrar en línea (inicie sesión en claude.ai). Use "Copiar resultados" y envíelos al facilitador.'; return; }
+  try{
+    const ref=DB.doc('respuestas/'+UID);
+    let hist=[];
+    try{const prev=await ref.get(); if(prev.exists){hist=(prev.data().historial||[]).slice(-9);}}catch(e){}
+    hist.push({fecha:new Date().toISOString(),nivel:d.nivel,porcentaje:d.porcentaje});
+    await ref.set({...d,fecha_envio:new Date().toISOString(),estado_correo:'pendiente',historial:hist});
+    if(st()) st().textContent=`Respuestas registradas. El resultado se enviará a ${d.email}.`;
+  }catch(e){
+    if(st()) st().textContent='No se pudo registrar ('+(e&&e.code||'error')+'). Use "Copiar resultados" y envíelos al facilitador.';
+  }
+}
+
+/* ===================== PANEL DEL FACILITADOR ===================== */
+let ROWS=[];
+function initAdmin(){
+  if(!DB) return;
+  $('#admin').style.display='block';
+  const timer=setTimeout(()=>{$('#adminStatus').textContent='No se pudo conectar con la base de respuestas todavía.';},10000);
+  DB.collection('respuestas').orderBy('fecha_envio','desc').onSnapshot(snap=>{
+    if(!snap.metadata.fromCache) clearTimeout(timer);
+    ROWS=snap.docs.map(d=>d.data());
+    $('#adminStatus').textContent=ROWS.length?`${ROWS.length} participante(s). Se actualiza en tiempo real.`:'Aún no hay respuestas.';
+    const t=$('#adminTable'); t.innerHTML='';
+    const head=document.createElement('tr');
+    ['Fecha','Nombre','Correo','Nivel','%','Correo enviado'].forEach(h=>{const th=document.createElement('th');th.textContent=h;head.appendChild(th);});
+    t.appendChild(head);
+    ROWS.forEach(r=>{const tr=document.createElement('tr');
+      [ (r.fecha_envio||'').slice(0,16).replace('T',' '), r.name, r.email, r.nivel, r.porcentaje+'%', r.estado_correo==='enviado'?'Sí':'Pendiente']
+      .forEach(v=>{const td=document.createElement('td');td.textContent=v??'';tr.appendChild(td);}); t.appendChild(tr);});
+  },err=>{clearTimeout(timer);$('#adminStatus').textContent='Error al leer respuestas: '+err.code;});
+  $('#btnExcel').addEventListener('click',downloadExcel);
+}
+function loadXLSX(){return new Promise((ok,ko)=>{if(window.XLSX)return ok();const sc=document.createElement('script');sc.src='https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';sc.onload=ok;sc.onerror=ko;document.head.appendChild(sc);});}
+async function downloadExcel(ev){
+  const btn=ev.currentTarget;
+  if(!ROWS.length){btn.textContent='Sin respuestas aún';return;}
+  try{
+    await loadXLSX();
+    const areaNames=Object.values(AREAS).map(a=>a.n);
+    const resumen=ROWS.map(r=>{const o={Fecha:(r.fecha_envio||'').slice(0,19).replace('T',' '),Nombre:r.name,Correo:r.email,Rol:r.rol,Licencia:r.licencia,Nivel:r.nivel,'% global':r.porcentaje,'Correo enviado':r.estado_correo};
+      Object.entries(r.tramos||{}).forEach(([k,v])=>o['Tramo '+k]=`${v.correctas}/${v.total}`);
+      areaNames.forEach(a=>{const v=(r.areas||{})[a];o[a]=v?Math.round(v.correctas/v.total*100):null;});
+      Object.entries(r.uso||{}).forEach(([k,v])=>o['Uso: '+k]=v);
+      o['Prompt práctico']=r.practico?r.practico.texto:''; return o;});
+    const detalle=[];
+    ROWS.forEach(r=>(r.respuestas||[]).forEach(q=>detalle.push({Correo:r.email,Nombre:r.name,Pregunta:q.id,Área:q.area,Nivel:q.nivel,Correcta:q.correcta?'Sí':'No','No sabe':q.no_sabe?'Sí':'No'})));
+    const wb=XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(resumen),'Resumen');
+    XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(detalle),'Detalle por pregunta');
+    const buf=XLSX.write(wb,{bookType:'xlsx',type:'array'});
+    const dl=await claude.use("downloads");
+    if(!dl){btn.textContent='Descarga no disponible aquí';return;}
+    await dl.save({filename:`diagnostico-ia-respuestas-${new Date().toISOString().slice(0,10)}.xlsx`,data:new Blob([buf])});
+    btn.textContent='Excel descargado ✓';
+  }catch(e){btn.textContent=(e&&e.code==='declined')?'Descarga cancelada':'No se pudo generar el Excel';}
+}
 $('#fecha').value=new Date().toISOString().slice(0,10);
 renderLikert(); renderQuestions();
 </script>
