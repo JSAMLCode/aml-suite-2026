@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Diagnóstico de IA · Gerencia de Sucursal con Microsoft 365 Copilot</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:opsz,wght@6..12,300;6..12,400;6..12,600;6..12,700;6..12,800;6..12,900&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0B1F3A;--navy2:#132B4F;--navy3:#1E3A66;--gold:#C9A227;--goldsoft:#F4EBCF;--ink:#1F2733;--muted:#5B6576;--line:#DCE1EA;--panel:#F6F8FB;--ok:#1F7A4D;--okbg:#EDF7F1;--bad:#B42318;--badbg:#FDF0EE;--warn:#B7791F}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Nunito Sans",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:var(--ink);background:#EEF1F6;line-height:1.55}
+header{background:linear-gradient(155deg,var(--navy),var(--navy2) 60%,var(--navy3));color:#fff;padding:40px 24px 90px;position:relative;overflow:hidden}
+header:after{content:"";position:absolute;right:-120px;top:-120px;width:380px;height:380px;border:2px solid rgba(201,162,39,.35);border-radius:50%}
+.wrap{max-width:860px;margin:0 auto;position:relative;z-index:1}
+.brand{letter-spacing:3px;font-size:.72rem;text-transform:uppercase;color:var(--gold);font-weight:800}
+header h1{font-size:2.1rem;font-weight:900;margin:.35em 0 .2em;line-height:1.15}
+header p{color:#C9D5E8;margin:0;max-width:680px}
+main{max-width:860px;margin:-60px auto 60px;padding:0 16px;position:relative;z-index:2}
+.card{background:#fff;border-radius:14px;box-shadow:0 6px 24px rgba(11,31,58,.08);padding:26px 28px;margin-bottom:18px}
+h2{color:var(--navy);font-size:1.3rem;font-weight:900;margin:0 0 4px}
+.sec-head{display:flex;align-items:center;gap:12px;margin:0 0 14px}
+.sec-num{background:var(--navy);color:var(--gold);font-weight:900;border-radius:8px;padding:4px 10px;font-size:.8rem;letter-spacing:1px}
+.sub{color:var(--muted);font-size:.92rem;margin:0}
+label.f{display:block;font-weight:700;color:var(--navy);font-size:.85rem;margin:12px 0 4px}
+input[type=text],input[type=date],select,textarea{width:100%;font:inherit;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:#fff}
+textarea{min-height:120px;resize:vertical}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.q{border-top:1px solid var(--line);padding:18px 0 6px}
+.q:first-of-type{border-top:0}
+.q .meta{display:flex;gap:6px;margin-bottom:6px;flex-wrap:wrap}
+.tag{font-size:.68rem;font-weight:800;letter-spacing:.5px;text-transform:uppercase;padding:2px 8px;border-radius:20px;background:var(--panel);color:var(--navy3);border:1px solid var(--line)}
+.tag.lvl{background:var(--navy);color:var(--gold);border-color:var(--navy)}
+.q .stem{font-weight:700;color:var(--ink);margin:0 0 10px}
+.opt{display:flex;gap:10px;align-items:flex-start;padding:9px 12px;border:1px solid var(--line);border-radius:9px;margin:6px 0;cursor:pointer;transition:.15s}
+.opt:hover{border-color:var(--navy3);background:var(--panel)}
+.opt input{margin-top:4px;accent-color:var(--navy)}
+.opt.sel{border-color:var(--navy);background:#EEF3FB}
+.opt.right{border-color:var(--ok);background:var(--okbg)}
+.opt.wrong{border-color:var(--bad);background:var(--badbg)}
+.expl{display:none;font-size:.9rem;background:var(--goldsoft);border-left:4px solid var(--gold);padding:8px 12px;border-radius:6px;margin:8px 0 4px}
+.reviewed .expl{display:block}
+.likert{width:100%;border-collapse:collapse;font-size:.92rem}
+.likert th{font-size:.75rem;color:var(--muted);font-weight:700;padding:6px;text-align:center}
+.likert td{border-top:1px solid var(--line);padding:9px 6px}
+.likert td:not(:first-child){text-align:center}
+.likert input{accent-color:var(--navy)}
+.progress{position:sticky;top:0;z-index:5;background:#fff;border-bottom:1px solid var(--line);padding:10px 16px;display:none}
+.progress .bar{height:6px;background:var(--panel);border-radius:6px;overflow:hidden;max-width:860px;margin:6px auto 0}
+.progress .fill{height:100%;background:var(--gold);width:0;transition:.3s}
+.progress .txt{max-width:860px;margin:0 auto;font-size:.82rem;color:var(--muted);font-weight:700}
+.btn{font:inherit;font-weight:800;border:0;border-radius:10px;padding:13px 22px;cursor:pointer;background:var(--navy);color:#fff}
+.btn.gold{background:var(--gold);color:var(--navy)}
+.btn.ghost{background:#fff;color:var(--navy);border:2px solid var(--navy)}
+.actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+.warn{color:var(--bad);font-weight:700;font-size:.9rem;display:none;margin-right:auto;align-self:center}
+#result{display:none}
+.level-hero{background:var(--navy);color:#fff;border-radius:14px;padding:26px;display:grid;grid-template-columns:auto 1fr;gap:22px;align-items:center}
+.ring{width:130px;height:130px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--gold) calc(var(--p)*1%),rgba(255,255,255,.12) 0)}
+.ring div{width:104px;height:104px;border-radius:50%;background:var(--navy);display:grid;place-items:center;font-weight:900;font-size:1.7rem;color:#fff}
+.level-hero .lv{color:var(--gold);font-weight:900;letter-spacing:2px;text-transform:uppercase;font-size:.8rem}
+.level-hero h3{margin:.1em 0 .2em;font-size:2rem;font-weight:900}
+.level-hero p{margin:0;color:#C9D5E8}
+.ladder{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:18px 0}
+.ladder div{border-radius:10px;padding:10px;background:var(--panel);border:1px solid var(--line);font-size:.82rem}
+.ladder div b{display:block;color:var(--navy)}
+.ladder div.on{background:var(--navy);color:#C9D5E8;border-color:var(--navy)}
+.ladder div.on b{color:var(--gold)}
+.bars .row{display:grid;grid-template-columns:200px 1fr 52px;gap:10px;align-items:center;margin:7px 0;font-size:.9rem}
+.bars .track{height:12px;background:var(--panel);border-radius:8px;overflow:hidden;border:1px solid var(--line)}
+.bars .val{height:100%;border-radius:8px}
+.bars .pct{font-weight:800;text-align:right;color:var(--navy)}
+table.rec{width:100%;border-collapse:collapse;font-size:.9rem}
+table.rec th{background:var(--navy);color:#fff;text-align:left;padding:8px 10px}
+table.rec td{border-bottom:1px solid var(--line);padding:8px 10px;vertical-align:top}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.chip{font-size:.78rem;font-weight:700;padding:3px 10px;border-radius:20px}
+.chip.y{background:var(--okbg);color:var(--ok)}
+.chip.n{background:var(--badbg);color:var(--bad)}
+.note{font-size:.82rem;color:var(--muted)}
+footer{text-align:center;color:var(--muted);font-size:.78rem;padding:0 16px 40px;max-width:860px;margin:0 auto}
+@media(max-width:640px){.grid2{grid-template-columns:1fr}.level-hero{grid-template-columns:1fr}.ladder{grid-template-columns:1fr 1fr}.bars .row{grid-template-columns:120px 1fr 44px}}
+@media print{body{background:#fff}.progress,.actions,#form-area{display:none!important}main{margin-top:0}.card{box-shadow:none;border:1px solid var(--line);break-inside:avoid}header{padding-bottom:30px}}
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress"><div class="txt" id="ptxt">0 de 0 respondidas</div><div class="bar"><div class="fill" id="pfill"></div></div></div>
+
+<header><div class="wrap">
+  <div class="brand">Serrano Lawyers &amp; Consultants · Procompliance · SELENE</div>
+  <h1>Diagnóstico de IA para la Gerencia de Sucursal</h1>
+  <p>Evaluación del nivel de dominio de Microsoft 365 Copilot en el rol de Gerente de Sucursal bancaria: datos y reserva, prompts, Outlook, Word, Excel, PowerPoint y Teams, Pages, Notebooks, agentes y automatización. Duración estimada: 25 minutos.</p>
+</div></header>
+
+<main>
+<div id="form-area">
+
+<section class="card">
+  <div class="sec-head"><span class="sec-num">INICIO</span><h2>Datos de la evaluación</h2></div>
+  <p class="sub">Responda según lo que sabe y hace hoy, sin consultar a Copilot. No hay penalización por responder “No lo sé”: ayuda a que el diagnóstico sea preciso.</p>
+  <div class="grid2">
+    <div><label class="f" for="nombre">Nombre</label><input type="text" id="nombre" placeholder="Nombre de la participante"></div>
+    <div><label class="f" for="fecha">Fecha</label><input type="date" id="fecha"></div>
+    <div><label class="f" for="rol">Rol</label><input type="text" id="rol" value="Gerente de Sucursal"></div>
+    <div><label class="f" for="lic">Licencia de Copilot que usa en el trabajo</label>
+      <select id="lic">
+        <option value="">Seleccione</option>
+        <option>Microsoft 365 Copilot corporativo (asignado por el banco)</option>
+        <option>Copilot Chat con cuenta del banco (sin licencia completa)</option>
+        <option>Microsoft 365 Premium personal</option>
+        <option>No estoy segura</option>
+      </select></div>
+  </div>
+</section>
+
+<section class="card">
+  <div class="sec-head"><span class="sec-num">PARTE 1</span><h2>Uso actual</h2></div>
+  <p class="sub">¿Con qué frecuencia usa hoy cada capacidad? No suma puntaje; se compara con el conocimiento demostrado.</p>
+  <table class="likert" id="likert"></table>
+</section>
+
+<section class="card">
+  <div class="sec-head"><span class="sec-num">PARTE 2</span><h2>Conocimiento aplicado</h2></div>
+  <p class="sub">36 preguntas de situación. Elija una opción por pregunta.</p>
+  <div id="questions"></div>
+</section>
+
+<section class="card">
+  <div class="sec-head"><span class="sec-num">PARTE 3</span><h2>Ejercicio práctico</h2></div>
+  <p class="sub">Reescriba este prompt para que Copilot entregue un resultado utilizable de inmediato:</p>
+  <p style="background:var(--navy);color:#EAF0FA;padding:12px 16px;border-radius:8px;border-left:5px solid var(--gold);font-family:ui-monospace,Consolas,monospace;font-size:.9rem">Ayúdame con las metas del mes.</p>
+  <textarea id="practico" placeholder="Escriba aquí su versión mejorada..."></textarea>
+  <p class="note">Se analiza la presencia de los elementos del método: rol, contexto o archivo, tarea concreta, formato, límites y verificación. El facilitador complementa con su revisión.</p>
+</section>
+
+<section class="card">
+  <div class="actions">
+    <span class="warn" id="warn"></span>
+    <button class="btn ghost" id="btnReset" type="button">Reiniciar</button>
+    <button class="btn gold" id="btnSubmit" type="button">Calcular mi nivel</button>
+  </div>
+</section>
+
+</div>
+
+<div id="result"></div>
+</main>
+
+<footer>Material de formación independiente de Serrano Lawyers &amp; Consultants. No es material oficial ni está afiliado a ninguna entidad bancaria. Microsoft 365 Copilot es marca de Microsoft Corporation. Las respuestas se procesan solo en este navegador; no se envían a ningún servidor.</footer>
+
+<script>
+/* ===================== MODELO DE DATOS ===================== */
+const LEVELS = {1:"Básico",2:"Intermedio",3:"Avanzado",4:"Experto"};
+const AREAS = {
+  G:{n:"Datos, reserva y riesgo", m:"Módulo 00"},
+  F:{n:"Fundamentos de IA", m:"Módulo 01"},
+  P:{n:"Prompts", m:"Módulo 02"},
+  O:{n:"Outlook", m:"Módulo 03"},
+  W:{n:"Word", m:"Módulo 04"},
+  X:{n:"Excel", m:"Módulo 05"},
+  T:{n:"PowerPoint y Teams", m:"Módulo 06"},
+  C:{n:"Copilot Chat, Pages y Notebooks", m:"Módulo 07"},
+  A:{n:"Agentes", m:"Módulo 08"},
+  U:{n:"Automatización", m:"Módulo 09"}
+};
+const USAGE = [
+  "Copilot en Outlook (resumir, redactar, coaching)",
+  "Copilot en Word",
+  "Copilot en Excel",
+  "Copilot en Teams (reuniones y chats)",
+  "Copilot Chat en modo Trabajo",
+  "Pages o Notebooks",
+  "Prompts guardados o programados",
+  "Agentes (creados por mí o por otros)"
+];
+const USAGE_SCALE = ["Nunca","Ocasional","Semanal","Diario"];
+
+/* c = índice de la opción correcta (antes de mezclar) */
+const Q = [
+ {id:1,a:"F",l:1,s:"¿Qué es una “alucinación” en un asistente de IA como Copilot?",
+  o:["Una respuesta incorrecta o inventada que se presenta con total seguridad","Un error técnico que cierra la aplicación","Una respuesta lenta por exceso de usuarios","Un aviso de seguridad cuando se comparte un archivo"],c:0,
+  e:"El modelo genera texto verosímil, no necesariamente verdadero. Por eso cifras, tasas y requisitos se validan con fuentes oficiales."},
+ {id:2,a:"F",l:1,s:"Copilot le indica una tasa para préstamo de auto al preparar una propuesta. ¿Qué hace?",
+  o:["La usa, porque Copilot está conectado al banco","La verifica en la ficha oficial vigente del producto antes de usarla","La redondea para que luzca más atractiva","Le pide a Copilot que confirme si está seguro"],c:1,
+  e:"Condiciones, tasas y requisitos se toman de las fichas oficiales. Preguntarle a Copilot “¿estás seguro?” no es una verificación."},
+ {id:3,a:"F",l:2,s:"Tras una conversación muy larga, Copilot empieza a ignorar instrucciones que le dio al inicio. ¿Qué es lo más efectivo?",
+  o:["Escribir las instrucciones en mayúsculas","Seguir en el mismo chat hasta que se corrija","Pedir un resumen de lo trabajado e iniciar un chat nuevo con ese resumen y las instrucciones","Cambiar de navegador"],c:2,
+  e:"La ventana de contexto es limitada. Un chat por tema y reiniciar con un resumen mantiene la calidad."},
+ {id:4,a:"G",l:1,s:"¿Dónde puede trabajar información de clientes (nombres, saldos, préstamos) con IA?",
+  o:["En cualquier IA si luego borra la conversación","En su cuenta personal de Copilot, si es Premium","Solo en el Copilot corporativo autorizado por el banco y según su política interna","En ninguna herramienta, nunca"],c:2,
+  e:"La reserva bancaria y la Ley 81 de 2019 aplican igual con IA. Solo el entorno corporativo autorizado ofrece los controles requeridos."},
+ {id:5,a:"G",l:2,s:"Copilot le muestra en una respuesta un archivo de otra área que usted no debería ver. ¿Cuál es la causa más probable?",
+  o:["Copilot tiene acceso a todos los archivos del banco","El archivo tenía permisos que ya le daban acceso a usted; Copilot solo lo hizo visible. Debe reportarlo a TI o al dueño del archivo","Fue una alucinación","Otro usuario le compartió su chat"],c:1,
+  e:"Copilot respeta los permisos existentes: si encuentra algo indebido, el problema es de permisos y debe corregirse."},
+ {id:6,a:"G",l:3,s:"Un ejecutivo le pide usar Copilot para escribirle a un cliente que “su transferencia está retenida porque Cumplimiento sospecha de ella”. ¿Qué corresponde?",
+  o:["Redactarlo con tono amable para no molestar al cliente","No enviar ese mensaje: se usa una comunicación neutral sin mencionar alertas ni revisiones, y se coordina con Cumplimiento","Enviarlo, porque el cliente tiene derecho a saberlo","Pedirle a Copilot que lo suavice y enviarlo"],c:1,
+  e:"Revelar al cliente la existencia de un análisis o reporte es una falta grave (tipping-off). Toda comunicación sensible se coordina con Cumplimiento."},
+ {id:7,a:"G",l:2,s:"Quiere preguntar “¿qué me pidió la gerencia regional por correo esta semana?”. ¿En qué modo de Copilot Chat?",
+  o:["Modo Web","Modo Trabajo","Cualquiera, dan lo mismo","Ninguno: Copilot no puede leer correos"],c:1,
+  e:"El modo Trabajo usa sus correos, reuniones, chats y archivos; el modo Web usa información pública."},
+ {id:8,a:"P",l:1,s:"¿Cuáles son los cuatro elementos básicos de un buen prompt?",
+  o:["Saludo, pregunta, agradecimiento y firma","Rol, contexto, tarea y formato","Título, palabras clave, idioma y extensión","Archivo, fecha, destinatario y prioridad"],c:1,
+  e:"Rol + Contexto + Tarea + Formato. El método del curso añade límites, audiencia/tono y verificación."},
+ {id:9,a:"P",l:2,s:"¿Cuál de estos prompts dará el resultado más útil?",
+  o:["Analiza las metas.","Dime cómo vamos este mes.","Actúa como gerente comercial. Con /Avance_metas.xlsx calcula el % de cumplimiento por ejecutivo y producto y la colocación diaria necesaria para cerrar. Tabla de menor a mayor. No inventes cifras.","Hazme un análisis completo y profesional de todo."],c:2,
+  e:"Incluye rol, fuente concreta, tarea medible, formato y un límite."},
+ {id:10,a:"P",l:2,s:"Copilot le entregó un buen correo, pero demasiado largo. ¿Qué hace?",
+  o:["Empieza de nuevo con otro prompt desde cero","Le pide en el mismo chat: “Mantén el contenido, redúcelo a 100 palabras y deja la pregunta final”","Lo recorta usted manualmente siempre","Cambia a modo Web"],c:1,
+  e:"Iterar sobre la respuesta es más rápido y conserva lo que ya está bien."},
+ {id:11,a:"P",l:3,s:"Tiene lista una propuesta comercial para una empresa. ¿Qué técnica la mejora antes de enviarla?",
+  o:["Pedirle a Copilot que la critique desde la perspectiva del cliente y liste sus posibles objeciones","Pedirle que agregue más adjetivos","Traducirla al inglés y de vuelta","Pedirle que la haga más larga"],c:0,
+  e:"La autocrítica con rol (“revísala como el cliente / la regional”) revela debilidades antes de enviar."},
+ {id:12,a:"O",l:1,s:"Recibe un hilo de 25 correos sobre un cliente empresarial. ¿Qué es lo más rápido?",
+  o:["Leer todos los correos","Usar el botón “Resumir” de Copilot en el hilo","Reenviarlo a un ejecutivo","Imprimirlo"],c:1,
+  e:"Resumir con Copilot en Outlook da los puntos clave y las acciones pendientes en segundos."},
+ {id:13,a:"O",l:2,s:"Va a responder un reclamo delicado y quiere revisar el tono antes de enviar. ¿Qué función usa?",
+  o:["Corrector ortográfico","Coaching de Copilot sobre el borrador","Respuesta automática","Traducir"],c:1,
+  e:"Coaching evalúa tono, claridad y sentimiento del lector y sugiere mejoras."},
+ {id:14,a:"O",l:2,s:"Quiere saber qué compromisos asumió por correo con clientes y aún no ha cumplido. ¿Cómo?",
+  o:["Buscar manualmente por palabra “compromiso”","Preguntar a Copilot (modo Trabajo u Outlook): “¿Qué compromisos asumí por correo esta semana que siguen pendientes?”","Revisar solo la carpeta de enviados","No es posible con Copilot"],c:1,
+  e:"Copilot puede razonar sobre su correo y devolver una lista con origen y fecha."},
+ {id:15,a:"W",l:1,s:"Para que Copilot en Word redacte una propuesta usando la ficha del producto y sus notas de visita, ¿qué hace?",
+  o:["Copia y pega todo el texto en el documento primero","En el cuadro de Copilot escribe “/” y selecciona los archivos como referencia","Envía los archivos por correo a Copilot","Copilot los encuentra solo, sin indicarlos"],c:1,
+  e:"Referenciar archivos con “/” ancla la redacción a fuentes concretas."},
+ {id:16,a:"W",l:2,s:"Le pide a Copilot revisar y mejorar un procedimiento existente. ¿Cómo ve exactamente qué cambió?",
+  o:["Comparando de memoria","Activando el control de cambios antes de pedir las modificaciones","No es posible saberlo","Pidiéndole que lo marque en negrita"],c:1,
+  e:"Con control de cambios usted aprueba o rechaza cada modificación."},
+ {id:17,a:"X",l:1,s:"¿Qué requisito ayuda más a que Copilot funcione bien en Excel?",
+  o:["Usar muchos colores","Datos en formato Tabla con encabezados claros, sin celdas combinadas, y archivo en OneDrive o SharePoint","Tener el archivo en el escritorio del computador","Que el archivo tenga una sola columna"],c:1,
+  e:"Copilot necesita datos estructurados y el archivo en la nube del banco."},
+ {id:18,a:"X",l:2,s:"Le pide a Copilot una columna con la colocación diaria necesaria para cumplir la meta. ¿Qué hace después?",
+  o:["La usa en el reporte a la regional de inmediato","Pide que explique la fórmula y valida 2 o 3 cálculos manualmente","La borra porque Copilot no hace fórmulas","Copia los valores sin la fórmula"],c:1,
+  e:"Las fórmulas generadas se validan antes de usarlas en un reporte oficial."},
+ {id:19,a:"X",l:3,s:"Tiene 500 comentarios de encuestas de servicio en una columna y quiere clasificarlos por tema. ¿Qué es más eficiente?",
+  o:["Leerlos uno por uno","Usar la función =COPILOT() en una columna nueva con las categorías definidas","Borrar los comentarios vacíos y adivinar","Pedirlo en PowerPoint"],c:1,
+  e:"La función COPILOT en celda aplica la misma instrucción fila por fila (por ejemplo: precio, tiempo, servicio, producto, otro)."},
+ {id:20,a:"X",l:3,s:"Quiere analizar 12 meses de colocaciones: estacionalidad, mejores canales y proyección. ¿Qué herramienta es la más adecuada?",
+  o:["El botón Resumir de Outlook","El agente Analyst o Agent Mode en Excel, pidiendo que explique su metodología","Copilot en Word","Un prompt programado"],c:1,
+  e:"Analyst y Agent Mode planifican y ejecutan análisis de varios pasos, incluso con Python."},
+ {id:21,a:"T",l:1,s:"¿Qué necesita para que Copilot en Teams genere el acta del huddle con los compromisos de cada ejecutivo?",
+  o:["Tomar notas a mano","Que la reunión tenga la transcripción (o grabación) activada","Invitar a Copilot como participante por correo","Nada; Copilot escucha todas las llamadas"],c:1,
+  e:"Copilot en reuniones trabaja sobre la transcripción; sin ella, no tiene qué resumir después."},
+ {id:22,a:"T",l:2,s:"Entra 15 minutos tarde a una reunión de Teams. ¿Qué hace para ponerse al día sin interrumpir?",
+  o:["Pide a todos que repitan","Pregunta a Copilot en la reunión: “¿Qué se ha discutido y qué se ha decidido hasta ahora?”","Espera al acta del día siguiente","Sale y vuelve a entrar"],c:1,
+  e:"Copilot responde durante la reunión con base en la transcripción en curso."},
+ {id:23,a:"T",l:2,s:"Quiere la presentación mensual para la regional a partir del informe que ya redactó en Word. ¿Cómo?",
+  o:["Copiar y pegar párrafo por párrafo en diapositivas","En PowerPoint, pedir a Copilot crear la presentación desde el archivo referenciado, indicando número y temas de diapositivas","Exportar el Word como PDF","Pedirlo en Outlook"],c:1,
+  e:"Copilot en PowerPoint crea la presentación a partir de un documento y puede agregar notas del orador."},
+ {id:24,a:"C",l:2,s:"¿Qué es una Copilot Page?",
+  o:["Una página web pública del banco","Un lienzo persistente y editable, creado desde una respuesta de Copilot, que se puede compartir y trabajar en equipo","Un correo programado","Un archivo de Excel"],c:1,
+  e:"Las Pages convierten una respuesta en un documento vivo para colaborar (por ejemplo, el plan de campaña con el equipo)."},
+ {id:25,a:"C",l:3,s:"¿Para qué sirve un Copilot Notebook (cuaderno)?",
+  o:["Para tomar notas a mano alzada","Para agrupar archivos, páginas y notas de un tema y hacerle preguntas a Copilot sobre ese conjunto","Para guardar contraseñas","Para enviar correos masivos"],c:1,
+  e:"Un notebook “Metas 2026” con fichas, plan e informes permite consultas enfocadas en esas fuentes."},
+ {id:26,a:"C",l:2,s:"Quiere recibir cada mañana a las 7:30 un resumen de reuniones, correos pendientes y menciones. ¿Qué usa?",
+  o:["Una regla de Outlook","Un prompt programado en Copilot Chat","Una alarma del teléfono","Un agente de SharePoint"],c:1,
+  e:"Los prompts programados ejecutan la misma instrucción con la frecuencia elegida."},
+ {id:27,a:"C",l:3,s:"¿Cuándo es apropiado usar el agente Researcher?",
+  o:["Para enviar un correo rápido","Para una investigación profunda de varias fuentes con informe y citas, como analizar la zona de influencia de la sucursal","Para corregir ortografía","Para aprobar créditos"],c:1,
+  e:"Researcher planifica búsquedas en web y datos de trabajo y entrega un informe citado. Más lento, más profundo."},
+ {id:28,a:"C",l:1,s:"¿Para qué sirve la Prompt Gallery (galería de prompts)?",
+  o:["Para ver imágenes generadas","Para guardar, reutilizar y compartir prompts con el equipo","Para almacenar archivos de clientes","Para cambiar el idioma de Copilot"],c:1,
+  e:"Permite tener una biblioteca de prompts estándar de la sucursal."},
+ {id:29,a:"C",l:2,s:"¿Qué logran las instrucciones personalizadas de Copilot?",
+  o:["Que Copilot aplique sus preferencias (rol, tono, formato) en todas las conversaciones sin repetirlas","Que Copilot tenga acceso a más archivos","Que las respuestas sean más rápidas","Que Copilot no cometa errores"],c:0,
+  e:"Se configuran una vez en Personalización y mejoran todas las respuestas."},
+ {id:30,a:"A",l:3,s:"¿Qué distingue a un agente de un chat normal con Copilot?",
+  o:["Que es más caro","Que tiene instrucciones, conocimiento y capacidades propias para un rol específico, y puede compartirse","Que solo funciona en inglés","Que no necesita revisión humana"],c:1,
+  e:"Un agente es un Copilot especializado (por ejemplo, Coach Comercial) que todo el equipo puede usar igual."},
+ {id:31,a:"A",l:3,s:"Crea el agente “Coach Comercial”. ¿Dónde coloca las fichas oficiales de productos?",
+  o:["En las instrucciones, copiando todo el texto","Como fuente de conocimiento (por ejemplo, la carpeta de SharePoint con las fichas vigentes)","En un correo al agente","No hace falta; el agente ya las conoce"],c:1,
+  e:"El conocimiento conectado se mantiene actualizado sin reescribir las instrucciones."},
+ {id:32,a:"A",l:4,s:"Quiere un agente que, además de conversar, registre oportunidades en una lista de SharePoint y pida aprobación a la gerente en casos especiales. ¿Con qué se construye?",
+  o:["Con Agent Builder básico, solo con instrucciones","Con Copilot Studio, usando temas, herramientas y flujos (Power Automate) con aprobaciones","Con un prompt programado","Con Copilot en Word"],c:1,
+  e:"Las acciones sobre sistemas, la lógica y las aprobaciones requieren Copilot Studio y flujos."},
+ {id:33,a:"A",l:3,s:"Antes de compartir un agente con el equipo, ¿qué es lo correcto?",
+  o:["Compartirlo con todo el banco para que más gente lo use","Probarlo con un banco de preguntas, incluidas preguntas fuera de alcance y pedidos indebidos, y compartirlo solo con el equipo de la sucursal","Probar una sola pregunta","No requiere pruebas"],c:1,
+  e:"Las pruebas verifican que respete límites (no prometer tasas, no aceptar datos reales, no saltarse políticas)."},
+ {id:34,a:"U",l:4,s:"Cada mañana, cada ejecutivo debe recibir en Teams sus oportunidades con próximo paso vencido. ¿Cómo se automatiza?",
+  o:["Recordándoselo en el huddle","Con un flujo programado de Power Automate que lee la lista de SharePoint, filtra por fecha y envía un mensaje a cada ejecutivo","Con la función =COPILOT() en Excel","Con el botón Resumir de Outlook"],c:1,
+  e:"Datos estructurados + disparador programado + filtro + notificación: patrón clásico de Power Automate."},
+ {id:35,a:"U",l:4,s:"¿Cuál de estas tareas NO debe quedar totalmente automatizada sin revisión humana?",
+  o:["Enviar a la gerente un resumen semanal de oportunidades","Recordar a un ejecutivo un seguimiento vencido","Enviar a clientes comunicaciones con condiciones de crédito redactadas por IA","Clasificar encuestas de servicio por tema"],c:2,
+  e:"Comunicaciones a clientes con condiciones y decisiones de crédito siempre pasan por revisión y aprobación."},
+ {id:36,a:"U",l:4,s:"¿Cuál es el orden recomendado para automatizar una rutina de la gerencia?",
+  o:["Flujo de Power Automate → prompt programado → prompt guardado","Prompt guardado → prompt programado → flujo de Power Automate","Agente autónomo desde el primer día","Directamente un flujo sin probar el prompt"],c:1,
+  e:"Escalera de automatización: se sube de escalón solo cuando el anterior funciona bien."}
+];
+Q.forEach(q=>q.o.push("No lo sé"));
+
+/* ===================== RENDER ===================== */
+const $ = s=>document.querySelector(s);
+const answers = {};
+function shuffle(arr,seed){const a=arr.map((v,i)=>[v,i]);let s=seed;for(let i=a.length-2;i>0;i--){s=(s*9301+49297)%233280;const j=Math.floor(s/233280*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function renderLikert(){
+  let h='<tr><th style="text-align:left">Capacidad</th>'+USAGE_SCALE.map(x=>`<th>${x}</th>`).join('')+'</tr>';
+  USAGE.forEach((u,i)=>{h+=`<tr><td>${u}</td>`+USAGE_SCALE.map((_,v)=>`<td><input type="radio" name="u${i}" value="${v}" aria-label="${u}: ${USAGE_SCALE[v]}"></td>`).join('')+'</tr>';});
+  $('#likert').innerHTML=h;
+}
+function renderQuestions(){
+  const box=$('#questions');let n=0;
+  Q.forEach(q=>{
+    n++;
+    const order=shuffle(q.o.slice(0,4),q.id*7+3); order.push([q.o[4],4]);
+    q.order=order;
+    const d=document.createElement('div');d.className='q';d.id='q'+q.id;
+    d.innerHTML=`<div class="meta"><span class="tag">${AREAS[q.a].n}</span><span class="tag lvl">${LEVELS[q.l]}</span></div>
+      <p class="stem">${n}. ${q.s}</p>`+
+      order.map(([t,orig])=>`<label class="opt" data-o="${orig}"><input type="radio" name="q${q.id}" value="${orig}"><span>${t}</span></label>`).join('')+
+      `<div class="expl"></div>`;
+    box.appendChild(d);
+  });
+  box.addEventListener('change',e=>{
+    if(!e.target.name)return;
+    const id=+e.target.name.slice(1);answers[id]=+e.target.value;
+    document.querySelectorAll(`#q${id} .opt`).forEach(o=>o.classList.toggle('sel',o.dataset.o==e.target.value));
+    updateProgress();
+  });
+}
+function updateProgress(){
+  const c=Object.keys(answers).length;$('#progress').style.display='block';
+  $('#ptxt').textContent=`${c} de ${Q.length} preguntas respondidas`;
+  $('#pfill').style.width=(c/Q.length*100)+'%';
+}
+
+/* ===================== PUNTAJE ===================== */
+function scorePractical(t){
+  const s=(t||'').toLowerCase();
+  const checks=[
+    ["Rol",/act[uú]a como|eres un|eres una|como gerente|como analista/.test(s)],
+    ["Contexto o archivo",/\/|archivo|excel|xlsx|sucursal|ejecutivos|meta de|usd|\d{2,}/.test(s)],
+    ["Tarea concreta",/calcula|identifica|compara|resume|analiza|proyecta|lista|redacta|clasifica/.test(s)],
+    ["Formato",/tabla|vi[ñn]etas|lista|gr[aá]fico|correo|palabras|columnas|diapositiva/.test(s)],
+    ["Límites",/no inventes|solo|únicamente|unicamente|no uses|sin |m[aá]ximo/.test(s)],
+    ["Verificación",/supuestos|confirmar|verificar|valida|explica la f[oó]rmula|metodolog/.test(s)]
+  ];
+  return {checks, n:checks.filter(c=>c[1]).length};
+}
+function compute(){
+  const tier={1:[0,0],2:[0,0],3:[0,0],4:[0,0]}, area={};
+  let pts=0,max=0;
+  Q.forEach(q=>{
+    const ok=answers[q.id]===q.c;
+    tier[q.l][1]++; if(ok)tier[q.l][0]++;
+    area[q.a]=area[q.a]||[0,0]; area[q.a][1]++; if(ok)area[q.a][0]++;
+    max+=q.l; if(ok)pts+=q.l;
+  });
+  const tp=l=>tier[l][1]?tier[l][0]/tier[l][1]*100:0;
+  // Nivel: el más alto cuyo tramo y todos los inferiores alcanzan 70 %
+  let level=0;
+  for(let l=1;l<=4;l++){ if(tp(l)>=70) level=l; else break; }
+  const gov = area.G ? area.G[0]/area.G[1]*100 : 0;
+  const prac = scorePractical($('#practico').value);
+  const usage = USAGE.map((u,i)=>{const r=document.querySelector(`input[name=u${i}]:checked`);return r?+r.value:null;});
+  return {pct:Math.round(pts/max*100), level, tier, tp, area, gov, prac, usage};
+}
+
+/* ===================== RESULTADO ===================== */
+const LEVEL_TXT={
+ 0:["Inicial","Aún no consolida las bases. Prioridad: reglas de datos, conceptos y método de prompts antes de usar Copilot con información del banco."],
+ 1:["Básico","Usa Copilot para resumir y redactar y conoce las reglas de datos. Siguiente paso: dominar el método de prompts y el uso diario en Outlook, Word y Excel."],
+ 2:["Intermedio","Escribe prompts estructurados y usa Copilot en las aplicaciones. Siguiente paso: Notebooks, Pages, Researcher, Analyst y su primer agente."],
+ 3:["Avanzado","Organiza su trabajo con las herramientas premium y entiende los agentes. Siguiente paso: automatizaciones con Power Automate y agentes con acciones."],
+ 4:["Experto","Domina el ecosistema hasta la automatización. Puede liderar la adopción de IA en la sucursal y formar a su equipo."]
+};
+function color(p){return p>=70?'var(--ok)':p>=40?'var(--warn)':'var(--bad)';}
+function showResult(){
+  const r=compute(), [lv,txt]=LEVEL_TXT[r.level];
+  const name=$('#nombre').value||'Participante', date=$('#fecha').value||new Date().toISOString().slice(0,10);
+  const weak=Object.keys(AREAS).filter(k=>r.area[k]&&r.area[k][0]/r.area[k][1]<0.7);
+  const usageAvg=r.usage.filter(v=>v!==null);
+  const uMean=usageAvg.length?usageAvg.reduce((a,b)=>a+b,0)/usageAvg.length:null;
+  let gap='';
+  if(uMean!==null){
+    if(uMean>=2 && r.level<=1) gap='Declara un uso frecuente de Copilot, pero el conocimiento demostrado es básico: hay riesgo de usarlo sin método ni controles. Priorice los Módulos 00 y 02.';
+    else if(uMean<1 && r.level>=2) gap='El conocimiento es mayor que el uso actual: el foco debe estar en crear hábitos (rutina diaria del Módulo 10).';
+    else gap='El uso declarado es coherente con el conocimiento demostrado.';
+  }
+  const govAlert = r.gov<100 ? `<div class="card" style="border-left:5px solid var(--bad)"><h2>Atención: datos, reserva y riesgo</h2><p class="sub" style="color:var(--ink)">Obtuvo ${Math.round(r.gov)} % en esta área. Antes de usar Copilot con información de clientes, repase las 5 reglas de oro del Módulo 00. Esta área no admite margen de error en banca.</p></div>`:'';
+
+  $('#result').innerHTML=`
+  <section class="card">
+    <div class="level-hero">
+      <div class="ring" style="--p:${r.pct}"><div>${r.pct}%</div></div>
+      <div><div class="lv">Nivel diagnosticado</div><h3>${lv}</h3><p>${txt}</p>
+      <p style="margin-top:8px;font-size:.85rem">${name} · ${$('#rol').value} · ${date}${$('#lic').value?' · '+$('#lic').value:''}</p></div>
+    </div>
+    <div class="ladder">${[1,2,3,4].map(l=>`<div class="${r.level>=l?'on':''}"><b>${LEVELS[l]}</b>${r.tier[l][0]}/${r.tier[l][1]} correctas · ${Math.round(r.tp(l))}%</div>`).join('')}</div>
+    <p class="note">Regla de clasificación: se alcanza un nivel cuando ese tramo y todos los anteriores tienen al menos 70 % de aciertos. El porcentaje global pondera cada pregunta por su dificultad (1 a 4).</p>
+  </section>
+  ${govAlert}
+  <section class="card">
+    <h2>Dominio por área</h2>
+    <div class="bars">${Object.keys(AREAS).map(k=>{const a=r.area[k],p=Math.round(a[0]/a[1]*100);return `<div class="row"><span>${AREAS[k].n}</span><div class="track"><div class="val" style="width:${p}%;background:${color(p)}"></div></div><span class="pct">${p}%</span></div>`}).join('')}</div>
+  </section>
+  <section class="card">
+    <h2>Plan de formación recomendado</h2>
+    ${weak.length?`<table class="rec"><tr><th>Área a reforzar</th><th>Resultado</th><th>Módulo de la guía</th></tr>${weak.map(k=>`<tr><td>${AREAS[k].n}</td><td>${r.area[k][0]}/${r.area[k][1]}</td><td>${AREAS[k].m}</td></tr>`).join('')}</table>`:'<p class="sub">Todas las áreas superan el 70 %. Recomendación: proyecto final del Módulo 10 y liderar la adopción en el equipo.</p>'}
+  </section>
+  <section class="card">
+    <h2>Uso actual vs. conocimiento</h2>
+    <table class="rec"><tr><th>Capacidad</th><th>Frecuencia declarada</th></tr>${USAGE.map((u,i)=>`<tr><td>${u}</td><td>${r.usage[i]===null?'Sin respuesta':USAGE_SCALE[r.usage[i]]}</td></tr>`).join('')}</table>
+    <p class="sub" style="margin-top:10px;color:var(--ink)">${gap}</p>
+  </section>
+  <section class="card">
+    <h2>Ejercicio práctico</h2>
+    <p class="sub">Elementos detectados: ${r.prac.n} de 6. ${r.prac.n>=5?'Prompt bien estructurado.':r.prac.n>=3?'Buena base; agregue los elementos faltantes.':'Repase la plantilla del Módulo 02.'}</p>
+    <div class="chips">${r.prac.checks.map(([k,v])=>`<span class="chip ${v?'y':'n'}">${v?'✓':'✗'} ${k}</span>`).join('')}</div>
+    ${$('#practico').value?`<p class="note" style="margin-top:10px;white-space:pre-wrap;background:var(--panel);padding:10px;border-radius:8px">${$('#practico').value.replace(/</g,'&lt;')}</p>`:''}
+    <p class="note">Detección automática orientativa; el facilitador valida la calidad real del prompt.</p>
+  </section>
+  <section class="card">
+    <div class="actions">
+      <button class="btn ghost" type="button" onclick="review()">Ver respuestas y explicaciones</button>
+      <button class="btn ghost" type="button" onclick="exportJSON()">Descargar resultados (JSON)</button>
+      <button class="btn gold" type="button" onclick="window.print()">Imprimir o guardar PDF</button>
+    </div>
+  </section>`;
+  $('#result').style.display='block';
+  $('#form-area').style.display='none'; $('#progress').style.display='none';
+  window.scrollTo({top:0,behavior:'smooth'});
+  window._last={name,date,rol:$('#rol').value,licencia:$('#lic').value,porcentaje:r.pct,nivel:lv,
+    tramos:Object.fromEntries([1,2,3,4].map(l=>[LEVELS[l],{correctas:r.tier[l][0],total:r.tier[l][1]}])),
+    areas:Object.fromEntries(Object.keys(AREAS).map(k=>[AREAS[k].n,{correctas:r.area[k][0],total:r.area[k][1]}])),
+    uso:Object.fromEntries(USAGE.map((u,i)=>[u,r.usage[i]===null?null:USAGE_SCALE[r.usage[i]]])),
+    practico:{texto:$('#practico').value,elementos:Object.fromEntries(r.prac.checks)},
+    respuestas:Q.map(q=>({id:q.id,area:AREAS[q.a].n,nivel:LEVELS[q.l],correcta:answers[q.id]===q.c,no_sabe:answers[q.id]===4}))};
+}
+function review(){
+  $('#form-area').style.display='block';
+  Q.forEach(q=>{
+    const d=$('#q'+q.id); d.classList.add('reviewed');
+    d.querySelectorAll('.opt').forEach(o=>{
+      const v=+o.dataset.o; o.classList.remove('sel');
+      if(v===q.c)o.classList.add('right'); else if(answers[q.id]===v)o.classList.add('wrong');
+      o.querySelector('input').disabled=true;
+    });
+    d.querySelector('.expl').innerHTML='<b>Explicación:</b> '+q.e;
+  });
+  document.querySelectorAll('#form-area .card').forEach((c,i,arr)=>{ if(i!==2) c.style.display='none'; });
+  $('#questions').scrollIntoView({behavior:'smooth'});
+}
+function exportJSON(){
+  const b=new Blob([JSON.stringify(window._last,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(b);
+  a.download=`diagnostico-ia-${(window._last.name||'participante').replace(/\s+/g,'-').toLowerCase()}-${window._last.date}.json`;a.click();
+}
+
+/* ===================== EVENTOS ===================== */
+$('#btnSubmit').addEventListener('click',()=>{
+  const missing=Q.filter(q=>answers[q.id]===undefined);
+  if(missing.length){
+    $('#warn').style.display='inline';$('#warn').textContent=`Faltan ${missing.length} preguntas por responder.`;
+    $('#q'+missing[0].id).scrollIntoView({behavior:'smooth',block:'center'});return;
+  }
+  showResult();
+});
+$('#btnReset').addEventListener('click',()=>{ if(confirm('¿Borrar todas las respuestas?')) location.reload(); });
+$('#fecha').value=new Date().toISOString().slice(0,10);
+renderLikert(); renderQuestions();
+</script>
+</body>
+</html>
