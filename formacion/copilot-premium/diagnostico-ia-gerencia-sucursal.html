@@ -412,9 +412,10 @@ function showResult(){
   <section class="card">
     <div class="actions">
       <button class="btn ghost" type="button" onclick="review()">Ver respuestas y explicaciones</button>
-      <button class="btn ghost" type="button" onclick="exportJSON()">Descargar resultados (JSON)</button>
-      <button class="btn gold" type="button" onclick="window.print()">Imprimir o guardar PDF</button>
+      <button class="btn gold" type="button" onclick="copyResults(this)">Copiar resultados</button>
     </div>
+    <textarea id="jsonOut" readonly style="margin-top:12px;min-height:90px;font-family:ui-monospace,Consolas,monospace;font-size:.78rem"></textarea>
+    <p class="note">Copie los resultados y envíelos por WhatsApp o correo al facilitador.</p>
   </section>`;
   $('#result').style.display='block';
   $('#form-area').style.display='none'; $('#progress').style.display='none';
@@ -440,10 +441,15 @@ function review(){
   document.querySelectorAll('#form-area .card').forEach((c,i,arr)=>{ if(i!==2) c.style.display='none'; });
   $('#questions').scrollIntoView({behavior:'smooth'});
 }
-function exportJSON(){
-  const b=new Blob([JSON.stringify(window._last,null,2)],{type:'application/json'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(b);
-  a.download=`diagnostico-ia-${(window._last.name||'participante').replace(/\s+/g,'-').toLowerCase()}-${window._last.date}.json`;a.click();
+function summaryText(){
+  const d=window._last;
+  const areas=Object.entries(d.areas).map(([k,v])=>`- ${k}: ${v.correctas}/${v.total}`).join('\n');
+  return `DIAGNÓSTICO DE IA · ${d.name} · ${d.rol} · ${d.date}\nNivel: ${d.nivel} (${d.porcentaje}%)\nLicencia: ${d.licencia||'N/D'}\nÁreas:\n${areas}\nPrompt práctico: ${d.practico.texto||'(vacío)'}\n\nDATOS:\n${JSON.stringify(d)}`;
+}
+async function copyResults(btn){
+  const t=summaryText(); const ta=document.getElementById('jsonOut'); ta.value=t;
+  try{await navigator.clipboard.writeText(t);btn.textContent='Copiado ✓';}
+  catch(e){ta.focus();ta.select();btn.textContent='Seleccionado: copie con el teclado';}
 }
 
 /* ===================== EVENTOS ===================== */
@@ -455,7 +461,7 @@ $('#btnSubmit').addEventListener('click',()=>{
   }
   showResult();
 });
-$('#btnReset').addEventListener('click',()=>{ if(confirm('¿Borrar todas las respuestas?')) location.reload(); });
+$('#btnReset').addEventListener('click',e=>{const b=e.currentTarget; if(b.dataset.armed){location.reload();return;} b.dataset.armed='1'; b.textContent='Toque otra vez para borrar todo'; setTimeout(()=>{delete b.dataset.armed;b.textContent='Reiniciar';},4000);});
 $('#fecha').value=new Date().toISOString().slice(0,10);
 renderLikert(); renderQuestions();
 </script>
